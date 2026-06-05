@@ -146,6 +146,9 @@ const GroupView = memo(function GroupView({
   byKey: Record<string, number[]>;
 }) {
   const filled = group.keys.filter((k) => byKey[k]?.length).length;
+  const pct = (100 * filled) / group.keys.length;
+  const pctLabel =
+    filled === 0 ? "0%" : pct < 1 ? "<1%" : `${Math.round(pct)}%`;
   const panes = useMemo(() => buildPanes(section, group), [section, group]);
   return (
     <div>
@@ -153,6 +156,11 @@ const GroupView = memo(function GroupView({
         <span className="font-display text-lg text-cream">{group.label}</span>
         <span className="font-mono text-[10.5px] text-cream-faint">
           {filled}/{group.keys.length}
+        </span>
+        <span
+          className={`font-mono text-[10.5px] ${filled > 0 ? "text-gold" : "text-cream-faint"}`}
+        >
+          {pctLabel} seen
         </span>
         <span className="h-px grow self-center bg-ink-line" />
       </div>

@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- SCOTUSgami: a 2D gavel icon, paper-folded 90° along the vertical middle.
+       Left half lies flat; right half recedes (compressed + sheared + shaded). -->
+  <defs>
+    <g id="art">
+      <rect x="6" y="6" width="52" height="52" rx="12" fill="#11161f"/>
+      <!-- gavel head (diagonal bar, upper left) -->
+      <rect x="13" y="16" width="26" height="12" rx="2.5" fill="#d9b566"
+            transform="rotate(-45 26 22)"/>
+      <!-- handle, crossing the fold toward lower right -->
+      <rect x="26" y="31" width="26" height="6" rx="3" fill="#d9b566"
+            transform="rotate(45 39 34)"/>
+    </g>
+    <clipPath id="left"><rect x="0" y="0" width="32" height="64"/></clipPath>
+    <clipPath id="right"><rect x="32" y="0" width="32" height="64"/></clipPath>
+    <linearGradient id="creaseShade" x1="32" y1="0" x2="44" y2="0"
+                    gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#000" stop-opacity="0.5"/>
+      <stop offset="1" stop-color="#000" stop-opacity="0.22"/>
+    </linearGradient>
+  </defs>
+
+  <!-- flat half -->
+  <g clip-path="url(#left)"><use href="#art"/></g>
+
+  <!-- folded half: x compressed toward the crease, y sheared down -->
+  <g transform="translate(32 0) skewY(20) scale(0.62 1) translate(-32 0)">
+    <g clip-path="url(#right)">
+      <use href="#art"/>
+      <rect x="32" y="0" width="32" height="64" fill="url(#creaseShade)"/>
+    </g>
+  </g>
+
+  <!-- crease highlight -->
+  <line x1="32" y1="6.5" x2="32" y2="57.5" stroke="#f3dfae"
+        stroke-width="1.2" opacity="0.65"/>
+</svg>
