@@ -386,14 +386,15 @@ export default function Game({ cases }: { cases: GameCase[] }) {
               </li>
               <li>
                 <span className="text-cream">Scoring.</span> Each box is worth{" "}
-                <span className="font-mono text-gold">1–100 points</span>,
+                <span className="font-mono text-gold">100–200 points</span>,
                 inverse to the case&apos;s fame (measured by recent Wikipedia
-                pageviews). The blockbuster everyone knows scores 1; a case
-                with no Wikipedia article at all scores 100.
+                pageviews). The blockbuster everyone knows scores 100; a case
+                with no Wikipedia article at all scores 200.
               </li>
               <li>
                 <span className="text-cream">Your total</span> is the sum of
-                your box scores — max 900. Obscure pulls win bragging rights.
+                your box scores — max 1,800. Obscure pulls win bragging
+                rights.
               </li>
             </ul>
           </div>

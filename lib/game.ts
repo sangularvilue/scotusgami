@@ -43,9 +43,10 @@ export function toGameCases(cases: CaseRecord[]): GameCase[] {
 }
 
 /**
- * Rarity points per case: scales inversely with fame on a log curve.
- * The most famous case in the pool is worth 1 point; a case with no
- * Wikipedia article is worth 100. Your score is the sum of your boxes.
+ * Rarity points per case: scales inversely with fame on a log curve, from
+ * 100 (the most famous case in the pool) to 200 (no Wikipedia article at
+ * all) — a rare pull is worth double a gimme, not 100×. Your score is the
+ * sum of your boxes, max 1,800.
  */
 export function rarityPoints(cases: GameCase[]): Map<string, number> {
   const maxFame = Math.max(1, ...cases.map((c) => c.fame));
@@ -53,7 +54,7 @@ export function rarityPoints(cases: GameCase[]): Map<string, number> {
   return new Map(
     cases.map((c) => [
       caseId(c),
-      Math.max(1, Math.round(100 * (1 - Math.log(1 + c.fame) / denom))),
+      100 + Math.max(0, Math.round(100 * (1 - Math.log(1 + c.fame) / denom))),
     ])
   );
 }
