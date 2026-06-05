@@ -1,5 +1,6 @@
 /** A justice's side in a given case. */
-export type Side = "M" | "D" | "A"; // majority | dissent | absent (took no part)
+export type Side = "M" | "D" | "A" | "T";
+// majority | dissent | absent (took no part) | tied (equally divided court — sides unrecorded)
 
 export interface OpinionInfo {
   /** e.g. "majority", "plurality", "concurrence", "special concurrence", "dissent" */

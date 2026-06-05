@@ -130,8 +130,20 @@ export default function CaseCard({
       <div className="space-y-1 px-4 pb-3 pt-2">
         <SideRow dot="var(--gold)" label="majority" names={names(sides.maj)} />
         <SideRow dot="var(--slate)" label="dissent" names={names(sides.dis)} pill />
+        <SideRow
+          dot="linear-gradient(180deg, var(--gold) 50%, var(--slate) 50%)"
+          label="equally divided"
+          names={names(sides.tied)}
+        />
         <SideRow dot="var(--absent)" label="out" names={names(sides.out)} />
       </div>
+
+      {sides.tied.length > 0 && (
+        <div className="px-4 pb-2 text-[11px] italic leading-snug text-cream-faint">
+          Affirmed by an equally divided Court — the justices&apos; sides are
+          never published.
+        </div>
+      )}
 
       {records.length === 0 && (
         <div className="border-t border-ink-line px-4 py-3 text-[12px] italic leading-relaxed text-cream-faint">

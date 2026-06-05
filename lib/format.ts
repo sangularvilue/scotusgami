@@ -17,16 +17,18 @@ export interface LineupSides {
   maj: Justice[];
   dis: Justice[];
   out: Justice[];
+  tied: Justice[];
 }
 
 /** Justices on each side, in ideological order. */
 export function lineupSides(key: string): LineupSides {
   const votes = decodeLineup(key);
-  const sides: LineupSides = { maj: [], dis: [], out: [] };
+  const sides: LineupSides = { maj: [], dis: [], out: [], tied: [] };
   for (const id of IDEOLOGICAL_IDS) {
     const j = JUSTICE_BY_ID[id];
     if (votes[id] === "M") sides.maj.push(j);
     else if (votes[id] === "D") sides.dis.push(j);
+    else if (votes[id] === "T") sides.tied.push(j);
     else sides.out.push(j);
   }
   return sides;

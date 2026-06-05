@@ -15,20 +15,28 @@ export function decodeLineup(key: string): Record<string, Side> {
   return votes;
 }
 
-export function keyCounts(key: string): { maj: number; dis: number; absent: number } {
+export function keyCounts(key: string): {
+  maj: number;
+  dis: number;
+  absent: number;
+  tied: number;
+} {
   let maj = 0,
     dis = 0,
-    absent = 0;
+    absent = 0,
+    tied = 0;
   for (const c of key) {
     if (c === "M") maj++;
     else if (c === "D") dis++;
+    else if (c === "T") tied++;
     else absent++;
   }
-  return { maj, dis, absent };
+  return { maj, dis, absent, tied };
 }
 
 export function splitLabel(key: string): string {
-  const { maj, dis } = keyCounts(key);
+  const { maj, dis, tied } = keyCounts(key);
+  if (tied > 0) return `${tied / 2}–${tied / 2}`;
   return `${maj}–${dis}`;
 }
 
@@ -121,10 +129,22 @@ export function enumerateSections(extraKeys: string[] = []): Section[] {
   const extras = [...new Set(extraKeys)].filter((key) => !enumerated.has(key));
   if (extras.length > 0) {
     extras.sort();
+    // group rarities by their split (e.g. "4–4" equally divided)
+    const byLabel = new Map<string, string[]>();
+    for (const key of extras) {
+      const label = splitLabel(key);
+      if (!byLabel.has(label)) byLabel.set(label, []);
+      byLabel.get(label)!.push(key);
+    }
     sections.push({
       k: 3,
       title: "Rare benches",
-      groups: [{ label: "other", majSize: 0, disSize: 0, keys: extras }],
+      groups: [...byLabel].map(([label, keys]) => ({
+        label,
+        majSize: 0,
+        disSize: 0,
+        keys,
+      })),
       rowCount: extras.length,
     });
   }

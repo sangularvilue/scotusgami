@@ -160,11 +160,20 @@ async function main() {
       }
       const vote = r[cVote].trim();
       const majority = r[cMajority].trim();
-      if (vote === "" || majority === "") {
+      if (vote === "") {
         votes[id] = "A"; // took no part
         continue;
       }
-      if (vote === "8") tie = true; // equally divided
+      if (vote === "8") {
+        // equally divided court — participated, but sides are never published
+        tie = true;
+        votes[id] = "T";
+        continue;
+      }
+      if (majority === "") {
+        votes[id] = "A";
+        continue;
+      }
       votes[id] = majority === "2" ? "M" : "D";
       if (r[cJustice].trim() === majWriterCode) majWriterId = id;
       const wrote = r[cOpinion].trim();
@@ -180,8 +189,9 @@ async function main() {
       misses.push(`${docket}: unknown SCDB justice ${unknownJustice}`);
       continue;
     }
-    if (tie) {
-      misses.push(`${docket}: equally divided court, no majority side`);
+    const tCount = Object.values(votes).filter((s) => s === "T").length;
+    if (tie && (tCount < 6 || tCount % 2 !== 0)) {
+      misses.push(`${docket}: malformed equally-divided record (${tCount} tied)`);
       continue;
     }
     for (const op of opinions) {
@@ -211,10 +221,14 @@ async function main() {
       ? new Date(decidedTs * 1000).toISOString().slice(0, 10)
       : `${term + 1}-06-30`;
 
-    const maj = Object.values(votes).filter((s) => s === "M").length;
-    const dis = Object.values(votes).filter((s) => s === "D").length;
-    if (maj === 0 || maj <= dis) {
-      misses.push(`${docket}: no majority side recorded (${maj}–${dis}, equally divided?)`);
+    const maj = tie
+      ? tCount / 2
+      : Object.values(votes).filter((s) => s === "M").length;
+    const dis = tie
+      ? tCount / 2
+      : Object.values(votes).filter((s) => s === "D").length;
+    if (!tie && (maj === 0 || maj <= dis)) {
+      misses.push(`${docket}: no majority side recorded (${maj}–${dis})`);
       continue;
     }
     out.push({
@@ -225,7 +239,7 @@ async function main() {
       question: stripHtml(detail.question),
       holding: stripHtml(detail.description),
       winningParty: "",
-      decisionType: "",
+      decisionType: tie ? "equally divided" : "",
       lineupKey: encodeLineup(votes),
       majority: maj,
       minority: dis,

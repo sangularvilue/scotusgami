@@ -58,6 +58,38 @@ export function sideStyle(
   };
 }
 
+/**
+ * Equally-divided cells: the court split 4–4 (or 3–3) with sides unrecorded,
+ * so each participating cell is half majority-gold, half dissent-slate.
+ * Rendered as two stacked half-height spans over the `T` columns.
+ */
+export function tieStyle(
+  key: string,
+  half: "top" | "bottom",
+  cellW = CELL_W,
+  cellH = CELL_H,
+  gap = CELL_GAP
+): React.CSSProperties | null {
+  const sides = colSides(key);
+  const pitch = cellW + gap;
+  const h = Math.max(2, Math.floor((cellH - 2) / 2));
+  const color = half === "top" ? VAR.M : VAR.D;
+  const shadows: string[] = [];
+  for (let i = 1; i < 9; i++) {
+    if (sides[i] === "T") shadows.push(`${i * pitch}px 0 0 0 ${color}`);
+  }
+  const own = sides[0] === "T";
+  if (!own && shadows.length === 0) return null;
+  return {
+    width: cellW,
+    height: h,
+    top: half === "top" ? 0 : cellH - h,
+    background: own ? color : "transparent",
+    boxShadow: shadows.length ? shadows.join(", ") : undefined,
+    borderRadius: 2,
+  };
+}
+
 /** Total strip width for a given cell/gap. */
 export const stripWidth = (cellW = CELL_W, gap = CELL_GAP) =>
   9 * cellW + 8 * gap;
