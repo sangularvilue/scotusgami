@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
+import { fetchFame } from "@/lib/fame";
 import { currentTerm, scrapeTerm } from "@/lib/oyez";
-import { loadMeta, saveMeta, saveTerm } from "@/lib/redis";
+import { loadMeta, loadTerm, saveMeta, saveTerm } from "@/lib/redis";
 
 export const maxDuration = 300; // Oyez scrape is sequential and polite
 export const dynamic = "force-dynamic";
@@ -17,6 +18,21 @@ export async function GET(req: NextRequest) {
 
   const term = currentTerm();
   const { cases, skipped } = await scrapeTerm(term);
+
+  // keep existing fame scores; fetch fame only for newly-seen dockets
+  const prev = await loadTerm(term);
+  const fameByDocket = new Map(prev.map((c) => [c.docket, c.fame]));
+  for (const c of cases) {
+    const known = fameByDocket.get(c.docket);
+    if (known !== undefined) c.fame = known;
+    else {
+      try {
+        c.fame = await fetchFame(c.name);
+      } catch {
+        /* leave undefined; next refresh retries */
+      }
+    }
+  }
   await saveTerm(term, cases);
 
   const meta = await loadMeta();

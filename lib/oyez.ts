@@ -13,6 +13,7 @@ interface OyezCaseSummary {
   name: string;
   href: string;
   term: string;
+  view_count?: number;
 }
 
 interface OyezMember {

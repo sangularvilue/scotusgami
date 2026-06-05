@@ -16,6 +16,8 @@ export interface GameCase {
   split: string; // e.g. "6–3"
   votes: Record<string, Side>;
   oyezUrl: string;
+  /** Wikipedia-pageview fame; 0 = no article (maximally obscure) */
+  fame: number;
 }
 
 export const GUESSES = 9;
@@ -36,7 +38,24 @@ export function toGameCases(cases: CaseRecord[]): GameCase[] {
       split: `${c.majority}–${c.minority}`,
       votes: c.votes,
       oyezUrl: c.oyezUrl,
+      fame: c.fame ?? 0,
     }));
+}
+
+/**
+ * Rarity points per case: scales inversely with fame on a log curve.
+ * The most famous case in the pool is worth 1 point; a case with no
+ * Wikipedia article is worth 100. Your score is the sum of your boxes.
+ */
+export function rarityPoints(cases: GameCase[]): Map<string, number> {
+  const maxFame = Math.max(1, ...cases.map((c) => c.fame));
+  const denom = Math.log(1 + maxFame);
+  return new Map(
+    cases.map((c) => [
+      caseId(c),
+      Math.max(1, Math.round(100 * (1 - Math.log(1 + c.fame) / denom))),
+    ])
+  );
 }
 
 export const caseId = (c: GameCase) => `${c.term}/${c.docket}`;

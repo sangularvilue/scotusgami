@@ -33,6 +33,8 @@ export interface CaseRecord {
   justiaUrl: string | null;
   /** vote-data source: Oyez (default) or SCDB supplement while Oyez catches up */
   source?: "oyez" | "scdb";
+  /** Wikipedia pageviews (recent ~60 days) — fame proxy for game rarity scoring; 0 = no article */
+  fame?: number;
 }
 
 export interface Meta {

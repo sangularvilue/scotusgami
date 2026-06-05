@@ -32,6 +32,11 @@ function parseBlob(blob: string | CaseRecord[] | null): CaseRecord[] {
   return typeof blob === "string" ? (JSON.parse(blob) as CaseRecord[]) : blob;
 }
 
+/** One term's Oyez-sourced records (no supplement merge). */
+export async function loadTerm(term: number): Promise<CaseRecord[]> {
+  return parseBlob(await redis().get<string | CaseRecord[] | null>(termKey(term)));
+}
+
 export async function loadAllCases(): Promise<CaseRecord[]> {
   const terms = ((await redis().smembers(TERMS_KEY)) as (string | number)[])
     .map(Number)

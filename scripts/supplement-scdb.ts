@@ -68,6 +68,7 @@ interface OyezSummary {
   docket_number: string;
   name: string;
   href: string;
+  view_count?: number;
 }
 
 async function main() {
