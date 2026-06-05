@@ -1,0 +1,1201 @@
+[
+ {
+  "term": "2025",
+  "docket": "24-5438",
+  "name": "Bowe v. United States",
+  "decided": "2026-01-09",
+  "question": "1. Does a rule requiring dismissal of repeat claims in state prisoner habeas petitions also apply to repeat claims in federal prisoner motions to vacate their sentences? 2. Does the Court have jurisdiction to review lower court decisions allowing or denying federal prisoners permission to file repeat challenges to their sentences?",
+  "holding": "A case in which the Court held that the statutory bar in 28 U.S.C. § 2244(b)(3)(E) that prohibits certiorari review of court of appeals decisions on second or successive habeas applications does not apply to federal prisoners, and § 2244(b)(1)’s bar on claims previously presented does not apply to federal prisoners’ motions under § 2255(h).",
+  "winningParty": "Bowe",
+  "decisionType": "majority opinion",
+  "lineupKey": "MDDMMDMDM",
+  "majority": 5,
+  "minority": 4,
+  "votes": {
+   "sonia_sotomayor": "M",
+   "john_g_roberts_jr": "M",
+   "elena_kagan": "M",
+   "ketanji_brown_jackson": "M",
+   "brett_m_kavanaugh": "M",
+   "neil_gorsuch": "D",
+   "clarence_thomas": "D",
+   "samuel_a_alito_jr": "D",
+   "amy_coney_barrett": "D"
+  },
+  "opinions": [
+   {
+    "type": "majority",
+    "author": "sonia_sotomayor",
+    "joinedBy": [
+     "john_g_roberts_jr",
+     "elena_kagan",
+     "ketanji_brown_jackson",
+     "brett_m_kavanaugh"
+    ]
+   },
+   {
+    "type": "concurrence",
+    "author": "ketanji_brown_jackson",
+    "joinedBy": []
+   },
+   {
+    "type": "dissent",
+    "author": "neil_gorsuch",
+    "joinedBy": [
+     "clarence_thomas",
+     "samuel_a_alito_jr",
+     "amy_coney_barrett"
+    ]
+   }
+  ],
+  "oyezUrl": "https://www.oyez.org/cases/2025/24-5438",
+  "justiaUrl": "https://supreme.justia.com/cases/federal/us/607/24-5438/"
+ },
+ {
+  "term": "2025",
+  "docket": "24-440",
+  "name": "Berk v. Choy",
+  "decided": "2026-01-20",
+  "question": "Must a Delaware law providing that a complaint must be dismissed unless it is accompanied by an expert affidavit be enforced by a federal court sitting in diversity?",
+  "holding": "A case in which the Court held that a Delaware law providing that a complaint must be dismissed unless it is accompanied by an expert affidavit conflicts with a valid Federal Rule of Civil Procedure and thus does not apply in a federal court sitting in diversity.",
+  "winningParty": "Berk",
+  "decisionType": "majority opinion",
+  "lineupKey": "MMMMMMMMM",
+  "majority": 9,
+  "minority": 0,
+  "votes": {
+   "amy_coney_barrett": "M",
+   "john_g_roberts_jr": "M",
+   "clarence_thomas": "M",
+   "samuel_a_alito_jr": "M",
+   "sonia_sotomayor": "M",
+   "elena_kagan": "M",
+   "neil_gorsuch": "M",
+   "brett_m_kavanaugh": "M",
+   "ketanji_brown_jackson": "M"
+  },
+  "opinions": [
+   {
+    "type": "majority",
+    "author": "amy_coney_barrett",
+    "joinedBy": [
+     "john_g_roberts_jr",
+     "clarence_thomas",
+     "samuel_a_alito_jr",
+     "sonia_sotomayor",
+     "elena_kagan",
+     "neil_gorsuch",
+     "brett_m_kavanaugh"
+    ]
+   },
+   {
+    "type": "special concurrence",
+    "author": "ketanji_brown_jackson",
+    "joinedBy": []
+   }
+  ],
+  "oyezUrl": "https://www.oyez.org/cases/2025/24-440",
+  "justiaUrl": "https://supreme.justia.com/cases/federal/us/607/24-440/"
+ },
+ {
+  "term": "2025",
+  "docket": "24-539",
+  "name": "Chiles v. Salazar",
+  "decided": "2026-03-31",
+  "question": "Does a Colorado law banning “conversion therapy”—i.e., attempts to “convert” someone’s sexual orientation or gender identity—violate the Free Speech Clause of the First Amendment?",
+  "holding": "A case in which the Court held that a Colorado law banning “conversion therapy”—i.e., attempts to “convert” someone’s sexual orientation or gender identity—violates the Free Speech Clause of the First Amendment.",
+  "winningParty": "Chiles",
+  "decisionType": "majority opinion",
+  "lineupKey": "MMMMMMMMD",
+  "majority": 8,
+  "minority": 1,
+  "votes": {
+   "neil_gorsuch": "M",
+   "clarence_thomas": "M",
+   "john_g_roberts_jr": "M",
+   "sonia_sotomayor": "M",
+   "elena_kagan": "M",
+   "brett_m_kavanaugh": "M",
+   "ketanji_brown_jackson": "D",
+   "amy_coney_barrett": "M",
+   "samuel_a_alito_jr": "M"
+  },
+  "opinions": [
+   {
+    "type": "majority",
+    "author": "neil_gorsuch",
+    "joinedBy": [
+     "clarence_thomas",
+     "john_g_roberts_jr",
+     "sonia_sotomayor",
+     "elena_kagan",
+     "brett_m_kavanaugh",
+     "amy_coney_barrett",
+     "samuel_a_alito_jr"
+    ]
+   },
+   {
+    "type": "concurrence",
+    "author": "elena_kagan",
+    "joinedBy": [
+     "sonia_sotomayor"
+    ]
+   },
+   {
+    "type": "dissent",
+    "author": "ketanji_brown_jackson",
+    "joinedBy": []
+   }
+  ],
+  "oyezUrl": "https://www.oyez.org/cases/2025/24-539",
+  "justiaUrl": "https://supreme.justia.com/cases/federal/us/607/24-539/"
+ },
+ {
+  "term": "2025",
+  "docket": "24-5774",
+  "name": "Barrett v. United States",
+  "decided": "2026-01-14",
+  "question": "May a defendant who commits a single act that violates two statutory provisions be convicted under both provisions?",
+  "holding": "A case in which the Court held that a defendant who commits a single act that violates both 18 U.S.C. §924(c)(1)(A)(i)—using, carrying, or possessing a firearm during a federal crime of violence or drug trafficking crime—and §924(j)—which applies when such a violation causes death—may be convicted under only one of those provisions, not both.",
+  "winningParty": "Barrett",
+  "decisionType": "majority opinion",
+  "lineupKey": "MMMMMMMMM",
+  "majority": 9,
+  "minority": 0,
+  "votes": {
+   "ketanji_brown_jackson": "M",
+   "john_g_roberts_jr": "M",
+   "clarence_thomas": "M",
+   "samuel_a_alito_jr": "M",
+   "elena_kagan": "M",
+   "sonia_sotomayor": "M",
+   "neil_gorsuch": "M",
+   "brett_m_kavanaugh": "M",
+   "amy_coney_barrett": "M"
+  },
+  "opinions": [
+   {
+    "type": "majority",
+    "author": "ketanji_brown_jackson",
+    "joinedBy": [
+     "john_g_roberts_jr",
+     "clarence_thomas",
+     "samuel_a_alito_jr",
+     "elena_kagan",
+     "sonia_sotomayor",
+     "neil_gorsuch",
+     "brett_m_kavanaugh",
+     "amy_coney_barrett"
+    ]
+   },
+   {
+    "type": "concurrence",
+    "author": "neil_gorsuch",
+    "joinedBy": []
+   }
+  ],
+  "oyezUrl": "https://www.oyez.org/cases/2025/24-5774",
+  "justiaUrl": "https://supreme.justia.com/cases/federal/us/607/24-5774/"
+ },
+ {
+  "term": "2025",
+  "docket": "24-557",
+  "name": "Villarreal v. Texas",
+  "decided": "2026-02-25",
+  "question": "Does a trial court violate a defendant’s Sixth Amendment right to counsel by preventing the defendant and his lawyer from discussing the defendant’s testimony during an overnight break in the trial?",
+  "holding": "A case in which the Court held that a trial court does not violate a defendant’s Sixth Amendment right to counsel by narrowly banning discussion of the defendant’s ongoing testimony with counsel during an overnight recess.",
+  "winningParty": "Texas",
+  "decisionType": "majority opinion",
+  "lineupKey": "MMMMMMMMM",
+  "majority": 9,
+  "minority": 0,
+  "votes": {
+   "ketanji_brown_jackson": "M",
+   "john_g_roberts_jr": "M",
+   "clarence_thomas": "M",
+   "neil_gorsuch": "M",
+   "samuel_a_alito_jr": "M",
+   "sonia_sotomayor": "M",
+   "brett_m_kavanaugh": "M",
+   "elena_kagan": "M",
+   "amy_coney_barrett": "M"
+  },
+  "opinions": [
+   {
+    "type": "majority",
+    "author": "ketanji_brown_jackson",
+    "joinedBy": [
+     "john_g_roberts_jr",
+     "sonia_sotomayor",
+     "brett_m_kavanaugh",
+     "elena_kagan",
+     "amy_coney_barrett"
+    ]
+   },
+   {
+    "type": "special concurrence",
+    "author": "clarence_thomas",
+    "joinedBy": [
+     "neil_gorsuch"
+    ]
+   },
+   {
+    "type": "concurrence",
+    "author": "samuel_a_alito_jr",
+    "joinedBy": []
+   }
+  ],
+  "oyezUrl": "https://www.oyez.org/cases/2025/24-557",
+  "justiaUrl": "https://supreme.justia.com/cases/federal/us/607/24-557/"
+ },
+ {
+  "term": "2025",
+  "docket": "24-482 ",
+  "name": "Ellingburg v. United States",
+  "decided": "2026-01-20",
+  "question": "Is criminal restitution under the Mandatory Victim Restitution Act (MVRA) penal for purposes of the Ex Post Facto Clause?",
+  "holding": "A case in which the Court held that criminal restitution under the Mandatory Victim Restitution Act (MVRA) is penal for purposes of the Ex Post Facto Clause.",
+  "winningParty": "Ellingburg",
+  "decisionType": "majority opinion",
+  "lineupKey": "MMMMMMMMM",
+  "majority": 9,
+  "minority": 0,
+  "votes": {
+   "brett_m_kavanaugh": "M",
+   "john_g_roberts_jr": "M",
+   "clarence_thomas": "M",
+   "neil_gorsuch": "M",
+   "samuel_a_alito_jr": "M",
+   "sonia_sotomayor": "M",
+   "elena_kagan": "M",
+   "amy_coney_barrett": "M",
+   "ketanji_brown_jackson": "M"
+  },
+  "opinions": [
+   {
+    "type": "majority",
+    "author": "brett_m_kavanaugh",
+    "joinedBy": [
+     "john_g_roberts_jr",
+     "clarence_thomas",
+     "neil_gorsuch",
+     "samuel_a_alito_jr",
+     "sonia_sotomayor",
+     "elena_kagan",
+     "amy_coney_barrett",
+     "ketanji_brown_jackson"
+    ]
+   },
+   {
+    "type": "concurrence",
+    "author": "clarence_thomas",
+    "joinedBy": [
+     "neil_gorsuch"
+    ]
+   }
+  ],
+  "oyezUrl": "https://www.oyez.org/cases/2025/24-482 ",
+  "justiaUrl": "https://supreme.justia.com/cases/federal/us/607/24-482/"
+ },
+ {
+  "term": "2025",
+  "docket": "24-351",
+  "name": "United States Postal Service v. Konan",
+  "decided": "2026-02-24",
+  "question": "Does a claim that Postal Service employees intentionally refused to deliver mail to a designated address arise out of “the loss” or “miscarriage” of postal matter under the Federal Tort Claims Act’s postal-matter exception?",
+  "holding": "The Federal Tort Claims Act's postal exception — which bars lawsuits against the government for claims \"arising out of the loss, miscarriage, or negligent transmission of letters or postal matter\" — shields the United States from liability even when postal workers intentionally fail to deliver mail.",
+  "winningParty": "USPS",
+  "decisionType": "majority opinion",
+  "lineupKey": "MMMDDDMMD",
+  "majority": 5,
+  "minority": 4,
+  "votes": {
+   "clarence_thomas": "M",
+   "john_g_roberts_jr": "M",
+   "samuel_a_alito_jr": "M",
+   "brett_m_kavanaugh": "M",
+   "amy_coney_barrett": "M",
+   "sonia_sotomayor": "D",
+   "elena_kagan": "D",
+   "neil_gorsuch": "D",
+   "ketanji_brown_jackson": "D"
+  },
+  "opinions": [
+   {
+    "type": "majority",
+    "author": "clarence_thomas",
+    "joinedBy": [
+     "john_g_roberts_jr",
+     "samuel_a_alito_jr",
+     "brett_m_kavanaugh",
+     "amy_coney_barrett"
+    ]
+   },
+   {
+    "type": "dissent",
+    "author": "sonia_sotomayor",
+    "joinedBy": [
+     "elena_kagan",
+     "neil_gorsuch",
+     "ketanji_brown_jackson"
+    ]
+   }
+  ],
+  "oyezUrl": "https://www.oyez.org/cases/2025/24-351",
+  "justiaUrl": "https://supreme.justia.com/cases/federal/us/607/24-351/"
+ },
+ {
+  "term": "2025",
+  "docket": "24-724",
+  "name": "Hain Celestial Group, Inc. v. Palmquist",
+  "decided": "2026-02-24",
+  "question": "Must a federal court’s final judgment be set aside if the case did not have complete diversity when it was removed from state court, and can a plaintiff block diversity jurisdiction by updating the complaint after removal to include a valid claim against a nondiverse defendant?",
+  "holding": "A case in which the Court held that a federal court cannot create jurisdiction over a lawsuit through its own erroneous ruling. When an appellate court reverses a district court's mistaken dismissal of a party who destroyed complete diversity, the jurisdictional defect never disappears and any trial verdict must be thrown out.",
+  "winningParty": "Palmquist",
+  "decisionType": "majority opinion",
+  "lineupKey": "MMMMMMMMM",
+  "majority": 9,
+  "minority": 0,
+  "votes": {
+   "sonia_sotomayor": "M",
+   "john_g_roberts_jr": "M",
+   "clarence_thomas": "M",
+   "samuel_a_alito_jr": "M",
+   "elena_kagan": "M",
+   "neil_gorsuch": "M",
+   "brett_m_kavanaugh": "M",
+   "amy_coney_barrett": "M",
+   "ketanji_brown_jackson": "M"
+  },
+  "opinions": [
+   {
+    "type": "majority",
+    "author": "sonia_sotomayor",
+    "joinedBy": [
+     "john_g_roberts_jr",
+     "clarence_thomas",
+     "samuel_a_alito_jr",
+     "elena_kagan",
+     "neil_gorsuch",
+     "brett_m_kavanaugh",
+     "amy_coney_barrett",
+     "ketanji_brown_jackson"
+    ]
+   },
+   {
+    "type": "concurrence",
+    "author": "clarence_thomas",
+    "joinedBy": []
+   }
+  ],
+  "oyezUrl": "https://www.oyez.org/cases/2025/24-724",
+  "justiaUrl": "https://supreme.justia.com/cases/federal/us/607/24-724/"
+ },
+ {
+  "term": "2025",
+  "docket": "23-1209 ",
+  "name": "M & K Employee Solutions, LLC v. Trustees of the IAM National Pension Fund",
+  "decided": "2026-05-21",
+  "question": "When a pension plan calculates how much a departing employer owes “as of the end of the plan year,” must the plan use the financial assumptions it had already adopted by that date, or can it use new assumptions created after that date if they are based on information that was available at year-end?",
+  "holding": "A case in which the Court held that under the Employee Retirement Income Security Act (ERISA), pension plans may calculate an employer's withdrawal liability using actuarial assumptions selected after the statutory measurement date (the last day of the plan year before the employer's withdrawal).",
+  "winningParty": "Trustees of the IAM National Pension Fund",
+  "decisionType": "majority opinion",
+  "lineupKey": "MMMMMMMMM",
+  "majority": 9,
+  "minority": 0,
+  "votes": {
+   "ketanji_brown_jackson": "M",
+   "john_g_roberts_jr": "M",
+   "clarence_thomas": "M",
+   "samuel_a_alito_jr": "M",
+   "sonia_sotomayor": "M",
+   "elena_kagan": "M",
+   "amy_coney_barrett": "M",
+   "neil_gorsuch": "M",
+   "brett_m_kavanaugh": "M"
+  },
+  "opinions": [
+   {
+    "type": "majority",
+    "author": "ketanji_brown_jackson",
+    "joinedBy": [
+     "john_g_roberts_jr",
+     "clarence_thomas",
+     "samuel_a_alito_jr",
+     "sonia_sotomayor",
+     "elena_kagan",
+     "amy_coney_barrett",
+     "neil_gorsuch",
+     "brett_m_kavanaugh"
+    ]
+   }
+  ],
+  "oyezUrl": "https://www.oyez.org/cases/2025/23-1209 ",
+  "justiaUrl": "https://supreme.justia.com/cases/federal/us/608/23-1209/"
+ },
+ {
+  "term": "2025",
+  "docket": "24-171",
+  "name": "Cox Communications, Inc. v. Sony Music Entertainment",
+  "decided": "2026-03-25",
+  "question": "Can an internet service provider be held liable, and found to have acted willfully, for copyright infringement just because it knew users were infringing and did not terminate their access?",
+  "holding": "A case in which the Court held that an internet service provider does not commit \"contributory copyright infringement\" — meaning legal responsibility for copyright violations committed by someone else — simply by continuing to provide internet service to subscribers it knows have been flagged for piracy.",
+  "winningParty": "Cox",
+  "decisionType": "majority opinion",
+  "lineupKey": "MMMMMMMMM",
+  "majority": 9,
+  "minority": 0,
+  "votes": {
+   "clarence_thomas": "M",
+   "sonia_sotomayor": "M",
+   "ketanji_brown_jackson": "M",
+   "john_g_roberts_jr": "M",
+   "samuel_a_alito_jr": "M",
+   "elena_kagan": "M",
+   "amy_coney_barrett": "M",
+   "brett_m_kavanaugh": "M",
+   "neil_gorsuch": "M"
+  },
+  "opinions": [
+   {
+    "type": "majority",
+    "author": "clarence_thomas",
+    "joinedBy": [
+     "john_g_roberts_jr",
+     "samuel_a_alito_jr",
+     "elena_kagan",
+     "amy_coney_barrett",
+     "brett_m_kavanaugh",
+     "neil_gorsuch"
+    ]
+   },
+   {
+    "type": "special concurrence",
+    "author": "sonia_sotomayor",
+    "joinedBy": [
+     "ketanji_brown_jackson"
+    ]
+   }
+  ],
+  "oyezUrl": "https://www.oyez.org/cases/2025/24-171",
+  "justiaUrl": "https://supreme.justia.com/cases/federal/us/607/24-171/"
+ },
+ {
+  "term": "2025",
+  "docket": "24-568",
+  "name": "Bost v. Illinois State Board of Elections",
+  "decided": "2026-01-14",
+  "question": "Do federal candidates have Article III standing to challenge state laws that allow mail-in ballots to be received and counted for two weeks after Election Day based on claims that such laws dilute their votes and force them to incur additional campaign expenses for extended ballot monitoring?",
+  "holding": "A case in which the Court held that a candidate for elected office has standing under Article III of the Constitution to challenge election rules that govern the counting of votes in his election, regardless of whether those rules harm his electoral prospects or increase the cost of his campaign.",
+  "winningParty": "Bost",
+  "decisionType": "majority opinion",
+  "lineupKey": "MMMDMMMMD",
+  "majority": 7,
+  "minority": 2,
+  "votes": {
+   "john_g_roberts_jr": "M",
+   "clarence_thomas": "M",
+   "samuel_a_alito_jr": "M",
+   "ketanji_brown_jackson": "D",
+   "sonia_sotomayor": "D",
+   "elena_kagan": "M",
+   "amy_coney_barrett": "M",
+   "neil_gorsuch": "M",
+   "brett_m_kavanaugh": "M"
+  },
+  "opinions": [
+   {
+    "type": "majority",
+    "author": "john_g_roberts_jr",
+    "joinedBy": [
+     "clarence_thomas",
+     "samuel_a_alito_jr",
+     "neil_gorsuch",
+     "brett_m_kavanaugh"
+    ]
+   },
+   {
+    "type": "dissent",
+    "author": "ketanji_brown_jackson",
+    "joinedBy": [
+     "sonia_sotomayor"
+    ]
+   },
+   {
+    "type": "special concurrence",
+    "author": "amy_coney_barrett",
+    "joinedBy": [
+     "elena_kagan"
+    ]
+   }
+  ],
+  "oyezUrl": "https://www.oyez.org/cases/2025/24-568",
+  "justiaUrl": "https://supreme.justia.com/cases/federal/us/607/24-568/"
+ },
+ {
+  "term": "2025",
+  "docket": "24-624",
+  "name": "Case v. Montana",
+  "decided": "2026-01-14",
+  "question": "May law enforcement enter a home without a search warrant based on less than probable cause that an emergency is occurring?",
+  "holding": "A case in which the Court held that law enforcement may enter a home without a search warrant when they have an objectively reasonable basis for believing that an occupant is seriously injured or faces imminent serious injury.",
+  "winningParty": "Montana",
+  "decisionType": "majority opinion",
+  "lineupKey": "MMMMMMMMM",
+  "majority": 9,
+  "minority": 0,
+  "votes": {
+   "elena_kagan": "M",
+   "sonia_sotomayor": "M",
+   "john_g_roberts_jr": "M",
+   "clarence_thomas": "M",
+   "samuel_a_alito_jr": "M",
+   "neil_gorsuch": "M",
+   "brett_m_kavanaugh": "M",
+   "amy_coney_barrett": "M",
+   "ketanji_brown_jackson": "M"
+  },
+  "opinions": [
+   {
+    "type": "majority",
+    "author": "elena_kagan",
+    "joinedBy": [
+     "sonia_sotomayor",
+     "john_g_roberts_jr",
+     "clarence_thomas",
+     "samuel_a_alito_jr",
+     "neil_gorsuch",
+     "brett_m_kavanaugh",
+     "amy_coney_barrett",
+     "ketanji_brown_jackson"
+    ]
+   },
+   {
+    "type": "concurrence",
+    "author": "sonia_sotomayor",
+    "joinedBy": []
+   }
+  ],
+  "oyezUrl": "https://www.oyez.org/cases/2025/24-624",
+  "justiaUrl": "https://supreme.justia.com/cases/federal/us/607/24-624/"
+ },
+ {
+  "term": "2025",
+  "docket": "24-758",
+  "name": "The GEO Group, Inc. v. Menocal",
+  "decided": "2026-02-25",
+  "question": "Is a pretrial order denying a government contractor's claim to protection under Yearsley v. W.A. Ross Construction Co. immediately appealable under the collateral-order doctrine?",
+  "holding": "A case in which the Court will decide whether an order denying a government contractor’s claim of derivative sovereign immunity under Yearsley v. W.A. Ross Construction Co. is immediately appealable under the collateral-order doctrine, which permits interlocutory appeals of certain non-final orders that conclusively determine important issues separate from the merits.",
+  "winningParty": "Menocal",
+  "decisionType": "majority opinion",
+  "lineupKey": "MMMMMMMMM",
+  "majority": 9,
+  "minority": 0,
+  "votes": {
+   "elena_kagan": "M",
+   "john_g_roberts_jr": "M",
+   "samuel_a_alito_jr": "M",
+   "clarence_thomas": "M",
+   "sonia_sotomayor": "M",
+   "neil_gorsuch": "M",
+   "amy_coney_barrett": "M",
+   "ketanji_brown_jackson": "M",
+   "brett_m_kavanaugh": "M"
+  },
+  "opinions": [
+   {
+    "type": "majority",
+    "author": "elena_kagan",
+    "joinedBy": [
+     "john_g_roberts_jr",
+     "sonia_sotomayor",
+     "neil_gorsuch",
+     "amy_coney_barrett",
+     "ketanji_brown_jackson",
+     "brett_m_kavanaugh"
+    ]
+   },
+   {
+    "type": "special concurrence",
+    "author": "samuel_a_alito_jr",
+    "joinedBy": []
+   },
+   {
+    "type": "special concurrence",
+    "author": "clarence_thomas",
+    "joinedBy": []
+   }
+  ],
+  "oyezUrl": "https://www.oyez.org/cases/2025/24-758",
+  "justiaUrl": "https://supreme.justia.com/cases/federal/us/607/24-758/"
+ },
+ {
+  "term": "2025",
+  "docket": "24-777 ",
+  "name": "Urias-Orellana v. Bondi",
+  "decided": "2026-03-04",
+  "question": "Must a federal court of appeals defer to the BIA’s judgment that a given set of undisputed facts does not demonstrate mistreatment severe enough to constitute “persecution” under 8 U.S.C. § 1101(a)(42)?",
+  "holding": "A case in which the Court held that a federal court of appeals must defer to the Board of Immigration Appeals’ judgment that a given set of undisputed facts does not demonstrate mistreatment severe enough to constitute “persecution” under 8 U.S.C. § 1101(a)(42).",
+  "winningParty": "Bondi",
+  "decisionType": "majority opinion",
+  "lineupKey": "MMMMMMMMM",
+  "majority": 9,
+  "minority": 0,
+  "votes": {
+   "ketanji_brown_jackson": "M",
+   "john_g_roberts_jr": "M",
+   "clarence_thomas": "M",
+   "samuel_a_alito_jr": "M",
+   "sonia_sotomayor": "M",
+   "elena_kagan": "M",
+   "neil_gorsuch": "M",
+   "brett_m_kavanaugh": "M",
+   "amy_coney_barrett": "M"
+  },
+  "opinions": [
+   {
+    "type": "majority",
+    "author": "ketanji_brown_jackson",
+    "joinedBy": [
+     "john_g_roberts_jr",
+     "clarence_thomas",
+     "samuel_a_alito_jr",
+     "sonia_sotomayor",
+     "elena_kagan",
+     "neil_gorsuch",
+     "brett_m_kavanaugh",
+     "amy_coney_barrett"
+    ]
+   }
+  ],
+  "oyezUrl": "https://www.oyez.org/cases/2025/24-777 ",
+  "justiaUrl": "https://supreme.justia.com/cases/federal/us/607/24-777/"
+ },
+ {
+  "term": "2025",
+  "docket": "24-781",
+  "name": "First Choice Women's Resource Centers, Inc. v. Platkin",
+  "decided": "2026-04-29",
+  "question": "When the recipient of a state investigatory subpoena demonstrates an objectively reasonable chill of its First Amendment rights, does a federal court lack jurisdiction to hear the case because those constitutional claims must first be resolved in state court?",
+  "holding": "A case in which the Court held that a government subpoena demanding a private organization's donor records inflicts an immediate injury to First Amendment freedom of association rights, allowing the organization to challenge the demand in federal court before it is enforced.",
+  "winningParty": "First Choice",
+  "decisionType": "majority opinion",
+  "lineupKey": "MMMMMMMMM",
+  "majority": 9,
+  "minority": 0,
+  "votes": {
+   "neil_gorsuch": "M",
+   "john_g_roberts_jr": "M",
+   "clarence_thomas": "M",
+   "samuel_a_alito_jr": "M",
+   "sonia_sotomayor": "M",
+   "elena_kagan": "M",
+   "brett_m_kavanaugh": "M",
+   "amy_coney_barrett": "M",
+   "ketanji_brown_jackson": "M"
+  },
+  "opinions": [
+   {
+    "type": "majority",
+    "author": "neil_gorsuch",
+    "joinedBy": [
+     "john_g_roberts_jr",
+     "clarence_thomas",
+     "samuel_a_alito_jr",
+     "sonia_sotomayor",
+     "elena_kagan",
+     "brett_m_kavanaugh",
+     "amy_coney_barrett",
+     "ketanji_brown_jackson"
+    ]
+   }
+  ],
+  "oyezUrl": "https://www.oyez.org/cases/2025/24-781",
+  "justiaUrl": "https://supreme.justia.com/cases/federal/us/608/24-781/"
+ },
+ {
+  "term": "2025",
+  "docket": "24-783",
+  "name": "Enbridge Energy, LP v. Nessel",
+  "decided": "2026-04-22",
+  "question": "Do district courts have the authority to excuse the thirty-day procedural time limit for removal in 28 U.S.C. § 1446(b)(1)?",
+  "holding": "A case in which the Court held that the thirty-day deadline for moving a lawsuit from state court to federal court is a mandatory rule that judges cannot extend for fairness reasons.",
+  "winningParty": "Nessel",
+  "decisionType": "majority opinion",
+  "lineupKey": "MMMMMMMAM",
+  "majority": 8,
+  "minority": 0,
+  "votes": {
+   "sonia_sotomayor": "M",
+   "john_g_roberts_jr": "M",
+   "clarence_thomas": "M",
+   "samuel_a_alito_jr": "M",
+   "elena_kagan": "M",
+   "ketanji_brown_jackson": "M",
+   "brett_m_kavanaugh": "M",
+   "neil_gorsuch": "M"
+  },
+  "opinions": [
+   {
+    "type": "majority",
+    "author": "sonia_sotomayor",
+    "joinedBy": [
+     "john_g_roberts_jr",
+     "clarence_thomas",
+     "samuel_a_alito_jr",
+     "elena_kagan",
+     "ketanji_brown_jackson",
+     "brett_m_kavanaugh",
+     "neil_gorsuch",
+     "ketanji_brown_jackson"
+    ]
+   }
+  ],
+  "oyezUrl": "https://www.oyez.org/cases/2025/24-783",
+  "justiaUrl": "https://supreme.justia.com/cases/federal/us/608/24-783/"
+ },
+ {
+  "term": "2025",
+  "docket": "24-808",
+  "name": "Coney Island Auto Parts Unlimited, Inc. v. Burton",
+  "decided": "2026-01-20",
+  "question": "Does Federal Rule of Civil Procedure 60(c)(1) impose any time limit to set aside a void default judgment for lack of personal jurisdiction?",
+  "holding": "A case in which the Court held that a motion to set aside a judgment as void under Federal Rule of Civil Procedure 60(b)(4) must be filed within a \"reasonable time\" as required by Rule 60(c)(1).",
+  "winningParty": "Burton",
+  "decisionType": "majority opinion",
+  "lineupKey": "MMMMMMMMM",
+  "majority": 9,
+  "minority": 0,
+  "votes": {
+   "samuel_a_alito_jr": "M",
+   "john_g_roberts_jr": "M",
+   "clarence_thomas": "M",
+   "sonia_sotomayor": "M",
+   "elena_kagan": "M",
+   "neil_gorsuch": "M",
+   "brett_m_kavanaugh": "M",
+   "amy_coney_barrett": "M",
+   "ketanji_brown_jackson": "M"
+  },
+  "opinions": [
+   {
+    "type": "majority",
+    "author": "samuel_a_alito_jr",
+    "joinedBy": [
+     "john_g_roberts_jr",
+     "clarence_thomas",
+     "elena_kagan",
+     "neil_gorsuch",
+     "brett_m_kavanaugh",
+     "amy_coney_barrett",
+     "ketanji_brown_jackson"
+    ]
+   },
+   {
+    "type": "special concurrence",
+    "author": "sonia_sotomayor",
+    "joinedBy": []
+   }
+  ],
+  "oyezUrl": "https://www.oyez.org/cases/2025/24-808",
+  "justiaUrl": "https://supreme.justia.com/cases/federal/us/607/24-808/"
+ },
+ {
+  "term": "2025",
+  "docket": "24-813",
+  "name": "Chevron USA Inc. v. Plaquemines Parish, Louisiana",
+  "decided": "2026-04-17",
+  "question": "Can an oil company being sued in state court for its World War II-era oil production move its case to federal court simply because the oil was produced to meet federal government contracts for wartime fuel—even if the contract did not specifically direct how to produce the oil?",
+  "holding": "A case in which the Court held that the federal officer removal statute allows a defendant to move a state-court suit to federal court if the challenged conduct has a plausible and close relationship to the performance of federal duties.",
+  "winningParty": "Chevron USA",
+  "decisionType": "majority opinion",
+  "lineupKey": "MMAMMMMMM",
+  "majority": 8,
+  "minority": 0,
+  "votes": {
+   "clarence_thomas": "M",
+   "john_g_roberts_jr": "M",
+   "samuel_a_alito_jr": "A",
+   "sonia_sotomayor": "M",
+   "elena_kagan": "M",
+   "brett_m_kavanaugh": "M",
+   "neil_gorsuch": "M",
+   "amy_coney_barrett": "M",
+   "ketanji_brown_jackson": "M"
+  },
+  "opinions": [
+   {
+    "type": "majority",
+    "author": "clarence_thomas",
+    "joinedBy": [
+     "john_g_roberts_jr",
+     "sonia_sotomayor",
+     "elena_kagan",
+     "brett_m_kavanaugh",
+     "neil_gorsuch",
+     "amy_coney_barrett"
+    ]
+   },
+   {
+    "type": "special concurrence",
+    "author": "ketanji_brown_jackson",
+    "joinedBy": []
+   }
+  ],
+  "oyezUrl": "https://www.oyez.org/cases/2025/24-813",
+  "justiaUrl": "https://supreme.justia.com/cases/federal/us/608/24-813/"
+ },
+ {
+  "term": "2025",
+  "docket": "24-924",
+  "name": "Hencely v. Fluor Corporation",
+  "decided": "2026-04-22",
+  "question": "Does Boyle v. United Technologies Corporation, which immunized government contractors from liability under certain circumstances, extend to preempt state tort claims against a government contractor for conduct that breached its contract and violated military orders?",
+  "holding": "A case in which the Court held that federal law does not block state-law lawsuits against military contractors for actions that the government neither ordered nor authorized.",
+  "winningParty": "Hencely",
+  "decisionType": "majority opinion",
+  "lineupKey": "DMDMMADMM",
+  "majority": 5,
+  "minority": 3,
+  "votes": {
+   "clarence_thomas": "M",
+   "john_g_roberts_jr": "D",
+   "samuel_a_alito_jr": "D",
+   "brett_m_kavanaugh": "D",
+   "sonia_sotomayor": "M",
+   "elena_kagan": "M",
+   "ketanji_brown_jackson": "M",
+   "amy_coney_barrett": "M"
+  },
+  "opinions": [
+   {
+    "type": "majority",
+    "author": "clarence_thomas",
+    "joinedBy": [
+     "sonia_sotomayor",
+     "elena_kagan",
+     "ketanji_brown_jackson",
+     "ketanji_brown_jackson",
+     "amy_coney_barrett"
+    ]
+   },
+   {
+    "type": "dissent",
+    "author": "samuel_a_alito_jr",
+    "joinedBy": [
+     "john_g_roberts_jr",
+     "brett_m_kavanaugh"
+    ]
+   }
+  ],
+  "oyezUrl": "https://www.oyez.org/cases/2025/24-924",
+  "justiaUrl": "https://supreme.justia.com/cases/federal/us/608/24-924/"
+ },
+ {
+  "term": "2025",
+  "docket": "24-1056",
+  "name": "Rico v. United States",
+  "decided": "2026-03-25",
+  "question": "Does the fugitive-tolling doctrine apply in the context of supervised release?",
+  "holding": "A case in which the Court held that the Sentencing Reform Act does not permit a defendant's term of supervised release to automatically extend when the defendant absconds.",
+  "winningParty": "Rico",
+  "decisionType": "majority opinion",
+  "lineupKey": "MMDMMMMMM",
+  "majority": 8,
+  "minority": 1,
+  "votes": {
+   "neil_gorsuch": "M",
+   "clarence_thomas": "M",
+   "john_g_roberts_jr": "M",
+   "samuel_a_alito_jr": "D",
+   "sonia_sotomayor": "M",
+   "elena_kagan": "M",
+   "amy_coney_barrett": "M",
+   "brett_m_kavanaugh": "M",
+   "ketanji_brown_jackson": "M"
+  },
+  "opinions": [
+   {
+    "type": "majority",
+    "author": "neil_gorsuch",
+    "joinedBy": [
+     "clarence_thomas",
+     "john_g_roberts_jr",
+     "sonia_sotomayor",
+     "elena_kagan",
+     "amy_coney_barrett",
+     "brett_m_kavanaugh",
+     "ketanji_brown_jackson"
+    ]
+   },
+   {
+    "type": "dissent",
+    "author": "samuel_a_alito_jr",
+    "joinedBy": []
+   }
+  ],
+  "oyezUrl": "https://www.oyez.org/cases/2025/24-1056",
+  "justiaUrl": "https://supreme.justia.com/cases/federal/us/607/24-1056/"
+ },
+ {
+  "term": "2025",
+  "docket": "24-109",
+  "name": "Louisiana v. Callais",
+  "decided": "2026-04-29",
+  "question": "Does Louisiana’s creation of a second majority-Black congressional district constitute unconstitutional racial gerrymandering, even when drawn in response to a federal court finding that the state’s prior single majority-Black district likely violated Section 2 of the Voting Rights Act?",
+  "holding": "A case in which the Court held that Louisiana’s creation of a second majority-Black congressional district constitutes unconstitutional racial gerrymandering, even when drawn in response to a federal court finding that the state’s prior single majority-Black district likely violated Section 2 of the Voting Rights Act.",
+  "winningParty": "Louisiana",
+  "decisionType": "majority opinion",
+  "lineupKey": "MMMDDMMMD",
+  "majority": 6,
+  "minority": 3,
+  "votes": {
+   "samuel_a_alito_jr": "M",
+   "john_g_roberts_jr": "M",
+   "clarence_thomas": "M",
+   "elena_kagan": "D",
+   "sonia_sotomayor": "D",
+   "ketanji_brown_jackson": "D",
+   "neil_gorsuch": "M",
+   "brett_m_kavanaugh": "M",
+   "amy_coney_barrett": "M"
+  },
+  "opinions": [
+   {
+    "type": "majority",
+    "author": "samuel_a_alito_jr",
+    "joinedBy": [
+     "john_g_roberts_jr",
+     "clarence_thomas",
+     "neil_gorsuch",
+     "brett_m_kavanaugh",
+     "amy_coney_barrett"
+    ]
+   },
+   {
+    "type": "concurrence",
+    "author": "clarence_thomas",
+    "joinedBy": [
+     "neil_gorsuch"
+    ]
+   },
+   {
+    "type": "dissent",
+    "author": "elena_kagan",
+    "joinedBy": [
+     "sonia_sotomayor",
+     "ketanji_brown_jackson"
+    ]
+   }
+  ],
+  "oyezUrl": "https://www.oyez.org/cases/2025/24-109",
+  "justiaUrl": "https://supreme.justia.com/cases/federal/us/2024/24-109/"
+ },
+ {
+  "term": "2025",
+  "docket": "24-1021",
+  "name": "Galette v. New Jersey Transit  Corp.",
+  "decided": "2026-03-04",
+  "question": "Is the New Jersey Transit Corporation an arm of the State of New Jersey for interstate sovereign immunity purposes?",
+  "holding": "A case in which the Court held that the New Jersey Transit Corporation is not an arm of the State of New Jersey for interstate sovereign immunity purposes.",
+  "winningParty": "Galette",
+  "decisionType": "majority opinion",
+  "lineupKey": "MMMMMMMMM",
+  "majority": 9,
+  "minority": 0,
+  "votes": {
+   "sonia_sotomayor": "M",
+   "john_g_roberts_jr": "M",
+   "elena_kagan": "M",
+   "clarence_thomas": "M",
+   "samuel_a_alito_jr": "M",
+   "neil_gorsuch": "M",
+   "brett_m_kavanaugh": "M",
+   "amy_coney_barrett": "M",
+   "ketanji_brown_jackson": "M"
+  },
+  "opinions": [
+   {
+    "type": "majority",
+    "author": "sonia_sotomayor",
+    "joinedBy": [
+     "john_g_roberts_jr",
+     "elena_kagan",
+     "clarence_thomas",
+     "samuel_a_alito_jr",
+     "neil_gorsuch",
+     "brett_m_kavanaugh",
+     "amy_coney_barrett",
+     "ketanji_brown_jackson"
+    ]
+   }
+  ],
+  "oyezUrl": "https://www.oyez.org/cases/2025/24-1021",
+  "justiaUrl": "https://supreme.justia.com/cases/federal/us/607/24-1021/"
+ },
+ {
+  "term": "2025",
+  "docket": "24-993",
+  "name": "Olivier v. City of Brandon, Mississippi",
+  "decided": "2026-03-20",
+  "question": "Does Heck v. Humphrey bar Section 1983 claims for purely prospective relief when the plaintiff has already been punished under the challenged law, and does that bar apply even if the plaintiff lacked access to federal habeas relief?",
+  "holding": "A case in which the Court held that its decision in Heck v. Humphrey does not bar claims under 42 U.S.C. § 1983 seeking only prospective relief when the plaintiff has previously been punished under the challenged law.",
+  "winningParty": "Olivier",
+  "decisionType": "majority opinion",
+  "lineupKey": "MMMMMMMMM",
+  "majority": 9,
+  "minority": 0,
+  "votes": {
+   "elena_kagan": "M",
+   "john_g_roberts_jr": "M",
+   "clarence_thomas": "M",
+   "samuel_a_alito_jr": "M",
+   "sonia_sotomayor": "M",
+   "neil_gorsuch": "M",
+   "brett_m_kavanaugh": "M",
+   "amy_coney_barrett": "M",
+   "ketanji_brown_jackson": "M"
+  },
+  "opinions": [
+   {
+    "type": "majority",
+    "author": "elena_kagan",
+    "joinedBy": [
+     "john_g_roberts_jr",
+     "clarence_thomas",
+     "samuel_a_alito_jr",
+     "sonia_sotomayor",
+     "neil_gorsuch",
+     "brett_m_kavanaugh",
+     "amy_coney_barrett",
+     "ketanji_brown_jackson"
+    ]
+   }
+  ],
+  "oyezUrl": "https://www.oyez.org/cases/2025/24-993",
+  "justiaUrl": "https://supreme.justia.com/cases/federal/us/607/24-993/"
+ },
+ {
+  "term": "2025",
+  "docket": "24-1287",
+  "name": "Learning Resources, Inc. v. Trump",
+  "decided": "2026-02-20",
+  "question": "Does the International Emergency Powers Act, 50 U.S.C. § 1701 (“IEEPA”), authorize the president to impose tariffs?",
+  "holding": "A case in which the Court held that the International Emergency Powers Act, 50 U.S.C. § 1701 (“IEEPA”), does not permit the president to impose tariffs.",
+  "winningParty": "Learning Resources",
+  "decisionType": "majority opinion",
+  "lineupKey": "MDDMMMDMM",
+  "majority": 6,
+  "minority": 3,
+  "votes": {
+   "john_g_roberts_jr": "M",
+   "sonia_sotomayor": "M",
+   "elena_kagan": "M",
+   "neil_gorsuch": "M",
+   "amy_coney_barrett": "M",
+   "ketanji_brown_jackson": "M",
+   "clarence_thomas": "D",
+   "brett_m_kavanaugh": "D",
+   "samuel_a_alito_jr": "D"
+  },
+  "opinions": [
+   {
+    "type": "majority",
+    "author": "john_g_roberts_jr",
+    "joinedBy": [
+     "sonia_sotomayor",
+     "elena_kagan",
+     "neil_gorsuch",
+     "amy_coney_barrett",
+     "ketanji_brown_jackson"
+    ]
+   },
+   {
+    "type": "concurrence",
+    "author": "elena_kagan",
+    "joinedBy": [
+     "sonia_sotomayor"
+    ]
+   },
+   {
+    "type": "concurrence",
+    "author": "neil_gorsuch",
+    "joinedBy": []
+   },
+   {
+    "type": "concurrence",
+    "author": "amy_coney_barrett",
+    "joinedBy": []
+   },
+   {
+    "type": "concurrence",
+    "author": "ketanji_brown_jackson",
+    "joinedBy": []
+   },
+   {
+    "type": "dissent",
+    "author": "clarence_thomas",
+    "joinedBy": []
+   },
+   {
+    "type": "dissent",
+    "author": "brett_m_kavanaugh",
+    "joinedBy": [
+     "clarence_thomas",
+     "samuel_a_alito_jr"
+    ]
+   }
+  ],
+  "oyezUrl": "https://www.oyez.org/cases/2025/24-1287",
+  "justiaUrl": "https://supreme.justia.com/cases/federal/us/607/24-1287/"
+ },
+ {
+  "term": "2025",
+  "docket": "24-1238",
+  "name": "Montgomery v. Caribe Transport II, LLC",
+  "decided": "2026-05-14",
+  "question": "Does 49 U.S.C. § 14501(c) preempt a state common-law claim against a broker for negligently selecting a motor carrier or driver?",
+  "holding": "A case in which the Court held that 49 U.S.C. § 14501(c) does not preempt state negligent-hiring lawsuits against transportation brokers, because those claims fall within the law's built-in safety exception preserving state authority to regulate motor vehicle safety.",
+  "winningParty": "Montgomery",
+  "decisionType": "majority opinion",
+  "lineupKey": "MMMMMMMMM",
+  "majority": 9,
+  "minority": 0,
+  "votes": {
+   "brett_m_kavanaugh": "M",
+   "samuel_a_alito_jr": "M",
+   "amy_coney_barrett": "M",
+   "john_g_roberts_jr": "M",
+   "clarence_thomas": "M",
+   "sonia_sotomayor": "M",
+   "elena_kagan": "M",
+   "neil_gorsuch": "M",
+   "ketanji_brown_jackson": "M"
+  },
+  "opinions": [
+   {
+    "type": "concurrence",
+    "author": "brett_m_kavanaugh",
+    "joinedBy": [
+     "samuel_a_alito_jr"
+    ]
+   },
+   {
+    "type": "majority",
+    "author": "amy_coney_barrett",
+    "joinedBy": [
+     "brett_m_kavanaugh",
+     "samuel_a_alito_jr",
+     "john_g_roberts_jr",
+     "clarence_thomas",
+     "sonia_sotomayor",
+     "elena_kagan",
+     "neil_gorsuch",
+     "ketanji_brown_jackson"
+    ]
+   }
+  ],
+  "oyezUrl": "https://www.oyez.org/cases/2025/24-1238",
+  "justiaUrl": "https://supreme.justia.com/cases/federal/us/608/24-1238/"
+ }
+]

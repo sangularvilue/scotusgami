@@ -1,0 +1,622 @@
+[
+ {
+  "term": "2024",
+  "docket": "23-191 ",
+  "name": "Williams v. Reed",
+  "decided": "2025-02-21",
+  "question": "Does a Section 1983 claim brought in state court require the plaintiffs to first exhaust state administrative remedies?",
+  "holding": "A case in which the Court held that exhaustion of state administrative remedies is not required to bring claims under 42 U.S.C. § 1983 in state court if enforcing that requirement effectively immunizes officials from suit.",
+  "winningParty": "Williams",
+  "decisionType": "majority opinion",
+  "lineupKey": "MDDMMDMDM",
+  "majority": 5,
+  "minority": 4,
+  "votes": {
+   "brett_m_kavanaugh": "M",
+   "john_g_roberts_jr": "M",
+   "sonia_sotomayor": "M",
+   "elena_kagan": "M",
+   "ketanji_brown_jackson": "M",
+   "clarence_thomas": "D",
+   "samuel_a_alito_jr": "D",
+   "neil_gorsuch": "D",
+   "amy_coney_barrett": "D"
+  },
+  "opinions": [
+   {
+    "type": "majority",
+    "author": "brett_m_kavanaugh",
+    "joinedBy": [
+     "john_g_roberts_jr",
+     "sonia_sotomayor",
+     "elena_kagan",
+     "ketanji_brown_jackson",
+     "amy_coney_barrett"
+    ]
+   },
+   {
+    "type": "dissent",
+    "author": "clarence_thomas",
+    "joinedBy": [
+     "samuel_a_alito_jr",
+     "neil_gorsuch"
+    ]
+   }
+  ],
+  "oyezUrl": "https://www.oyez.org/cases/2024/23-191 ",
+  "justiaUrl": "https://supreme.justia.com/cases/federal/us/604/23-191/"
+ },
+ {
+  "term": "2024",
+  "docket": "22-7466",
+  "name": "Glossip v. Oklahoma",
+  "decided": "2025-02-25",
+  "question": "May Oklahoma carry out the execution of Richard Glossip in light of the prosecutorial misconduct and other errors that affected his conviction and sentencing?",
+  "holding": "A capital case in which the Court held that the prosecution’s failure to correct false testimony violated the Due Process Clause and remanded the case for a new trial.",
+  "winningParty": "Glossip",
+  "decisionType": "majority opinion",
+  "lineupKey": "MDDMMAMMM",
+  "majority": 6,
+  "minority": 2,
+  "votes": {
+   "sonia_sotomayor": "M",
+   "john_g_roberts_jr": "M",
+   "elena_kagan": "M",
+   "brett_m_kavanaugh": "M",
+   "ketanji_brown_jackson": "M",
+   "amy_coney_barrett": "M",
+   "clarence_thomas": "D",
+   "samuel_a_alito_jr": "D",
+   "neil_gorsuch": "A"
+  },
+  "opinions": [
+   {
+    "type": "majority",
+    "author": "sonia_sotomayor",
+    "joinedBy": [
+     "john_g_roberts_jr",
+     "elena_kagan",
+     "brett_m_kavanaugh",
+     "ketanji_brown_jackson",
+     "amy_coney_barrett"
+    ]
+   },
+   {
+    "type": "concurrence",
+    "author": "amy_coney_barrett",
+    "joinedBy": []
+   },
+   {
+    "type": "dissent",
+    "author": "clarence_thomas",
+    "joinedBy": [
+     "amy_coney_barrett",
+     "samuel_a_alito_jr"
+    ]
+   }
+  ],
+  "oyezUrl": "https://www.oyez.org/cases/2024/22-7466",
+  "justiaUrl": "https://supreme.justia.com/cases/federal/us/604/22-7466/"
+ },
+ {
+  "term": "2024",
+  "docket": "23-583 ",
+  "name": "Bouarfa v. Mayorkas",
+  "decided": "2024-12-10",
+  "question": "May a visa petitioner obtain judicial review when an approved petition is revoked on the basis of nondiscretionary criteria?",
+  "holding": "A case in which the Court held that revocation of an approved visa petition under 8 U.S.C. §1155 based on a sham-marriage determination by the Secretary of Homeland Security is the kind of discretionary decision that falls within the purview of §1252(a)(2)(B)(ii), which strips federal courts of jurisdiction to review certain actions “in the discretion of” the agency.",
+  "winningParty": "Mayorkas",
+  "decisionType": "majority opinion",
+  "lineupKey": "MMMMMMMMM",
+  "majority": 9,
+  "minority": 0,
+  "votes": {
+   "ketanji_brown_jackson": "M",
+   "john_g_roberts_jr": "M",
+   "samuel_a_alito_jr": "M",
+   "clarence_thomas": "M",
+   "sonia_sotomayor": "M",
+   "elena_kagan": "M",
+   "neil_gorsuch": "M",
+   "brett_m_kavanaugh": "M",
+   "amy_coney_barrett": "M"
+  },
+  "opinions": [
+   {
+    "type": "majority",
+    "author": "ketanji_brown_jackson",
+    "joinedBy": [
+     "john_g_roberts_jr",
+     "samuel_a_alito_jr",
+     "clarence_thomas",
+     "sonia_sotomayor",
+     "elena_kagan",
+     "neil_gorsuch",
+     "brett_m_kavanaugh",
+     "amy_coney_barrett"
+    ]
+   }
+  ],
+  "oyezUrl": "https://www.oyez.org/cases/2024/23-583 ",
+  "justiaUrl": "https://supreme.justia.com/cases/federal/us/604/23-583/"
+ },
+ {
+  "term": "2024",
+  "docket": "23-677",
+  "name": "Royal Canin U.S.A. v. Wullschleger",
+  "decided": "2025-01-15",
+  "question": "Can a plaintiff whose state-court lawsuit has been removed by the defendants to federal court seek to have the case sent back to state court by amending the complaint to omit all references to federal law?",
+  "holding": "A case in which the Court held that a plaintiff whose state-court lawsuit was removed by the defendants to federal court can seek to have the case sent back to state court by amending the complaint to omit all references to federal law.",
+  "winningParty": "Wullschleger",
+  "decisionType": "majority opinion",
+  "lineupKey": "MMMMMMMMM",
+  "majority": 9,
+  "minority": 0,
+  "votes": {
+   "elena_kagan": "M",
+   "john_g_roberts_jr": "M",
+   "clarence_thomas": "M",
+   "samuel_a_alito_jr": "M",
+   "sonia_sotomayor": "M",
+   "neil_gorsuch": "M",
+   "brett_m_kavanaugh": "M",
+   "amy_coney_barrett": "M",
+   "ketanji_brown_jackson": "M"
+  },
+  "opinions": [
+   {
+    "type": "majority",
+    "author": "elena_kagan",
+    "joinedBy": [
+     "john_g_roberts_jr",
+     "clarence_thomas",
+     "samuel_a_alito_jr",
+     "sonia_sotomayor",
+     "neil_gorsuch",
+     "brett_m_kavanaugh",
+     "amy_coney_barrett",
+     "ketanji_brown_jackson"
+    ]
+   }
+  ],
+  "oyezUrl": "https://www.oyez.org/cases/2024/23-677",
+  "justiaUrl": "https://supreme.justia.com/cases/federal/us/604/23-677/"
+ },
+ {
+  "term": "2024",
+  "docket": "23-217",
+  "name": "E.M.D. Sales, Inc. v. Carrera",
+  "decided": "2025-01-15",
+  "question": "Is the burden of proof that employers must satisfy to demonstrate the applicability of a Fair Labor Standards Act exemption a mere preponderance of the evidence or clear and convincing evidence?",
+  "holding": "A case in which the Court held that employers seeking to demonstrate the applicability of a Fair Labor Standards Act exemption must do so by a preponderance of the evidence.",
+  "winningParty": "E.M.D. Sales",
+  "decisionType": "majority opinion",
+  "lineupKey": "MMMMMMMMM",
+  "majority": 9,
+  "minority": 0,
+  "votes": {
+   "brett_m_kavanaugh": "M",
+   "john_g_roberts_jr": "M",
+   "samuel_a_alito_jr": "M",
+   "clarence_thomas": "M",
+   "neil_gorsuch": "M",
+   "sonia_sotomayor": "M",
+   "elena_kagan": "M",
+   "amy_coney_barrett": "M",
+   "ketanji_brown_jackson": "M"
+  },
+  "opinions": [
+   {
+    "type": "majority",
+    "author": "brett_m_kavanaugh",
+    "joinedBy": [
+     "john_g_roberts_jr",
+     "samuel_a_alito_jr",
+     "clarence_thomas",
+     "neil_gorsuch",
+     "sonia_sotomayor",
+     "elena_kagan",
+     "amy_coney_barrett",
+     "ketanji_brown_jackson"
+    ]
+   },
+   {
+    "type": "concurrence",
+    "author": "neil_gorsuch",
+    "joinedBy": [
+     "clarence_thomas"
+    ]
+   }
+  ],
+  "oyezUrl": "https://www.oyez.org/cases/2024/23-217",
+  "justiaUrl": "https://supreme.justia.com/cases/federal/us/604/23-217/"
+ },
+ {
+  "term": "2024",
+  "docket": "23-1127",
+  "name": "Wisconsin Bell, Inc. cv. United States, ex rel. Heath",
+  "decided": "2025-02-21",
+  "question": "Do reimbursement requests submitted to the Federal Communications Commission's E-rate program qualify as “claims” under the False Claims Act?",
+  "holding": "A case in which the Court will decide whether reimbursement requests submitted to the Federal Communications Commission's E-rate program are “claims” under the False Claims Act.",
+  "winningParty": "United States",
+  "decisionType": "majority opinion",
+  "lineupKey": "MMMMMMMMM",
+  "majority": 9,
+  "minority": 0,
+  "votes": {
+   "elena_kagan": "M",
+   "john_g_roberts_jr": "M",
+   "clarence_thomas": "M",
+   "brett_m_kavanaugh": "M",
+   "samuel_a_alito_jr": "M",
+   "neil_gorsuch": "M",
+   "sonia_sotomayor": "M",
+   "amy_coney_barrett": "M",
+   "ketanji_brown_jackson": "M"
+  },
+  "opinions": [
+   {
+    "type": "majority",
+    "author": "elena_kagan",
+    "joinedBy": [
+     "john_g_roberts_jr",
+     "clarence_thomas",
+     "brett_m_kavanaugh",
+     "samuel_a_alito_jr",
+     "neil_gorsuch",
+     "sonia_sotomayor",
+     "amy_coney_barrett",
+     "ketanji_brown_jackson"
+    ]
+   },
+   {
+    "type": "concurrence",
+    "author": "clarence_thomas",
+    "joinedBy": [
+     "brett_m_kavanaugh",
+     "samuel_a_alito_jr"
+    ]
+   },
+   {
+    "type": "concurrence",
+    "author": "brett_m_kavanaugh",
+    "joinedBy": [
+     "clarence_thomas"
+    ]
+   }
+  ],
+  "oyezUrl": "https://www.oyez.org/cases/2024/23-1127",
+  "justiaUrl": "https://supreme.justia.com/cases/federal/us/604/23-1127/"
+ },
+ {
+  "term": "2024",
+  "docket": "23-867",
+  "name": "Republic of Hungary v. Simon",
+  "decided": "2025-02-21",
+  "question": "1. Does historical commingling of assets suffice to establish that proceeds of seized property have a commercial nexus with the United States under the expropriation exception to the Foreign Sovereign Immunities Act? 2. Must a plaintiff make out a valid claim that an exception to the FSIA applies at the pleading stage, rather than merely raising a plausible inference? 3. Does a sovereign defendant bear the burden of producing evidence to affirmatively disprove that the proceeds of property taken in violation of international law have a commercial nexus with the United States under the expropriation exception to the FSIA?",
+  "holding": "A case in which the Court held that the expropriation exception to the Foreign Sovereign Immunities Act applies in cases involving seized money and that the plaintiffs must establish a clear trace between expropriated property (or the proceeds from its sale) and property present in the United States in connection with commercial activity.",
+  "winningParty": "Hungary",
+  "decisionType": "majority opinion",
+  "lineupKey": "MMMMMMMMM",
+  "majority": 9,
+  "minority": 0,
+  "votes": {
+   "sonia_sotomayor": "M",
+   "john_g_roberts_jr": "M",
+   "clarence_thomas": "M",
+   "samuel_a_alito_jr": "M",
+   "elena_kagan": "M",
+   "neil_gorsuch": "M",
+   "brett_m_kavanaugh": "M",
+   "amy_coney_barrett": "M",
+   "ketanji_brown_jackson": "M"
+  },
+  "opinions": [
+   {
+    "type": "majority",
+    "author": "sonia_sotomayor",
+    "joinedBy": [
+     "john_g_roberts_jr",
+     "clarence_thomas",
+     "samuel_a_alito_jr",
+     "elena_kagan",
+     "neil_gorsuch",
+     "brett_m_kavanaugh",
+     "amy_coney_barrett",
+     "ketanji_brown_jackson"
+    ]
+   }
+  ],
+  "oyezUrl": "https://www.oyez.org/cases/2024/23-867",
+  "justiaUrl": "https://supreme.justia.com/cases/federal/us/604/23-867/"
+ },
+ {
+  "term": "2024",
+  "docket": "23-997",
+  "name": "Stanley v. City of Sanford, Florida",
+  "decided": "2025-06-20",
+  "question": "Under the Americans with Disabilities Act, does a former employee — who was qualified to perform her job and who earned post-employment benefits while employed — lose her right to sue over discrimination with respect to those benefits solely because she no longer holds her job?",
+  "holding": "A case in which the Court held that the Americans with Disabilities Act does not permit a former employee—who was qualified to perform her job and who earned post-employment benefits while employed—to sue over discrimination with respect to those benefits.",
+  "winningParty": "City of Sanford",
+  "decisionType": "majority opinion",
+  "lineupKey": "MMMMMMMMD",
+  "majority": 8,
+  "minority": 1,
+  "votes": {
+   "neil_gorsuch": "M",
+   "john_g_roberts_jr": "M",
+   "samuel_a_alito_jr": "M",
+   "elena_kagan": "M",
+   "clarence_thomas": "M",
+   "amy_coney_barrett": "M",
+   "brett_m_kavanaugh": "M",
+   "sonia_sotomayor": "M",
+   "ketanji_brown_jackson": "D"
+  },
+  "opinions": [
+   {
+    "type": "majority",
+    "author": "neil_gorsuch",
+    "joinedBy": [
+     "john_g_roberts_jr",
+     "samuel_a_alito_jr",
+     "elena_kagan",
+     "clarence_thomas",
+     "amy_coney_barrett",
+     "brett_m_kavanaugh",
+     "sonia_sotomayor"
+    ]
+   },
+   {
+    "type": "concurrence",
+    "author": "clarence_thomas",
+    "joinedBy": [
+     "amy_coney_barrett"
+    ]
+   },
+   {
+    "type": "concurrence",
+    "author": "sonia_sotomayor",
+    "joinedBy": []
+   },
+   {
+    "type": "dissent",
+    "author": "ketanji_brown_jackson",
+    "joinedBy": [
+     "sonia_sotomayor"
+    ]
+   }
+  ],
+  "oyezUrl": "https://www.oyez.org/cases/2024/23-997",
+  "justiaUrl": "https://supreme.justia.com/cases/federal/us/606/23-997/"
+ },
+ {
+  "term": "2024",
+  "docket": "23-1187",
+  "name": "Food and Drug Administration v. R.J. Reynolds Vapor Co.",
+  "decided": "2025-06-20",
+  "question": "Can retailers who would sell a new tobacco product seek judicial review of the FDA’s denial of a manufacturer’s marketing application under the Tobacco Control Act?",
+  "holding": "A case in which the Court held that the Tobacco Control Act’s provision that “any person adversely affected” by the FDA’s denial of a marketing application may seek judicial review extends to retailers who would sell the new tobacco product, not just the manufacturers who applied for approval.",
+  "winningParty": "R.J. Reynolds Vapor Co.",
+  "decisionType": "majority opinion",
+  "lineupKey": "MMMDMMMMD",
+  "majority": 7,
+  "minority": 2,
+  "votes": {
+   "amy_coney_barrett": "M",
+   "john_g_roberts_jr": "M",
+   "clarence_thomas": "M",
+   "samuel_a_alito_jr": "M",
+   "sonia_sotomayor": "D",
+   "elena_kagan": "M",
+   "neil_gorsuch": "M",
+   "brett_m_kavanaugh": "M",
+   "ketanji_brown_jackson": "D"
+  },
+  "opinions": [
+   {
+    "type": "majority",
+    "author": "amy_coney_barrett",
+    "joinedBy": [
+     "john_g_roberts_jr",
+     "clarence_thomas",
+     "samuel_a_alito_jr",
+     "elena_kagan",
+     "neil_gorsuch",
+     "brett_m_kavanaugh"
+    ]
+   },
+   {
+    "type": "dissent",
+    "author": "ketanji_brown_jackson",
+    "joinedBy": [
+     "sonia_sotomayor"
+    ]
+   }
+  ],
+  "oyezUrl": "https://www.oyez.org/cases/2024/23-1187",
+  "justiaUrl": "https://supreme.justia.com/cases/federal/us/606/23-1187/"
+ },
+ {
+  "term": "2024",
+  "docket": "23-1226",
+  "name": "McLaughlin Chiropractic Associates, Inc. v. McKesson Corporation",
+  "decided": "2025-06-20",
+  "question": "Does the Hobbs Act require a federal district court to accept the Federal Communication Commission’s legal interpretation of the Telephone Consumer Protection Act?",
+  "holding": "A case in which the Court held that the Hobbs Act does not preclude judicial review of an agency's statutory interpretation in district court enforcement proceedings, and district courts must independently determine whether the agency's interpretation is correct under ordinary principles of statutory interpretation.",
+  "winningParty": "McLaughlin",
+  "decisionType": "majority opinion",
+  "lineupKey": "MMMDDMMMD",
+  "majority": 6,
+  "minority": 3,
+  "votes": {
+   "brett_m_kavanaugh": "M",
+   "john_g_roberts_jr": "M",
+   "clarence_thomas": "M",
+   "samuel_a_alito_jr": "M",
+   "sonia_sotomayor": "D",
+   "elena_kagan": "D",
+   "neil_gorsuch": "M",
+   "amy_coney_barrett": "M",
+   "ketanji_brown_jackson": "D"
+  },
+  "opinions": [
+   {
+    "type": "majority",
+    "author": "brett_m_kavanaugh",
+    "joinedBy": [
+     "john_g_roberts_jr",
+     "clarence_thomas",
+     "samuel_a_alito_jr",
+     "neil_gorsuch",
+     "amy_coney_barrett"
+    ]
+   },
+   {
+    "type": "dissent",
+    "author": "elena_kagan",
+    "joinedBy": [
+     "sonia_sotomayor",
+     "ketanji_brown_jackson"
+    ]
+   }
+  ],
+  "oyezUrl": "https://www.oyez.org/cases/2024/23-1226",
+  "justiaUrl": "https://supreme.justia.com/cases/federal/us/606/23-1226/"
+ },
+ {
+  "term": "2024",
+  "docket": "24-20",
+  "name": "Fuld v. Palestine Liberation Organization",
+  "decided": "2025-06-20",
+  "question": "Does the Promoting Security and Justice for Victims of Terrorism Act violate the Due Process Clause of the Fifth Amendment?",
+  "holding": "A case in which the Court held that the personal jurisdiction provision of the Promoting Security and Justice for Victims of Terrorism Act does not violate the Due Process Clause of the Fifth Amendment.",
+  "winningParty": "Fuld",
+  "decisionType": "majority opinion",
+  "lineupKey": "MMMMMMMMM",
+  "majority": 9,
+  "minority": 0,
+  "votes": {
+   "john_g_roberts_jr": "M",
+   "clarence_thomas": "M",
+   "neil_gorsuch": "M",
+   "samuel_a_alito_jr": "M",
+   "sonia_sotomayor": "M",
+   "elena_kagan": "M",
+   "amy_coney_barrett": "M",
+   "brett_m_kavanaugh": "M",
+   "ketanji_brown_jackson": "M"
+  },
+  "opinions": [
+   {
+    "type": "majority",
+    "author": "john_g_roberts_jr",
+    "joinedBy": [
+     "samuel_a_alito_jr",
+     "sonia_sotomayor",
+     "elena_kagan",
+     "amy_coney_barrett",
+     "brett_m_kavanaugh",
+     "ketanji_brown_jackson"
+    ]
+   },
+   {
+    "type": "special concurrence",
+    "author": "clarence_thomas",
+    "joinedBy": [
+     "neil_gorsuch"
+    ]
+   }
+  ],
+  "oyezUrl": "https://www.oyez.org/cases/2024/24-20",
+  "justiaUrl": "https://supreme.justia.com/cases/federal/us/606/24-20/"
+ },
+ {
+  "term": "2024",
+  "docket": "24-7",
+  "name": "Diamond Alternative Energy LLC v. Environmental Protection Agency",
+  "decided": "2025-06-20",
+  "question": "Do the fuel producers have Article III standing to challenge the EPA's approval of California regulations that require automakers to manufacture more electric vehicles and fewer gasoline-powered vehicles?",
+  "holding": "A case in which the Court will decide whether a party may establish the redressability component of Article III standing by pointing to the coercive and predictable effects of regulation on third parties.",
+  "winningParty": "Diamond Alternative Energy",
+  "decisionType": "majority opinion",
+  "lineupKey": "MMMDMMMMD",
+  "majority": 7,
+  "minority": 2,
+  "votes": {
+   "brett_m_kavanaugh": "M",
+   "john_g_roberts_jr": "M",
+   "clarence_thomas": "M",
+   "samuel_a_alito_jr": "M",
+   "sonia_sotomayor": "D",
+   "elena_kagan": "M",
+   "neil_gorsuch": "M",
+   "amy_coney_barrett": "M",
+   "ketanji_brown_jackson": "D"
+  },
+  "opinions": [
+   {
+    "type": "majority",
+    "author": "brett_m_kavanaugh",
+    "joinedBy": [
+     "john_g_roberts_jr",
+     "clarence_thomas",
+     "samuel_a_alito_jr",
+     "elena_kagan",
+     "neil_gorsuch",
+     "amy_coney_barrett"
+    ]
+   },
+   {
+    "type": "dissent",
+    "author": "sonia_sotomayor",
+    "joinedBy": []
+   },
+   {
+    "type": "dissent",
+    "author": "ketanji_brown_jackson",
+    "joinedBy": []
+   }
+  ],
+  "oyezUrl": "https://www.oyez.org/cases/2024/24-7",
+  "justiaUrl": "https://supreme.justia.com/cases/federal/us/606/24-7/"
+ },
+ {
+  "term": "2024",
+  "docket": "24-656",
+  "name": "TikTok, Inc. v. Garland",
+  "decided": "2025-01-17",
+  "question": "Does the Protecting Americans from Foreign Adversary Controlled Applications Act, as applied to TikTok, violate the First Amendment?",
+  "holding": "A case in which the Court will decide whether the Protecting Americans from Foreign Adversary Controlled Applications Act, as applied to TikTok, violates the First Amendment.",
+  "winningParty": "Garland",
+  "decisionType": "per curiam",
+  "lineupKey": "MMMMMMMMM",
+  "majority": 9,
+  "minority": 0,
+  "votes": {
+   "john_g_roberts_jr": "M",
+   "clarence_thomas": "M",
+   "samuel_a_alito_jr": "M",
+   "sonia_sotomayor": "M",
+   "elena_kagan": "M",
+   "neil_gorsuch": "M",
+   "brett_m_kavanaugh": "M",
+   "amy_coney_barrett": "M",
+   "ketanji_brown_jackson": "M"
+  },
+  "opinions": [
+   {
+    "type": "concurrence",
+    "author": "sonia_sotomayor",
+    "joinedBy": []
+   },
+   {
+    "type": "special concurrence",
+    "author": "neil_gorsuch",
+    "joinedBy": []
+   }
+  ],
+  "oyezUrl": "https://www.oyez.org/cases/2024/24-656",
+  "justiaUrl": "https://supreme.justia.com/cases/federal/us/604/24-656/"
+ }
+]

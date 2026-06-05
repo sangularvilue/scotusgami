@@ -1,0 +1,219 @@
+@import "tailwindcss";
+
+:root {
+  /* the engraved reporter — ink, marble cream, gold leaf, slate dissent */
+  --ink: #0d1015;
+  --ink-raised: #131820;
+  --ink-line: #242c38;
+  --cream: #e9e1cd;
+  --cream-dim: #9a958a;
+  --cream-faint: #5d5f60;
+  --gold: #c9a558;
+  --gold-bright: #ecd193;
+  --slate: #6e8fb5;
+  --slate-bright: #9dbede;
+  --absent: #20262f;
+
+  /* glyph cell palette (vivid) */
+  --c-m: var(--gold);
+  --c-d: var(--slate);
+  --c-a: var(--absent);
+}
+
+@theme inline {
+  --color-ink: var(--ink);
+  --color-ink-raised: var(--ink-raised);
+  --color-ink-line: var(--ink-line);
+  --color-cream: var(--cream);
+  --color-cream-dim: var(--cream-dim);
+  --color-cream-faint: var(--cream-faint);
+  --color-gold: var(--gold);
+  --color-gold-bright: var(--gold-bright);
+  --color-slate-dissent: var(--slate);
+  --font-display: var(--font-fraunces);
+  --font-sans: var(--font-manrope);
+  --font-mono: var(--font-jetbrains);
+}
+
+body {
+  background: var(--ink);
+  color: var(--cream);
+  font-family: var(--font-manrope), sans-serif;
+  position: relative;
+}
+
+/* marble atmosphere: faint warm glow up top + grain */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(1100px 480px at 50% -120px, rgba(201, 165, 88, 0.09), transparent 70%),
+    radial-gradient(900px 600px at 85% 110%, rgba(110, 143, 181, 0.05), transparent 70%);
+}
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E");
+}
+
+/* ---------- typographic ornaments ---------- */
+
+.rule-double {
+  border-top: 1px solid var(--gold);
+  position: relative;
+}
+.rule-double::after {
+  content: "";
+  display: block;
+  margin-top: 3px;
+  border-top: 1px solid color-mix(in srgb, var(--gold) 45%, transparent);
+}
+
+.smallcaps {
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.22em;
+}
+
+/* ---------- the wall of squares ---------- */
+
+.sq {
+  position: relative;
+  width: 26px;
+  height: 26px;
+  padding: 3px;
+  border-radius: 4px;
+  background: var(--ink-raised);
+  border: 1px solid var(--ink-line);
+  cursor: pointer;
+  transition: transform 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
+}
+.sq:hover {
+  transform: scale(1.6);
+  z-index: 5;
+  border-color: var(--gold);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.6);
+}
+.sq.hit {
+  border-color: color-mix(in srgb, var(--gold) 55%, var(--ink-line));
+  background: #161c26;
+}
+.sq.hit.multi::after {
+  content: "";
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gold-bright);
+  box-shadow: 0 0 5px rgba(236, 209, 147, 0.8);
+}
+.sq.ghost {
+  --c-m: #2a3140;
+  --c-d: #232b38;
+  --c-a: #161b23;
+  border-color: #1b212b;
+  background: transparent;
+}
+.sq.ghost:hover {
+  --c-m: #4d5870;
+  --c-d: #3e4d63;
+  --c-a: #20262f;
+}
+.sq.pinned {
+  border-color: var(--gold-bright);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--gold) 40%, transparent);
+}
+
+/* the 3×3 pixel glyph: one span, eight box-shadows */
+.glyph {
+  position: absolute;
+  display: block;
+  width: 6px;
+  height: 6px;
+  border-radius: 1px;
+}
+
+/* ---------- case card / tooltip ---------- */
+
+.case-card {
+  position: fixed;
+  z-index: 50;
+  width: 340px;
+  max-height: 70vh;
+  overflow: hidden;
+  background: linear-gradient(180deg, #171d27, #11161e);
+  border: 1px solid var(--ink-line);
+  border-top: 2px solid var(--gold);
+  border-radius: 6px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.65);
+  pointer-events: none;
+  animation: card-in 140ms ease both;
+}
+.case-card.interactive {
+  pointer-events: auto;
+  overflow-y: auto;
+}
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---------- entrance ---------- */
+
+.reveal {
+  animation: reveal 600ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---------- details/summary chrome ---------- */
+
+details.section-fold > summary {
+  cursor: pointer;
+  list-style: none;
+}
+details.section-fold > summary::-webkit-details-marker {
+  display: none;
+}
+details.section-fold > summary .fold-arrow {
+  transition: transform 150ms ease;
+  display: inline-block;
+}
+details.section-fold[open] > summary .fold-arrow {
+  transform: rotate(90deg);
+}
+
+::selection {
+  background: color-mix(in srgb, var(--gold) 35%, transparent);
+}
+
+/* thin gold scrollbar for pinned card */
+.case-card.interactive::-webkit-scrollbar {
+  width: 6px;
+}
+.case-card.interactive::-webkit-scrollbar-thumb {
+  background: var(--ink-line);
+  border-radius: 3px;
+}
