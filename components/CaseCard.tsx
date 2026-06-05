@@ -6,16 +6,18 @@ function SideRow({
   dot,
   label,
   names,
+  pill,
 }: {
   dot: string;
   label: string;
   names: string;
+  pill?: boolean;
 }) {
   if (!names) return null;
   return (
     <div className="flex items-baseline gap-2 text-[12.5px] leading-snug">
       <span
-        className="mt-[1px] inline-block size-2 shrink-0 self-center rounded-[2px]"
+        className={`mt-[1px] inline-block shrink-0 self-center ${pill ? "h-1.5 w-3 rounded-full" : "size-2 rounded-[2px]"}`}
         style={{ background: dot }}
       />
       <span className="smallcaps shrink-0 text-[10.5px] text-cream-faint">{label}</span>
@@ -127,7 +129,7 @@ export default function CaseCard({
 
       <div className="space-y-1 px-4 pb-3 pt-2">
         <SideRow dot="var(--gold)" label="majority" names={names(sides.maj)} />
-        <SideRow dot="var(--slate)" label="dissent" names={names(sides.dis)} />
+        <SideRow dot="var(--slate)" label="dissent" names={names(sides.dis)} pill />
         <SideRow dot="var(--absent)" label="out" names={names(sides.out)} />
       </div>
 

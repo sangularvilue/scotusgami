@@ -52,29 +52,6 @@ function ideologicalRank(ids: string[]): string {
     .join("");
 }
 
-export interface SplitGroup {
-  /** e.g. "9–0" */
-  label: string;
-  majSize: number;
-  disSize: number;
-  keys: string[];
-}
-
-export interface Subsection {
-  /** Justice ids absent in every lineup of this subsection (empty for full bench). */
-  absentIds: string[];
-  groups: SplitGroup[];
-}
-
-export interface Section {
-  /** number of absent justices */
-  k: number;
-  title: string;
-  subsections: Subsection[];
-  /** total enumerated squares in this section */
-  squareCount: number;
-}
-
 function buildKey(absent: string[], dissent: string[]): string {
   const votes: Record<string, Side> = {};
   for (const id of SENIORITY_IDS) votes[id] = "M";
@@ -83,36 +60,31 @@ function buildKey(absent: string[], dissent: string[]): string {
   return encodeLineup(votes);
 }
 
-/** Build the split groups for one fixed absent-set. Excludes ties (|D| == |M|). */
-function groupsForAbsent(absent: string[]): SplitGroup[] {
-  const present = SENIORITY_IDS.filter((id) => !absent.includes(id));
-  const n = present.length;
-  const maxDissent = Math.ceil(n / 2) - 1;
-  const groups: SplitGroup[] = [];
-  for (let d = 0; d <= maxDissent; d++) {
-    const combos = combinations(present, d).sort((a, b) =>
-      ideologicalRank(a).localeCompare(ideologicalRank(b))
-    );
-    groups.push({
-      label: `${n - d}–${d}`,
-      majSize: n - d,
-      disSize: d,
-      keys: combos.map((c) => buildKey(absent, c)),
-    });
-  }
-  return groups;
+export interface SplitGroup {
+  /** e.g. "6–3" */
+  label: string;
+  majSize: number;
+  disSize: number;
+  /** one lineup key per possible outcome (matrix row) */
+  keys: string[];
 }
 
-const SECTION_TITLES = [
-  "Full bench",
-  "One justice out",
-  "Two justices out",
-];
+export interface Section {
+  /** number of absent justices */
+  k: number;
+  title: string;
+  groups: SplitGroup[];
+  /** total enumerated rows in this section */
+  rowCount: number;
+}
+
+const SECTION_TITLES = ["Full bench", "One justice out", "Two justices out"];
 
 /**
- * Enumerate the displayed grid universe: sections for k = 0, 1, 2 absent.
- * Lineups with 3+ absent (or 4–4 ties) are only shown if they actually occur —
- * pass their keys via `extraKeys` to get a trailing section.
+ * Enumerate the displayed universe as matrix rows: for each k (absent count)
+ * a section whose groups are the splits (9–0, 8–1, ...). Within a group, rows
+ * are ordered by absent set then dissent set (ideological order), so missing-
+ * justice blocks and ideological blocs cluster.
  */
 export function enumerateSections(extraKeys: string[] = []): Section[] {
   const sections: Section[] = [];
@@ -120,22 +92,31 @@ export function enumerateSections(extraKeys: string[] = []): Section[] {
     const absentSets = combinations(SENIORITY_IDS, k).sort((a, b) =>
       ideologicalRank(a).localeCompare(ideologicalRank(b))
     );
-    const subsections = absentSets.map((absent) => ({
-      absentIds: absent,
-      groups: groupsForAbsent(absent),
-    }));
-    const squareCount = subsections.reduce(
-      (sum, s) => sum + s.groups.reduce((g, grp) => g + grp.keys.length, 0),
-      0
-    );
-    sections.push({ k, title: SECTION_TITLES[k], subsections, squareCount });
+    const n = N_JUSTICES - k;
+    const maxDissent = Math.ceil(n / 2) - 1;
+    const groups: SplitGroup[] = [];
+    for (let d = 0; d <= maxDissent; d++) {
+      const keys: string[] = [];
+      for (const absent of absentSets) {
+        const present = SENIORITY_IDS.filter((id) => !absent.includes(id));
+        const combos = combinations(present, d).sort((a, b) =>
+          ideologicalRank(a).localeCompare(ideologicalRank(b))
+        );
+        for (const c of combos) keys.push(buildKey(absent, c));
+      }
+      groups.push({ label: `${n - d}–${d}`, majSize: n - d, disSize: d, keys });
+    }
+    sections.push({
+      k,
+      title: SECTION_TITLES[k],
+      groups,
+      rowCount: groups.reduce((s, g) => s + g.keys.length, 0),
+    });
   }
 
   // Anything observed outside the enumerated universe (3+ out, or a 4–4 tie)
   const enumerated = new Set(
-    sections.flatMap((s) =>
-      s.subsections.flatMap((ss) => ss.groups.flatMap((g) => g.keys))
-    )
+    sections.flatMap((s) => s.groups.flatMap((g) => g.keys))
   );
   const extras = [...new Set(extraKeys)].filter((key) => !enumerated.has(key));
   if (extras.length > 0) {
@@ -143,10 +124,8 @@ export function enumerateSections(extraKeys: string[] = []): Section[] {
     sections.push({
       k: 3,
       title: "Rare benches",
-      subsections: [
-        { absentIds: [], groups: [{ label: "other", majSize: 0, disSize: 0, keys: extras }] },
-      ],
-      squareCount: extras.length,
+      groups: [{ label: "other", majSize: 0, disSize: 0, keys: extras }],
+      rowCount: extras.length,
     });
   }
   return sections;
@@ -154,7 +133,6 @@ export function enumerateSections(extraKeys: string[] = []): Section[] {
 
 /** Quick self-check used by scripts/check-grid.ts */
 export function expectedCounts(): Record<number, number> {
-  // k absent → count of valid (|M| > |D|) lineups
   const choose = (n: number, r: number): number => {
     if (r < 0 || r > n) return 0;
     let v = 1;

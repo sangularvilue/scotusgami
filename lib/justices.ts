@@ -5,6 +5,8 @@ export interface Justice {
   fullName: string;
   /** Common shorthand initials */
   short: string;
+  /** 2-char column tick for matrix headers */
+  tick: string;
   /** 0-based seniority index (Chief first, then by appointment date) */
   seniority: number;
   /** 0-based ideological display index (left to right) */
@@ -17,15 +19,15 @@ export interface Justice {
  * Array is in SENIORITY order — this order defines lineup-key positions.
  */
 export const JUSTICES: Justice[] = [
-  { id: "john_g_roberts_jr",     lastName: "Roberts",   fullName: "John G. Roberts, Jr.",  short: "JR",  seniority: 0, ideology: 3 },
-  { id: "clarence_thomas",       lastName: "Thomas",    fullName: "Clarence Thomas",       short: "CT",  seniority: 1, ideology: 8 },
-  { id: "samuel_a_alito_jr",     lastName: "Alito",     fullName: "Samuel A. Alito, Jr.",  short: "SA",  seniority: 2, ideology: 7 },
-  { id: "sonia_sotomayor",       lastName: "Sotomayor", fullName: "Sonia Sotomayor",       short: "SS",  seniority: 3, ideology: 0 },
-  { id: "elena_kagan",           lastName: "Kagan",     fullName: "Elena Kagan",           short: "EK",  seniority: 4, ideology: 1 },
-  { id: "neil_gorsuch",          lastName: "Gorsuch",   fullName: "Neil Gorsuch",          short: "NG",  seniority: 5, ideology: 6 },
-  { id: "brett_m_kavanaugh",     lastName: "Kavanaugh", fullName: "Brett M. Kavanaugh",    short: "BK",  seniority: 6, ideology: 4 },
-  { id: "amy_coney_barrett",     lastName: "Barrett",   fullName: "Amy Coney Barrett",     short: "ACB", seniority: 7, ideology: 5 },
-  { id: "ketanji_brown_jackson", lastName: "Jackson",   fullName: "Ketanji Brown Jackson", short: "KBJ", seniority: 8, ideology: 2 },
+  { id: "john_g_roberts_jr",     lastName: "Roberts",   fullName: "John G. Roberts, Jr.",  short: "JR",  tick: "Ro", seniority: 0, ideology: 3 },
+  { id: "clarence_thomas",       lastName: "Thomas",    fullName: "Clarence Thomas",       short: "CT",  tick: "Th", seniority: 1, ideology: 8 },
+  { id: "samuel_a_alito_jr",     lastName: "Alito",     fullName: "Samuel A. Alito, Jr.",  short: "SA",  tick: "Al", seniority: 2, ideology: 7 },
+  { id: "sonia_sotomayor",       lastName: "Sotomayor", fullName: "Sonia Sotomayor",       short: "SS",  tick: "So", seniority: 3, ideology: 0 },
+  { id: "elena_kagan",           lastName: "Kagan",     fullName: "Elena Kagan",           short: "EK",  tick: "Ka", seniority: 4, ideology: 2 },
+  { id: "neil_gorsuch",          lastName: "Gorsuch",   fullName: "Neil Gorsuch",          short: "NG",  tick: "Go", seniority: 5, ideology: 6 },
+  { id: "brett_m_kavanaugh",     lastName: "Kavanaugh", fullName: "Brett M. Kavanaugh",    short: "BK",  tick: "Kv", seniority: 6, ideology: 5 },
+  { id: "amy_coney_barrett",     lastName: "Barrett",   fullName: "Amy Coney Barrett",     short: "ACB", tick: "Ba", seniority: 7, ideology: 4 },
+  { id: "ketanji_brown_jackson", lastName: "Jackson",   fullName: "Ketanji Brown Jackson", short: "KBJ", tick: "Ja", seniority: 8, ideology: 1 },
 ];
 
 /** Justice ids in seniority order (lineup-key position order). */

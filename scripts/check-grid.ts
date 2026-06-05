@@ -6,7 +6,7 @@ const expected = expectedCounts();
 let ok = true;
 for (const s of sections) {
   const want = expected[s.k];
-  const got = s.squareCount;
+  const got = s.rowCount;
   const pass = want === got;
   ok &&= pass;
   console.log(`k=${s.k} (${s.title}): ${got} squares (expected ${want}) ${pass ? "✓" : "✗"}`);
@@ -14,7 +14,7 @@ for (const s of sections) {
 
 // Round-trip a few keys
 const allKeys = sections.flatMap((s) =>
-  s.subsections.flatMap((ss) => ss.groups.flatMap((g) => g.keys))
+  s.groups.flatMap((g) => g.keys)
 );
 const unique = new Set(allKeys);
 console.log(`total enumerated: ${allKeys.length}, unique: ${unique.size} ${allKeys.length === unique.size ? "✓" : "✗ DUPES"}`);

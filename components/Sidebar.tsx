@@ -1,9 +1,10 @@
 "use client";
 
 import { memo } from "react";
+import Strip from "./Strip";
 import { fmtDate } from "@/lib/format";
-import { glyphStyle } from "@/lib/glyph";
 import { splitLabel } from "@/lib/grid";
+import { stripWidth } from "@/lib/strip";
 import type { CaseRecord } from "@/lib/types";
 
 interface Stat {
@@ -12,10 +13,13 @@ interface Stat {
   total: number;
 }
 
-const MiniGlyph = memo(function MiniGlyph({ k }: { k: string }) {
+const MiniStrip = memo(function MiniStrip({ k }: { k: string }) {
   return (
-    <span className="relative block h-[26px] w-[26px] shrink-0 rounded-[3px] border border-ink-line bg-ink p-[3px]">
-      <span className="glyph" style={glyphStyle(k)} />
+    <span
+      className="block shrink-0 rounded-[3px] border border-ink-line bg-ink px-[3px] py-[3px] leading-[0]"
+      style={{ width: stripWidth(22, 1) + 8 }}
+    >
+      <Strip k={k} cellW={22} cellH={10} gap={1} />
     </span>
   );
 });
@@ -82,9 +86,9 @@ export default function Sidebar({
               <li key={`${c.term}-${c.docket}`}>
                 <button
                   onClick={() => onJump(c.lineupKey)}
-                  className="group flex w-full cursor-pointer items-start gap-3 text-left"
+                  className="group flex w-full cursor-pointer flex-col gap-1.5 text-left"
                 >
-                  <MiniGlyph k={c.lineupKey} />
+                  <MiniStrip k={c.lineupKey} />
                   <span className="min-w-0">
                     <span className="block truncate font-display text-[13px] italic leading-tight text-cream group-hover:text-gold-bright">
                       {c.name}

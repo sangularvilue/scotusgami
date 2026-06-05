@@ -36,10 +36,10 @@ export default async function Home() {
         </h1>
         <div className="rule-double mx-auto mt-5 w-56" />
         <p className="mx-auto mt-5 max-w-xl text-[14px] leading-relaxed text-cream-dim">
-          A justice may join the majority, dissent, or take no part. Every
-          square below is one possible alignment of the Roberts Court since
-          Justice Jackson joined — October Term 2022 to today. The vivid ones
-          have actually happened.
+          A justice may join the majority, dissent, or take no part. Every row
+          below is one possible alignment of the Roberts Court since Justice
+          Jackson joined — October Term 2022 to today. The lit ones have
+          actually happened.
         </p>
       </header>
 
