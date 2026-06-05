@@ -247,8 +247,9 @@ export default function Game({ cases }: { cases: GameCase[] }) {
 
       <p className="mt-4 text-center text-[12px] leading-relaxed text-cream-faint">
         Name a case where both justices were on the same side — together in the
-        majority or together in dissent. Unanimous decisions don&apos;t count.
-        One use per case.
+        majority or together in dissent. Only the current bench counts: cases
+        decided since Justice Jackson joined (October Term 2022 onward).
+        Unanimous decisions don&apos;t count. One use per case.
       </p>
 
       {/* game-over panel */}
@@ -313,7 +314,8 @@ export default function Game({ cases }: { cases: GameCase[] }) {
               ))}
               {query.trim().length >= 2 && matches.length === 0 && (
                 <li className="px-2 py-1.5 text-[12px] text-cream-faint">
-                  no cases match
+                  no cases match — remember, only divided decisions from the
+                  current bench (OT2022–) are in the pool
                 </li>
               )}
             </ul>

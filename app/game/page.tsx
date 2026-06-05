@@ -9,7 +9,7 @@ export const revalidate = 3600;
 export const metadata: Metadata = {
   title: "Immaculate Bench — SCOTUSgami",
   description:
-    "The daily Supreme Court grid. Name a case where both justices were on the same side. Unanimous decisions don't count.",
+    "The daily Supreme Court grid. Name a case from the current bench (OT2022–) where both justices were on the same side. Unanimous decisions don't count.",
 };
 
 export default async function GamePage() {
@@ -30,6 +30,9 @@ export default async function GamePage() {
           Immaculate <span className="italic text-gold-bright">Bench</span>
         </h1>
         <div className="rule-double mx-auto mt-4 w-40" />
+        <p className="smallcaps mt-3 text-[11px] text-cream-faint">
+          the Roberts–Jackson court · OT2022 to today
+        </p>
       </header>
 
       <Game cases={gameCases} />
