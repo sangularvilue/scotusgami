@@ -96,6 +96,11 @@ interface HeaderSets {
   match?: Set<number>; // category matches (category headers)
 }
 
+// cap on selection weight: keeps appearance roughly proportional to case count
+// for small/mid clues while stopping the few giant clues (Criminal Procedure,
+// "Conservative result", long-tenured justices) from dominating every board.
+const WEIGHT_CAP = 150;
+
 function buildHeaderSets(notable: PoolCase[]): { justices: HeaderSets[]; cats: HeaderSets[] } {
   const justices: HeaderSets[] = [];
   for (const j of GAME_JUSTICES) {
@@ -107,7 +112,12 @@ function buildHeaderSets(notable: PoolCase[]): { justices: HeaderSets[]; cats: H
       else if (s === "D") dis.add(i);
     });
     if (maj.size + dis.size > 0)
-      justices.push({ header: { kind: "justice", id: j.id }, maj, dis, weight: maj.size + dis.size });
+      justices.push({
+        header: { kind: "justice", id: j.id },
+        maj,
+        dis,
+        weight: Math.min(maj.size + dis.size, WEIGHT_CAP),
+      });
   }
   const cats: HeaderSets[] = [];
   for (const cat of Object.values(CATEGORY_BY_ID)) {
@@ -116,7 +126,11 @@ function buildHeaderSets(notable: PoolCase[]): { justices: HeaderSets[]; cats: H
       if (cat.test(c)) match.add(i);
     });
     if (match.size > 0)
-      cats.push({ header: { kind: "category", id: cat.id }, match, weight: match.size });
+      cats.push({
+        header: { kind: "category", id: cat.id },
+        match,
+        weight: Math.min(match.size, WEIGHT_CAP),
+      });
   }
   return { justices, cats };
 }
@@ -188,14 +202,20 @@ export function generatePuzzle(notable: PoolCase[], date: string): Puzzle {
     return a;
   };
 
-  // Difficulty: every cell needs ≥ MIN notable answers; category-involving
-  // cells are also capped so broad clues (e.g. "Conservative result") can't
-  // make a gimme — they only survive when paired with something narrow. The
-  // single justice×justice cell is exempt (two aligned long-tenured justices
-  // share inherently many cases).
+  // Difficulty: every cell needs ≥ MIN notable answers. Headers are drawn
+  // weighted by case count (proportional appearance), but among the day's
+  // weighted draws we keep the *tightest* board — the one whose busiest
+  // category cell is smallest — so broad clues like "Conservative result"
+  // only survive when paired with something narrow, never as a gimme. Stop
+  // early once a comfortably tight board appears. The single justice×justice
+  // cell is exempt from the tightness measure (two aligned long-tenured
+  // justices inherently share many cases).
   const MIN = 3;
-  const attempt = (cap: number): HeaderSets[] | null => {
-    for (let t = 0; t < 3000; t++) {
+  const GOOD_ENOUGH = 24; // busiest category cell ≤ this → accept immediately
+  const tightest = (minCells: number): HeaderSets[] | null => {
+    let best: HeaderSets[] | null = null;
+    let bestMax = Infinity;
+    for (let t = 0; t < 4000; t++) {
       const js = weightedPick(justices, 2, rng);
       if (js.length < 2) return null;
       const cs = weightedPick(cats, 4, rng);
@@ -203,23 +223,30 @@ export function generatePuzzle(notable: PoolCase[], date: string): Puzzle {
       const rows = shuffle([js[0], cs[0], cs[1]]);
       const cols = shuffle([js[1], cs[2], cs[3]]);
       let ok = true;
+      let maxCat = 0;
       for (const r of rows) {
         for (const c of cols) {
           const n = cellCount(r, c);
-          const jj = r.header.kind === "justice" && c.header.kind === "justice";
-          if (n < MIN || (!jj && n > cap)) {
+          if (n < minCells) {
             ok = false;
             break;
           }
+          const jj = r.header.kind === "justice" && c.header.kind === "justice";
+          if (!jj) maxCat = Math.max(maxCat, n);
         }
         if (!ok) break;
       }
-      if (ok) return [...rows, ...cols];
+      if (!ok) continue;
+      if (maxCat < bestMax) {
+        bestMax = maxCat;
+        best = [...rows, ...cols];
+        if (bestMax <= GOOD_ENOUGH) break;
+      }
     }
-    return null;
+    return best;
   };
 
-  const headers = attempt(45) ?? attempt(90) ?? attempt(200) ?? attempt(Infinity);
+  const headers = tightest(MIN) ?? tightest(1);
   if (!headers) {
     // pathological fallback
     const js = justices.slice(0, 2);
