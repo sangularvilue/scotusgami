@@ -91,6 +91,7 @@ function mulberry32(seed: number): () => number {
 interface HeaderSets {
   header: Header;
   weight: number; // notable coverage — drives proportional appearance
+  topic?: boolean; // category is a case-topic (issueArea / granular issue)
   maj?: Set<number>; // justice in majority, non-unanimous (justice headers)
   dis?: Set<number>; // justice in dissent (justice headers)
   match?: Set<number>; // category matches (category headers)
@@ -130,6 +131,7 @@ function buildHeaderSets(notable: PoolCase[]): { justices: HeaderSets[]; cats: H
         header: { kind: "category", id: cat.id },
         match,
         weight: Math.min(match.size, WEIGHT_CAP),
+        topic: cat.group === "Topic",
       });
   }
   return { justices, cats };
@@ -202,32 +204,56 @@ export function generatePuzzle(notable: PoolCase[], date: string): Puzzle {
     return a;
   };
 
-  // Difficulty: every cell needs ≥ MIN notable answers. Headers are drawn
-  // weighted by case count (proportional appearance), but among the day's
-  // weighted draws we keep the *tightest* board — the one whose busiest
-  // category cell is smallest — so broad clues like "Conservative result"
-  // only survive when paired with something narrow, never as a gimme. Stop
-  // early once a comfortably tight board appears. The single justice×justice
-  // cell is exempt from the tightness measure (two aligned long-tenured
-  // justices inherently share many cases).
+  // Board composition: ≥3 justice labels (≥1 on each axis), at most one
+  // case-topic category, and up to 6 justices possible. Pick the justice count
+  // for the day (weighted toward fewer, so all-justice boards are rare but can
+  // happen), draw that many justices + the rest as categories (≤1 topic), all
+  // weighted by case count for proportional appearance. Then keep the tightest
+  // board — the one whose busiest category cell is smallest — so broad clues
+  // never make a gimme. justice×justice cells are exempt (two aligned justices
+  // inherently share many cases), which is why all-justice boards stay easy.
   const MIN = 3;
-  const GOOD_ENOUGH = 24; // busiest category cell ≤ this → accept immediately
+  const GOOD_ENOUGH = 24;
+
+  const topicCats = cats.filter((c) => c.topic);
+  const nonTopicCats = cats.filter((c) => !c.topic);
+  const pickOne = (pool: HeaderSets[], used: Set<HeaderSets>): HeaderSets | null =>
+    weightedPick(pool, 1, rng, used)[0] ?? null;
+
+  // categories with ≤1 topic
+  const drawCats = (n: number): HeaderSets[] => {
+    const out: HeaderSets[] = [];
+    const used = new Set<HeaderSets>();
+    let topicUsed = false;
+    for (let i = 0; i < n; i++) {
+      const pool = topicUsed ? nonTopicCats : [...nonTopicCats, ...topicCats];
+      const pick = pickOne(pool, used);
+      if (!pick) break;
+      used.add(pick);
+      out.push(pick);
+      if (pick.topic) topicUsed = true;
+    }
+    return out;
+  };
+
+  // justice count is fixed for the day (weighted toward fewer; 6 is rare but
+  // possible) — chosen here, outside the search, so the difficulty objective
+  // can't collapse every board to all-justices (which have no category cells).
+  const r0 = rng();
+  const nJ = r0 < 0.5 ? 3 : r0 < 0.8 ? 4 : r0 < 0.95 ? 5 : 6;
+
   const tightest = (minCells: number): HeaderSets[] | null => {
     let best: HeaderSets[] | null = null;
     let bestMax = Infinity;
     for (let t = 0; t < 4000; t++) {
-      // 3 justices + 3 categories: one axis gets 2 justices + 1 category, the
-      // other 1 justice + 2 categories. Guarantees ≥1 justice on every axis
-      // and ≥3 justice labels overall.
-      const js = weightedPick(justices, 3, rng);
-      if (js.length < 3) return null;
-      const cs = weightedPick(cats, 3, rng);
-      if (cs.length < 3) return null;
-      const axisA = shuffle([js[0], js[1], cs[0]]); // 2 justices + 1 category
-      const axisB = shuffle([js[2], cs[1], cs[2]]); // 1 justice + 2 categories
-      const rowsGet2 = rng() < 0.5;
-      const rows = rowsGet2 ? axisA : axisB;
-      const cols = rowsGet2 ? axisB : axisA;
+      const js = weightedPick(justices, nJ, rng);
+      if (js.length < nJ) return null;
+      const cs = drawCats(6 - js.length);
+      if (js.length + cs.length < 6) continue;
+      // reserve one justice per axis, distribute the rest
+      const rest = shuffle([...js.slice(2), ...cs]);
+      const rows = shuffle([js[0], rest[0], rest[1]]);
+      const cols = shuffle([js[1], rest[2], rest[3]]);
       let ok = true;
       let maxCat = 0;
       for (const r of rows) {
@@ -254,13 +280,13 @@ export function generatePuzzle(notable: PoolCase[], date: string): Puzzle {
 
   const headers = tightest(MIN) ?? tightest(1);
   if (!headers) {
-    // pathological fallback
-    const js = justices.slice(0, 2);
-    const cs = cats.slice(0, 4);
+    // pathological fallback: 3 justices + 3 non-topic categories
+    const js = justices.slice(0, 3);
+    const cs = nonTopicCats.slice(0, 3);
     return {
       date,
-      rows: [js[0], cs[0], cs[1]].map((s) => s.header),
-      cols: [js[1], cs[2], cs[3]].map((s) => s.header),
+      rows: [js[0], js[1], cs[0]].map((s) => s.header),
+      cols: [js[2], cs[1], cs[2]].map((s) => s.header),
     };
   }
   return {
