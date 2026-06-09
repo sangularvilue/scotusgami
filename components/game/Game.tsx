@@ -84,6 +84,7 @@ export default function Game() {
   const [showRules, setShowRules] = useState(false);
   const [revealData, setRevealData] = useState<RevealAnswer[][] | null>(null);
   const [revealCell, setRevealCell] = useState<number | null>(null);
+  const [solutionMode, setSolutionMode] = useState<"optimal" | "famous" | null>(null);
   const [copied, setCopied] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const statsRecorded = useRef(false);
@@ -216,6 +217,31 @@ export default function Game() {
   const colOf = (i: number) => puzzle.cols[i % 3];
   const rowOf = (i: number) => puzzle.rows[Math.floor(i / 3)];
 
+  // greedy distinct assignment (respects the no-reuse rule): optimal = rarest
+  // (max points) per cell, famous = most famous (max fame = min points) per cell
+  const buildSolution = (mode: "optimal" | "famous") => {
+    if (!revealData) return null;
+    const used = new Set<string>();
+    const cellsOut: (RevealAnswer | null)[] = Array(9).fill(null);
+    let total = 0;
+    const order = [...Array(9).keys()].sort(
+      (a, b) => revealData[a].length - revealData[b].length
+    );
+    for (const i of order) {
+      const list = mode === "optimal" ? revealData[i] : [...revealData[i]].reverse();
+      const pick = list.find((a) => !used.has(a.id));
+      if (pick) {
+        used.add(pick.id);
+        cellsOut[i] = pick;
+        total += pick.points;
+      }
+    }
+    return { cells: cellsOut, total };
+  };
+  const optimalSol = over && revealData ? buildSolution("optimal") : null;
+  const famousSol = over && revealData ? buildSolution("famous") : null;
+  const curSolution = solutionMode === "optimal" ? optimalSol : solutionMode === "famous" ? famousSol : null;
+
   const shareText = () => {
     const grid = [0, 1, 2]
       .map((r) => [0, 1, 2].map((c) => (cells[r * 3 + c] ? "🟦" : "⬛")).join(""))
@@ -289,7 +315,19 @@ export default function Game() {
                       : "border-ink-line bg-ink-raised/60 hover:border-cream-faint"
                   } ${flashing ? (flash!.ok ? "outline outline-2 outline-gold" : "outline outline-2 outline-red-400/70") : ""}`}
                 >
-                  {fill ? (
+                  {curSolution && curSolution.cells[i] ? (
+                    <>
+                      <span className="line-clamp-4 font-display text-[11px] italic leading-tight text-slate-dissent">
+                        {curSolution.cells[i]!.name}
+                      </span>
+                      <span className="mt-1 font-mono text-[9px] text-cream-faint">
+                        {curSolution.cells[i]!.split} · OT{curSolution.cells[i]!.term}
+                      </span>
+                      <span className="mt-0.5 font-mono text-[9px] text-slate-dissent">
+                        +{curSolution.cells[i]!.points}
+                      </span>
+                    </>
+                  ) : fill ? (
                     <>
                       <span className="line-clamp-4 font-display text-[11px] italic leading-tight text-cream">
                         {fill.name}
@@ -331,17 +369,38 @@ export default function Game() {
             {immaculate ? "Immaculate." : `${filled} of 9`}
             <span className="ml-3 text-gold-bright">{score} pts</span>
           </div>
-          <button
-            onClick={() => {
-              navigator.clipboard.writeText(shareText()).then(() => {
-                setCopied(true);
-                setTimeout(() => setCopied(false), 1500);
-              });
-            }}
-            className="mt-3 cursor-pointer rounded border border-gold/60 px-4 py-1.5 font-mono text-[11px] text-gold hover:bg-gold/10"
-          >
-            {copied ? "copied" : "share"}
-          </button>
+          <div className="mt-3 flex flex-wrap items-center justify-center gap-2">
+            <button
+              onClick={() => {
+                navigator.clipboard.writeText(shareText()).then(() => {
+                  setCopied(true);
+                  setTimeout(() => setCopied(false), 1500);
+                });
+              }}
+              className="cursor-pointer rounded border border-gold/60 px-4 py-1.5 font-mono text-[11px] text-gold hover:bg-gold/10"
+            >
+              {copied ? "copied" : "share"}
+            </button>
+            <button
+              onClick={() => setSolutionMode((m) => (m === "optimal" ? null : "optimal"))}
+              disabled={!optimalSol}
+              className={`cursor-pointer rounded border px-4 py-1.5 font-mono text-[11px] disabled:opacity-40 ${solutionMode === "optimal" ? "border-slate-dissent bg-slate-dissent/15 text-slate-dissent" : "border-ink-line text-cream-dim hover:border-cream-faint"}`}
+            >
+              optimal{optimalSol ? ` · ${optimalSol.total}` : ""}
+            </button>
+            <button
+              onClick={() => setSolutionMode((m) => (m === "famous" ? null : "famous"))}
+              disabled={!famousSol}
+              className={`cursor-pointer rounded border px-4 py-1.5 font-mono text-[11px] disabled:opacity-40 ${solutionMode === "famous" ? "border-slate-dissent bg-slate-dissent/15 text-slate-dissent" : "border-ink-line text-cream-dim hover:border-cream-faint"}`}
+            >
+              most famous{famousSol ? ` · ${famousSol.total}` : ""}
+            </button>
+          </div>
+          {solutionMode && (
+            <p className="mt-2 font-mono text-[10px] text-cream-faint">
+              showing the {solutionMode === "optimal" ? "rarest (highest-scoring)" : "most famous"} case per square
+            </p>
+          )}
         </div>
       )}
 

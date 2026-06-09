@@ -139,6 +139,23 @@ async function main() {
   }
   console.log(`total cited→title: ${citeToTitle.size}`);
 
+  // cases later overruled by a subsequent decision (curated Wikipedia list).
+  // First case-link + first cite per row = the overruled precedent.
+  const overruledCites = new Set<string>();
+  {
+    const html = await getText(
+      "https://en.wikipedia.org/wiki/List_of_overruled_United_States_Supreme_Court_decisions"
+    );
+    if (html) {
+      for (const row of html.split("<tr")) {
+        if (!/href="\/wiki\/[^"]*"[^>]*title="[^"]*\sv\.\s[^"]*"/.test(row)) continue;
+        const cite = normCite(plain(row));
+        if (cite) overruledCites.add(cite);
+      }
+      console.log(`overruled list: ${overruledCites.size} cited cases`);
+    }
+  }
+
   const poolPath = join(process.cwd(), "data", "pool.json");
   const pool = JSON.parse(readFileSync(poolPath, "utf8")) as PoolCase[];
   const byTerm = new Map<number, PoolCase[]>();
@@ -177,6 +194,7 @@ async function main() {
   }
 
   let matched = 0;
+  let overruledN = 0;
   for (const c of pool) {
     if (titleByCase.has(c.id)) {
       c.notable = true;
@@ -185,8 +203,11 @@ async function main() {
       c.notable = false;
       c.fame = 0;
     }
+    const cite = c.usCite ? normCite(c.usCite) : null;
+    c.overruled = !!cite && overruledCites.has(cite);
+    if (c.overruled) overruledN++;
   }
-  console.log(`pool join: ${matched}/${pool.length} notable`);
+  console.log(`pool join: ${matched}/${pool.length} notable, ${overruledN} overruled`);
 
   if (process.argv.includes("--join-only")) {
     writeFileSync(poolPath, JSON.stringify(pool));

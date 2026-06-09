@@ -22,6 +22,7 @@ export interface PoolCase {
   petitioner: number | null;
   respondent: number | null;
   overruledPrecedent?: boolean; // this case overruled an earlier precedent (SCDB precedentAlteration)
+  overruled?: boolean; // this case was itself later overruled (Wikipedia list)
   notable?: boolean;
   fame?: number;
 }

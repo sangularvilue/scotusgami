@@ -12,7 +12,8 @@ export interface Category {
     | "Party"
     | "Era"
     | "Direction"
-    | "Clerkship";
+    | "Clerkship"
+    | "Precedent";
   test: (c: PoolCase) => boolean;
 }
 
@@ -159,6 +160,18 @@ const STATIC: Category[] = [
     label: "Decided while a sitting Senator clerked",
     group: "Clerkship",
     test: (c) => SENATOR_CLERK_TERMS.has(c.term),
+  },
+  {
+    id: "prec:overruled-prior",
+    label: "Overturned a prior precedent",
+    group: "Precedent",
+    test: (c) => c.overruledPrecedent === true,
+  },
+  {
+    id: "prec:was-overruled",
+    label: "Was later overruled",
+    group: "Precedent",
+    test: (c) => c.overruled === true,
   },
 ];
 
