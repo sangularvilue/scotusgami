@@ -216,12 +216,18 @@ export function generatePuzzle(notable: PoolCase[], date: string): Puzzle {
     let best: HeaderSets[] | null = null;
     let bestMax = Infinity;
     for (let t = 0; t < 4000; t++) {
-      const js = weightedPick(justices, 2, rng);
-      if (js.length < 2) return null;
-      const cs = weightedPick(cats, 4, rng);
-      if (cs.length < 4) return null;
-      const rows = shuffle([js[0], cs[0], cs[1]]);
-      const cols = shuffle([js[1], cs[2], cs[3]]);
+      // 3 justices + 3 categories: one axis gets 2 justices + 1 category, the
+      // other 1 justice + 2 categories. Guarantees ≥1 justice on every axis
+      // and ≥3 justice labels overall.
+      const js = weightedPick(justices, 3, rng);
+      if (js.length < 3) return null;
+      const cs = weightedPick(cats, 3, rng);
+      if (cs.length < 3) return null;
+      const axisA = shuffle([js[0], js[1], cs[0]]); // 2 justices + 1 category
+      const axisB = shuffle([js[2], cs[1], cs[2]]); // 1 justice + 2 categories
+      const rowsGet2 = rng() < 0.5;
+      const rows = rowsGet2 ? axisA : axisB;
+      const cols = rowsGet2 ? axisB : axisA;
       let ok = true;
       let maxCat = 0;
       for (const r of rows) {
