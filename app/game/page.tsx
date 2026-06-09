@@ -1,24 +1,19 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Game from "@/components/game/Game";
-import { loadData } from "@/lib/data";
-import { toGameCases } from "@/lib/game";
 
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Immaculate Bench — SCOTUSgami",
   description:
-    "The daily Supreme Court grid. Name a case from the current bench (OT2022–) where both justices were on the same side. Unanimous decisions don't count.",
+    "The daily Supreme Court grid. Name a case that fits both clues — a justice in the majority, a topic, an author, an era. 1946 to today.",
 };
 
-export default async function GamePage() {
-  const { cases } = await loadData();
-  const gameCases = toGameCases(cases);
-
+export default function GamePage() {
   return (
     <main className="relative z-10 flex min-h-screen flex-col">
-      <header className="reveal mx-auto w-full max-w-2xl px-5 pb-8 pt-10 text-center">
+      <header className="reveal mx-auto w-full max-w-3xl px-5 pb-6 pt-10 text-center">
         <Link
           href="/"
           className="font-mono text-[11px] text-cream-faint hover:text-gold-bright"
@@ -31,14 +26,14 @@ export default async function GamePage() {
         </h1>
         <div className="rule-double mx-auto mt-4 w-40" />
         <p className="smallcaps mt-3 text-[11px] text-cream-faint">
-          the Roberts–Jackson court · OT2022 to today
+          every U.S. Supreme Court decision · 1946 to today
         </p>
       </header>
 
-      <Game cases={gameCases} />
+      <Game />
 
       <footer className="mt-auto border-t border-ink-line">
-        <div className="mx-auto flex w-full max-w-2xl items-baseline justify-between px-5 py-5 font-mono text-[11px] text-cream-faint">
+        <div className="mx-auto flex w-full max-w-3xl items-baseline justify-between px-5 py-5 font-mono text-[11px] text-cream-faint">
           <span>a new bench every day</span>
           <Link href="/" className="text-cream-dim hover:text-gold-bright">
             scotusgami
