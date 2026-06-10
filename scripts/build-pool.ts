@@ -64,7 +64,7 @@ async function main() {
     const files = unzipSync(buf);
     csvBytes = files[Object.keys(files).find((f) => f.endsWith(".csv"))!];
   } else csvBytes = buf;
-  const text = Buffer.from(csvBytes).toString("latin1");
+  const text = Buffer.from(csvBytes).toString("utf8");
   const rows = parseCsv(text);
   const header = rows[0].map((h) => h.replace(/^﻿/, "").replace(/^"|"$/g, ""));
   const col = (n: string) => {

@@ -113,16 +113,25 @@ export interface SearchHit {
 }
 
 export function search(q: string, limit = 10): SearchHit[] {
-  const s = q.trim().toLowerCase();
-  if (s.length < 2) return [];
-  const out: SearchHit[] = [];
+  // tokenized: every word in the query must appear in the case name (ignoring
+  // "v"/"v." and punctuation), so "allen v milligan" matches "ALLEN v.
+  // MILLIGAN" and word order / punctuation don't matter.
+  // strip apostrophes (so "womens" matches "Women's") then split on punctuation
+  const norm = (x: string) => x.toLowerCase().replace(/['’`]/g, "");
+  const tokens = norm(q)
+    .split(/[^a-z0-9]+/)
+    .filter((t) => t && t !== "v");
+  if (tokens.length === 0) return [];
+  const hits: { c: PoolCase; score: number }[] = [];
   for (const c of pool()) {
-    if (c.name.toLowerCase().includes(s)) {
-      out.push({ id: c.id, name: c.name, term: c.term });
-      if (out.length >= limit) break;
+    const name = norm(c.name);
+    if (tokens.every((t) => name.includes(t))) {
+      // rank: shorter names first (closer to the bare case name), then recency
+      hits.push({ c, score: name.length });
     }
   }
-  return out;
+  hits.sort((a, b) => a.score - b.score || b.c.term - a.c.term);
+  return hits.slice(0, limit).map(({ c }) => ({ id: c.id, name: c.name, term: c.term }));
 }
 
 export interface RevealAnswer {
