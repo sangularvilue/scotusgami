@@ -1,6 +1,6 @@
 import { encodeLineup } from "./grid";
 import { JUSTICE_BY_ID, NATURAL_COURT_START } from "./justices";
-import type { CaseRecord, OpinionInfo, Side } from "./types";
+import type { BingoCase, CaseRecord, OpinionInfo, Side } from "./types";
 
 const API = "https://api.oyez.org";
 const FETCH_DELAY_MS = 150;
@@ -154,12 +154,68 @@ export function parseCase(detail: OyezCaseDetail): ParseOutcome {
   return { record };
 }
 
+/* ---------- bingo (opinion-authorship) parsing ---------- */
+
+// UTC month index → SCOTUS argument sitting. Sittings run Oct–Apr; anything
+// else (rare summer reargument, etc.) maps to null and is dropped from the card.
+const SITTING_BY_MONTH: (string | null)[] = [
+  "January", "February", "March", "April", null, null,
+  null, null, null, "October", "November", "December",
+];
+
+function sittingOf(iso: string | null): string | null {
+  if (!iso) return null;
+  return SITTING_BY_MONTH[new Date(`${iso}T00:00:00Z`).getUTCMonth()] ?? null;
+}
+
+function timelineDate(detail: OyezCaseDetail, event: string): string | null {
+  const ts = detail.timeline?.find((t) => t.event === event)?.dates?.slice(-1)[0];
+  return ts ? new Date(ts * 1000).toISOString().slice(0, 10) : null;
+}
+
+/** The author of the Court's controlling opinion (majority, else plurality). */
+function majorityAuthorOf(detail: OyezCaseDetail): string | null {
+  const decision = detail.decisions?.find((d) => d.votes && d.votes.length > 0);
+  if (!decision?.votes) return null;
+  for (const want of ["majority", "plurality"]) {
+    const v = decision.votes.find(
+      (vote) => vote.opinion_type === want && resolveJustice(vote.member)
+    );
+    if (v) return resolveJustice(v.member);
+  }
+  return null;
+}
+
+/**
+ * Reduce an Oyez case to its bingo-card row. Only argued merits cases qualify
+ * (they have an "Argued" timeline event); cert-stage entries return null. A case
+ * with no "Decided" date is still pending — that's how Trump v. Cook et al. show
+ * up as open cells.
+ */
+export function parseBingoCase(detail: OyezCaseDetail): BingoCase | null {
+  const argued = timelineDate(detail, "Argued");
+  if (!argued) return null;
+  const decided = timelineDate(detail, "Decided");
+  return {
+    term: detail.term,
+    docket: detail.docket_number.trim(),
+    name: detail.name,
+    argued,
+    sitting: sittingOf(argued),
+    decided,
+    majorityAuthor: decided ? majorityAuthorOf(detail) : null,
+    oyezUrl: `https://www.oyez.org/cases/${detail.term}/${detail.docket_number}`,
+  };
+}
+
 /* ---------- scraping ---------- */
 
 export interface TermScrape {
   term: number;
   cases: CaseRecord[];
   skipped: { name: string; reason: string }[];
+  /** every argued merits case (decided or pending), for the bingo card */
+  bingo: BingoCase[];
 }
 
 export async function scrapeTerm(
@@ -172,6 +228,7 @@ export async function scrapeTerm(
   log(`term ${term}: ${list.length} cases listed`);
   const cases: CaseRecord[] = [];
   const skipped: { name: string; reason: string }[] = [];
+  const bingo: BingoCase[] = [];
   for (const summary of list) {
     await sleep(FETCH_DELAY_MS);
     try {
@@ -179,14 +236,16 @@ export async function scrapeTerm(
       const { record, skipped: reason } = parseCase(detail);
       if (record) cases.push(record);
       else skipped.push({ name: summary.name, reason: reason ?? "?" });
+      const bc = parseBingoCase(detail);
+      if (bc) bingo.push(bc);
     } catch (e) {
       skipped.push({ name: summary.name, reason: `fetch error: ${e}` });
     }
   }
   log(
-    `term ${term}: parsed ${cases.length}, skipped ${skipped.length}`
+    `term ${term}: parsed ${cases.length}, skipped ${skipped.length}, bingo ${bingo.length}`
   );
-  return { term, cases, skipped };
+  return { term, cases, skipped, bingo };
 }
 
 /** The term currently in progress (terms start the first Monday of October). */

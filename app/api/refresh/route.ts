@@ -1,14 +1,26 @@
 import { NextRequest, NextResponse } from "next/server";
+import { sendNewGamiEmail, type NewGami } from "@/lib/email";
 import { fetchFame } from "@/lib/fame";
+import { splitLabel } from "@/lib/grid";
 import { currentTerm, scrapeTerm } from "@/lib/oyez";
-import { loadMeta, loadTerm, saveMeta, saveTerm } from "@/lib/redis";
+import { fetchDecided, reconcileDecided } from "@/lib/scotusgov";
+import {
+  loadAllCases,
+  loadMeta,
+  loadTerm,
+  saveBingo,
+  saveMeta,
+  saveTerm,
+} from "@/lib/redis";
+import type { CaseRecord } from "@/lib/types";
 
 export const maxDuration = 300; // Oyez scrape is sequential and polite
 export const dynamic = "force-dynamic";
 
 /**
  * Daily cron (11:15 EST / 16:15 UTC, see vercel.json): re-scrape the current
- * term from Oyez and upsert it into Redis.
+ * term from Oyez, upsert it into Redis, refresh the bingo card, and email when
+ * a never-before-seen alignment lights up.
  */
 export async function GET(req: NextRequest) {
   const auth = req.headers.get("authorization");
@@ -17,7 +29,14 @@ export async function GET(req: NextRequest) {
   }
 
   const term = currentTerm();
-  const { cases, skipped } = await scrapeTerm(term);
+
+  // Snapshot the alignments that already exist BEFORE we overwrite this term,
+  // so we can tell which the new scrape introduces.
+  const beforeMeta = await loadMeta();
+  const before = await loadAllCases();
+  const prevKeys = new Set(before.map((c) => c.lineupKey));
+
+  const { cases, skipped, bingo } = await scrapeTerm(term);
 
   // keep existing fame scores; fetch fame only for newly-seen dockets
   const prev = await loadTerm(term);
@@ -35,11 +54,40 @@ export async function GET(req: NextRequest) {
   }
   await saveTerm(term, cases);
 
-  const meta = await loadMeta();
-  const terms = [...new Set([...(meta?.terms ?? []), term])].sort();
-  // caseCount tracks the latest full picture; recompute cheaply from meta + this term
-  const { loadAllCases } = await import("@/lib/redis");
+  // Reconcile the bingo cases against the Court's slip-opinion list so the card
+  // reflects same-day hand-downs even while Oyez lags. Degrade to Oyez-only if
+  // the fetch fails (e.g. the site blocks the request).
+  let bingoCases = bingo;
+  try {
+    bingoCases = reconcileDecided(bingo, await fetchDecided(term));
+  } catch {
+    /* keep Oyez-only bingo */
+  }
+  await saveBingo(term, bingoCases);
+
+  // Brand-new alignments contributed by this term (one entry per lineup key).
+  const newByKey = new Map<string, CaseRecord>();
+  for (const c of cases) {
+    if (!prevKeys.has(c.lineupKey) && !newByKey.has(c.lineupKey)) {
+      newByKey.set(c.lineupKey, c);
+    }
+  }
+  const newGamis: NewGami[] = [...newByKey.values()].map((c) => ({
+    lineupKey: c.lineupKey,
+    split: splitLabel(c.lineupKey),
+    caseName: c.name,
+    oyezUrl: c.oyezUrl,
+    decided: c.decided,
+  }));
+
+  // Only notify once a baseline exists — never blast on the first seed.
+  const email =
+    beforeMeta && prevKeys.size > 0
+      ? await sendNewGamiEmail(newGamis)
+      : { sent: false, reason: "no baseline yet" };
+
   const all = await loadAllCases();
+  const terms = [...new Set([...(beforeMeta?.terms ?? []), term])].sort();
   await saveMeta({
     lastRefresh: new Date().toISOString(),
     caseCount: all.length,
@@ -50,6 +98,9 @@ export async function GET(req: NextRequest) {
     term,
     parsed: cases.length,
     skipped: skipped.length,
+    bingo: bingo.length,
     totalCases: all.length,
+    newGamis: newGamis.length,
+    email,
   });
 }

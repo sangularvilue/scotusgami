@@ -29,7 +29,11 @@ Each case maps to a 9-character key over the justices in seniority order
   replace SCDB ones per-docket automatically as Oyez catches up.
 
 A Vercel cron hits `/api/refresh` daily at 11:15 ET to re-scrape the current
-term into Redis.
+term into Redis. The same job rebuilds the **bingo card** (`/bingo` — opinion
+authorship by argument sitting, with the justices still "owed" an opinion
+highlighted) and, when a never-before-seen alignment lights up, sends a
+notification email via Resend (`RESEND_API_KEY` / `EMAIL_TO` / `EMAIL_FROM`;
+no-op if unset).
 
 ## Stack
 
@@ -41,6 +45,7 @@ npx tsx scripts/check-grid.ts      # combinatorics sanity checks
 npx tsx scripts/backfill.ts        # scrape all terms from Oyez → data/
 npx tsx scripts/supplement-scdb.ts 2024   # SCDB gap-fill for one term → data/
 npx tsx scripts/load-redis.ts      # push data/ into Upstash
+npx tsx scripts/build-bingo.ts     # scrape current-term argued cases → data/bingo-*.json + Redis
 ```
 
 Note: build/dev use `--webpack` (Turbopack rejects projects on mapped network

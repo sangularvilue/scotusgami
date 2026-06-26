@@ -42,3 +42,23 @@ export interface Meta {
   caseCount: number;
   terms: number[];
 }
+
+/**
+ * A single argued merits case as it appears on the bingo card: its argument
+ * sitting, whether it has come down yet, and (if decided) who wrote the Court's
+ * opinion. Pending cases (argued, not yet decided) carry a null author.
+ */
+export interface BingoCase {
+  term: string;
+  docket: string;
+  name: string;
+  /** ISO date (YYYY-MM-DD) the case was argued, or null if unknown */
+  argued: string | null;
+  /** argument sitting label: "October" … "April", or null if off-calendar */
+  sitting: string | null;
+  /** ISO date decided, or null while still pending */
+  decided: string | null;
+  /** justice id of the majority/plurality opinion author, or null */
+  majorityAuthor: string | null;
+  oyezUrl: string;
+}

@@ -41,12 +41,20 @@ export default async function Home() {
           Jackson joined — October Term 2022 to today. The lit ones have
           actually happened.
         </p>
-        <a
-          href="/game"
-          className="mt-5 inline-block rounded border border-gold/60 px-4 py-1.5 font-mono text-[12px] text-gold transition-colors hover:bg-gold/10"
-        >
-          ▦ play today&apos;s Immaculate Bench →
-        </a>
+        <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
+          <a
+            href="/game"
+            className="inline-block rounded border border-gold/60 px-4 py-1.5 font-mono text-[12px] text-gold transition-colors hover:bg-gold/10"
+          >
+            ▦ play today&apos;s Immaculate Bench →
+          </a>
+          <a
+            href="/bingo"
+            className="inline-block rounded border border-gold/60 px-4 py-1.5 font-mono text-[12px] text-gold transition-colors hover:bg-gold/10"
+          >
+            ◇ opinion-authorship bingo →
+          </a>
+        </div>
       </header>
 
       <Board

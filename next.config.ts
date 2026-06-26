@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
   outputFileTracingIncludes: {
     "/game": ["./data/pool.json"],
     "/api/game/**": ["./data/pool.json"],
+    "/bingo": ["./data/bingo-*.json"],
   },
 };
 

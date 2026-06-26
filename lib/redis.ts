@@ -1,6 +1,6 @@
 import { Redis } from "@upstash/redis";
 import { mergeTerm } from "./merge";
-import type { CaseRecord, Meta } from "./types";
+import type { BingoCase, CaseRecord, Meta } from "./types";
 
 let client: Redis | null = null;
 function redis(): Redis {
@@ -13,6 +13,7 @@ function redis(): Redis {
 
 const termKey = (term: number | string) => `scotusgami:term:${term}`;
 const supplementKey = (term: number | string) => `scotusgami:supplement:${term}`;
+const bingoKey = (term: number | string) => `scotusgami:bingo:${term}`;
 const META_KEY = "scotusgami:meta";
 const TERMS_KEY = "scotusgami:terms";
 
@@ -51,6 +52,17 @@ export async function loadAllCases(): Promise<CaseRecord[]> {
   }
   all.sort((a, b) => a.decided.localeCompare(b.decided) || a.docket.localeCompare(b.docket));
   return all;
+}
+
+/** Argued merits cases (decided + pending) for the bingo card. */
+export async function saveBingo(term: number, cases: BingoCase[]): Promise<void> {
+  await redis().set(bingoKey(term), JSON.stringify(cases));
+}
+
+export async function loadBingo(term: number): Promise<BingoCase[]> {
+  const blob = await redis().get<string | BingoCase[] | null>(bingoKey(term));
+  if (!blob) return [];
+  return typeof blob === "string" ? (JSON.parse(blob) as BingoCase[]) : blob;
 }
 
 export async function saveMeta(meta: Meta): Promise<void> {
