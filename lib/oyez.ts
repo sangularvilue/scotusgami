@@ -193,7 +193,13 @@ function majorityAuthorOf(detail: OyezCaseDetail): string | null {
  * up as open cells.
  */
 export function parseBingoCase(detail: OyezCaseDetail): BingoCase | null {
-  const argued = timelineDate(detail, "Argued");
+  // Use the latest sitting the case was heard in: a case set for reargument
+  // (often a prior-term holdover) belongs to its reargument sitting, not the
+  // original one — e.g. Louisiana v. Callais, argued Mar 2025, reargued Oct 2025.
+  const heard = [timelineDate(detail, "Argued"), timelineDate(detail, "Reargued")]
+    .filter((d): d is string => !!d)
+    .sort();
+  const argued = heard.length ? heard[heard.length - 1] : null;
   if (!argued) return null;
   const decided = timelineDate(detail, "Decided");
   return {
