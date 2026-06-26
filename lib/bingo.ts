@@ -1,16 +1,16 @@
 import { SENIORITY_IDS } from "./justices";
 import type { BingoCase } from "./types";
 
-/** Argument sittings in calendar order. */
-export const SITTINGS = [
-  "October",
-  "November",
-  "December",
-  "January",
-  "February",
-  "March",
-  "April",
-] as const;
+const MONTHS = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December",
+];
+
+// A SCOTUS argument sitting often straddles a month boundary (e.g. the February
+// sitting runs late Feb into early March), so we can't bucket by calendar month.
+// Instead we group argued cases into sessions: a gap larger than this many days
+// between consecutive argument dates starts a new sitting.
+const SESSION_GAP_DAYS = 12;
 
 export interface BingoCaseLite {
   name: string;
@@ -57,14 +57,33 @@ const lite = (c: BingoCase): BingoCaseLite => ({
  * game — the justices who could still be holding a pending opinion.
  */
 export function buildBingoGrid(term: number, cases: BingoCase[]): BingoGrid {
-  const perJustice: Record<string, number> = {};
+  // Only cases argued during this term's sittings. Drops holdovers argued before
+  // the term opened (a case carried over from the prior term and decided now).
+  const termStart = `${term}-10-01`;
+  const argued = cases
+    .filter((c) => c.argued && c.argued >= termStart)
+    .sort((a, b) => a.argued!.localeCompare(b.argued!));
 
-  const sittings: BingoSitting[] = SITTINGS.map((sitting) => {
-    const inSitting = cases.filter((c) => c.sitting === sitting);
+  // Split the chronological list into sessions on large date gaps.
+  const sessions: BingoCase[][] = [];
+  let prevTs: number | null = null;
+  for (const c of argued) {
+    const ts = Date.parse(`${c.argued}T00:00:00Z`);
+    const newSession =
+      prevTs === null || (ts - prevTs) / 86_400_000 > SESSION_GAP_DAYS;
+    if (newSession) sessions.push([]);
+    sessions[sessions.length - 1].push(c);
+    prevTs = ts;
+  }
+
+  const perJustice: Record<string, number> = {};
+  const sittings: BingoSitting[] = sessions.map((group) => {
+    const sitting =
+      MONTHS[new Date(`${group[0].argued}T00:00:00Z`).getUTCMonth()];
     const byAuthor: Record<string, BingoCaseLite[]> = {};
     const pending: BingoCaseLite[] = [];
 
-    for (const c of inSitting) {
+    for (const c of group) {
       if (c.decided && c.majorityAuthor) {
         (byAuthor[c.majorityAuthor] ??= []).push(lite(c));
         perJustice[c.majorityAuthor] = (perJustice[c.majorityAuthor] ?? 0) + 1;
@@ -81,13 +100,13 @@ export function buildBingoGrid(term: number, cases: BingoCase[]): BingoGrid {
       : [];
 
     return { sitting, byAuthor, pending, authored, owed };
-  }).filter((row) => row.authored.length > 0 || row.pending.length > 0);
+  });
 
   return {
     term,
     sittings,
     perJustice,
-    decidedCount: cases.filter((c) => c.decided).length,
-    pendingCount: cases.filter((c) => !c.decided).length,
+    decidedCount: argued.filter((c) => c.decided).length,
+    pendingCount: argued.filter((c) => !c.decided).length,
   };
 }
