@@ -106,7 +106,12 @@ export function buildBingoGrid(term: number, cases: BingoCase[]): BingoGrid {
     term,
     sittings,
     perJustice,
-    decidedCount: argued.filter((c) => c.decided).length,
+    // authored opinions actually shown — excludes DIG'd / per-curiam argued
+    // cases (decided but no assigned author), so it matches the visible tiles.
+    decidedCount: sittings.reduce(
+      (n, s) => n + Object.values(s.byAuthor).reduce((m, a) => m + a.length, 0),
+      0
+    ),
     pendingCount: argued.filter((c) => !c.decided).length,
   };
 }
