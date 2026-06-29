@@ -4,7 +4,7 @@ import { buildBingoGrid, type BingoGrid } from "@/lib/bingo";
 import { currentTerm } from "@/lib/oyez";
 import type { BingoCase } from "@/lib/types";
 
-export const revalidate = 3600;
+export const revalidate = 600;
 
 export const metadata: Metadata = {
   title: "SCOTUSgami · Bingo",

@@ -1,3 +1,4 @@
+import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 import { sendNewGamiEmail, type NewGami } from "@/lib/email";
 import { fetchFame } from "@/lib/fame";
@@ -93,6 +94,12 @@ export async function GET(req: NextRequest) {
     caseCount: all.length,
     terms,
   });
+
+  // Push the new data to the pages immediately rather than waiting for ISR —
+  // on the Hobby plan this cron only runs once a day, so the refresh should be
+  // reflected the moment it lands.
+  revalidatePath("/bingo");
+  revalidatePath("/");
 
   return NextResponse.json({
     term,
