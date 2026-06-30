@@ -74,6 +74,8 @@ export interface BingoCaseLite {
   docket: string;
   oyezUrl: string;
   decided: string | null;
+  /** ISO date cert was granted — shown on granted-pool cards */
+  granted?: string | null;
   /** companion case names folded in via consolidation (lead tile only) */
   consolidatedWith?: string[];
 }
@@ -115,6 +117,7 @@ const lite = (c: BingoCase): BingoCaseLite => ({
   docket: c.docket,
   oyezUrl: c.oyezUrl,
   decided: c.decided,
+  ...(c.granted ? { granted: c.granted } : {}),
   ...(c.consolidatedWith?.length ? { consolidatedWith: c.consolidatedWith } : {}),
 });
 

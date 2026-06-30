@@ -66,24 +66,12 @@ export async function GET(req: NextRequest) {
   }
   await saveBingo(term, bingoCases);
 
-  // Also refresh the upcoming term's bingo so its granted-but-uncalendared
-  // cases show on the board before the Court publishes its argument calendar.
-  // It carries no decided cases yet, so we only need the (cheap) bingo list.
-  let nextBingo = 0;
-  try {
-    const next = term + 1;
-    const { bingo: nb } = await scrapeTerm(next);
-    let nbCases = nb;
-    try {
-      nbCases = reconcileDecided(nb, await fetchDecided(next));
-    } catch {
-      /* slip list usually empty for a not-yet-started term; ignore */
-    }
-    await saveBingo(next, nbCases);
-    nextBingo = nbCases.length;
-  } catch {
-    /* leave the upcoming term as-is if its scrape fails */
-  }
+  // NOTE: the upcoming term's granted pool (scotusgami:bingo:{term+1}) is NOT
+  // refreshed here. Oyez badly under-lists a not-yet-argued term, so that pool
+  // is sourced from the Court's authoritative Granted & Noted list via
+  // `scripts/build-granted.ts` (run it when the Court grants more cases). The
+  // cron deliberately leaves that key alone so it isn't clobbered with Oyez's
+  // partial list.
 
   // Brand-new alignments contributed by this term (one entry per lineup key).
   const newByKey = new Map<string, CaseRecord>();
@@ -125,7 +113,6 @@ export async function GET(req: NextRequest) {
     parsed: cases.length,
     skipped: skipped.length,
     bingo: bingo.length,
-    nextBingo,
     totalCases: all.length,
     newGamis: newGamis.length,
     email,

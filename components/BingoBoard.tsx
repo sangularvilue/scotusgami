@@ -83,15 +83,15 @@ function JusticeCell({
  * granted-but-uncalendared one. Same shape as a written-opinion tile, dashed to
  * read as "not yet placed"; when it comes down it moves into its author's cell.
  */
-function SideCard({ c }: { c: BingoCaseLite }) {
+function SideCard({ c, wide = false }: { c: BingoCaseLite; wide?: boolean }) {
   return (
     <a
       href={c.oyezUrl}
       target="_blank"
       rel="noreferrer"
       title={caseTitle(c)}
-      style={{ width: CELL_W + 18 }}
-      className="flex shrink-0 items-center rounded border border-dashed border-gold/40 bg-gold/[0.07] px-1.5 py-1 text-[10px] leading-tight text-gold transition-colors hover:border-gold/70 hover:bg-gold/15 hover:text-gold-bright"
+      style={{ width: wide ? 168 : CELL_W + 18 }}
+      className="flex shrink-0 flex-col justify-center rounded border border-dashed border-gold/40 bg-gold/[0.07] px-1.5 py-1 text-[10px] leading-tight text-gold transition-colors hover:border-gold/70 hover:bg-gold/15 hover:text-gold-bright"
     >
       <span className="line-clamp-2">
         {c.name}
@@ -99,6 +99,11 @@ function SideCard({ c }: { c: BingoCaseLite }) {
           <span className="text-gold/60"> +{c.consolidatedWith.length}</span>
         ) : null}
       </span>
+      {wide && c.granted && (
+        <span className="mt-0.5 font-mono text-[8px] text-cream-faint">
+          granted {c.granted.slice(5).replace("-", "/")}
+        </span>
+      )}
     </a>
   );
 }
@@ -177,64 +182,66 @@ export default function BingoBoard({
           </span>
         </div>
       )}
-      <div className="overflow-x-auto pb-2">
-        <div className="w-max min-w-full">
-          {/* justice column headers + term tallies */}
-          <div
-            className="sticky top-0 z-10 grid gap-1 border-b border-ink-line bg-ink/85 py-2 backdrop-blur"
-            style={{ ...COLS, width: GRID_W }}
-          >
-            <div className="smallcaps self-end pb-0.5 text-[10px] text-cream-faint">
-              sitting
-            </div>
-            {IDEOLOGICAL_IDS.map((id) => {
-              const j = JUSTICE_BY_ID[id];
-              const n = grid.perJustice[id] ?? 0;
-              return (
-                <div key={id} className="text-center" title={j.fullName}>
-                  <div className="text-[11px] font-semibold text-cream-dim">
-                    {j.lastName}
+      {grid.sittings.length > 0 && (
+        <div className="overflow-x-auto pb-2">
+          <div className="w-max min-w-full">
+            {/* justice column headers + term tallies */}
+            <div
+              className="sticky top-0 z-10 grid gap-1 border-b border-ink-line bg-ink/85 py-2 backdrop-blur"
+              style={{ ...COLS, width: GRID_W }}
+            >
+              <div className="smallcaps self-end pb-0.5 text-[10px] text-cream-faint">
+                sitting
+              </div>
+              {IDEOLOGICAL_IDS.map((id) => {
+                const j = JUSTICE_BY_ID[id];
+                const n = grid.perJustice[id] ?? 0;
+                return (
+                  <div key={id} className="text-center" title={j.fullName}>
+                    <div className="text-[11px] font-semibold text-cream-dim">
+                      {j.lastName}
+                    </div>
+                    <div className="font-mono text-[10px] text-gold">{n}</div>
                   </div>
-                  <div className="font-mono text-[10px] text-gold">{n}</div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
+
+            {/* one row per sitting, with still-out cases stacking to the right */}
+            <div className="mt-1 space-y-1.5">
+              {grid.sittings.map((s) => (
+                <Row
+                  key={s.sitting}
+                  label={s.sitting}
+                  sub={`${s.authored.length} writ${
+                    s.pending.length > 0 ? ` · ${s.pending.length} out` : ""
+                  }`}
+                  authoredBy={s.byAuthor}
+                  owed={s.owed}
+                  cards={s.pending}
+                />
+              ))}
+            </div>
           </div>
-
-          {/* one row per sitting, with still-out cases stacking to the right */}
-          <div className="mt-1 space-y-1.5">
-            {grid.sittings.map((s) => (
-              <Row
-                key={s.sitting}
-                label={s.sitting}
-                sub={`${s.authored.length} writ${
-                  s.pending.length > 0 ? ` · ${s.pending.length} out` : ""
-                }`}
-                authoredBy={s.byAuthor}
-                owed={s.owed}
-                cards={s.pending}
-              />
-            ))}
-
-            {/* granted-but-uncalendared cases (an upcoming term before its
-                argument calendar drops) — no sitting yet, so they stack to the
-                right of an empty grid until a date slots them in. */}
-            {grid.granted.length > 0 && (
-              <Row
-                label="Granted"
-                sub={`${grid.granted.length} awaiting`}
-                cards={grid.granted}
-              />
-            )}
-          </div>
-
-          {grid.sittings.length === 0 && grid.granted.length === 0 && (
-            <p className="py-6 text-[13px] text-cream-dim">
-              No argued or granted cases recorded for this term yet.
-            </p>
-          )}
         </div>
-      </div>
+      )}
+
+      {/* Granted-but-uncalendared cases (an upcoming term before its argument
+          calendar drops). No sittings yet, so rather than stack against an empty
+          grid we lay them out as a gallery that fills rightward and wraps. */}
+      {grid.granted.length > 0 && (
+        <div className="flex flex-wrap gap-1.5">
+          {grid.granted.map((c) => (
+            <SideCard key={c.docket} c={c} wide />
+          ))}
+        </div>
+      )}
+
+      {grid.sittings.length === 0 && grid.granted.length === 0 && (
+        <p className="py-6 text-[13px] text-cream-dim">
+          No argued or granted cases recorded for this term yet.
+        </p>
+      )}
     </div>
   );
 }
