@@ -61,4 +61,10 @@ export interface BingoCase {
   /** justice id of the majority/plurality opinion author, or null */
   majorityAuthor: string | null;
   oyezUrl: string;
+  /**
+   * Names of the companion cases folded into this one because the Court
+   * consolidated them under a single opinion. Set on the lead case only; the
+   * members are dropped from the card. Absent for ordinary (un-consolidated) cases.
+   */
+  consolidatedWith?: string[];
 }

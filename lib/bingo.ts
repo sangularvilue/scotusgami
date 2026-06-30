@@ -12,11 +12,70 @@ const MONTHS = [
 // between consecutive argument dates starts a new sitting.
 const SESSION_GAP_DAYS = 12;
 
+/**
+ * Cases the Court consolidated to be argued and decided together under a single
+ * opinion. Oyez lists each consolidated petition as its own docket carrying its
+ * own (null) decision, and the slip-opinion list reports the merged decision
+ * under just one of them — so without this map a consolidated companion dangles
+ * forever as "still out" after its group has actually come down.
+ *
+ * Each group is ONE merits decision with ONE author. List the lead docket first
+ * (its case supplies the displayed tile and name); the rest are folded into it.
+ * The group is treated as decided as soon as ANY member resolves, so it does not
+ * matter which docket the slip list happens to file the opinion under.
+ *
+ * Source: the Court's consolidation orders — verify against supremecourt.gov.
+ */
+export const CONSOLIDATED_GROUPS: string[][] = [
+  // West Virginia v. B.P.J. (24-43) + Little v. Hecox (24-38) — consolidated for
+  // argument, decided together (slip filed under 24-43).
+  ["24-43", "24-38"],
+];
+
+/**
+ * Fold consolidated companion cases into their lead. The lead absorbs the
+ * group's decided date/author from whichever member resolved, records the
+ * companions in `consolidatedWith`, and the members are dropped so the group
+ * occupies a single tile counted as one opinion. Non-destructive: returns a new
+ * list, leaving the stored (raw) bingo cases intact.
+ */
+export function collapseConsolidated(cases: BingoCase[]): BingoCase[] {
+  if (!CONSOLIDATED_GROUPS.length) return cases;
+  const byDocket = new Map(cases.map((c) => [c.docket, c] as const));
+  const drop = new Set<string>();
+  const patched = new Map<string, BingoCase>();
+
+  for (const group of CONSOLIDATED_GROUPS) {
+    // Members present on the card, in lead-first order — so members[0] is the
+    // lead (the first listed docket that actually exists this term).
+    const members = group
+      .map((d) => byDocket.get(d))
+      .filter((c): c is BingoCase => !!c);
+    if (members.length < 2) continue; // nothing to merge
+
+    const lead = members[0];
+    const resolved = members.find((m) => m.decided && m.majorityAuthor);
+    patched.set(lead.docket, {
+      ...lead,
+      decided: lead.decided ?? resolved?.decided ?? null,
+      majorityAuthor: lead.majorityAuthor ?? resolved?.majorityAuthor ?? null,
+      consolidatedWith: members.slice(1).map((m) => m.name),
+    });
+    for (const m of members.slice(1)) drop.add(m.docket);
+  }
+
+  return cases
+    .filter((c) => !drop.has(c.docket))
+    .map((c) => patched.get(c.docket) ?? c);
+}
+
 export interface BingoCaseLite {
   name: string;
   docket: string;
   oyezUrl: string;
   decided: string | null;
+  /** companion case names folded in via consolidation (lead tile only) */
+  consolidatedWith?: string[];
 }
 
 export interface BingoSitting {
@@ -49,6 +108,7 @@ const lite = (c: BingoCase): BingoCaseLite => ({
   docket: c.docket,
   oyezUrl: c.oyezUrl,
   decided: c.decided,
+  ...(c.consolidatedWith?.length ? { consolidatedWith: c.consolidatedWith } : {}),
 });
 
 /**
@@ -57,6 +117,10 @@ const lite = (c: BingoCase): BingoCaseLite => ({
  * game — the justices who could still be holding a pending opinion.
  */
 export function buildBingoGrid(term: number, cases: BingoCase[]): BingoGrid {
+  // Fold consolidated companions into their lead so each shared opinion is one
+  // tile (and a companion never lingers as "still out" once the group is down).
+  cases = collapseConsolidated(cases);
+
   // Only cases argued during this term's sittings. Drops holdovers argued before
   // the term opened (a case carried over from the prior term and decided now).
   const termStart = `${term}-10-01`;

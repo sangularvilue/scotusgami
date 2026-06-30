@@ -19,7 +19,7 @@ export const maxDuration = 300; // Oyez scrape is sequential and polite
 export const dynamic = "force-dynamic";
 
 /**
- * Daily cron (11:15 EST / 16:15 UTC, see vercel.json): re-scrape the current
+ * Daily cron (11:00 EST / 16:00 UTC, see vercel.json): re-scrape the current
  * term from Oyez, upsert it into Redis, refresh the bingo card, and email when
  * a never-before-seen alignment lights up.
  */

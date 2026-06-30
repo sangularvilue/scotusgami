@@ -40,10 +40,17 @@ function Cell({
             href={c.oyezUrl}
             target="_blank"
             rel="noreferrer"
-            title={`${c.name}${c.decided ? ` — decided ${c.decided}` : ""}`}
+            title={`${c.name}${
+              c.consolidatedWith?.length
+                ? ` (consolidated with ${c.consolidatedWith.join(", ")})`
+                : ""
+            }${c.decided ? ` — decided ${c.decided}` : ""}`}
             className="block truncate text-[10px] leading-tight text-gold-bright hover:underline"
           >
             {c.name}
+            {c.consolidatedWith?.length ? (
+              <span className="text-gold/60"> +{c.consolidatedWith.length}</span>
+            ) : null}
           </a>
         ))}
       </div>
@@ -137,9 +144,20 @@ export default function BingoBoard({ grid }: { grid: BingoGrid }) {
                           href={c.oyezUrl}
                           target="_blank"
                           rel="noreferrer"
+                          title={
+                            c.consolidatedWith?.length
+                              ? `${c.name} (consolidated with ${c.consolidatedWith.join(", ")})`
+                              : c.name
+                          }
                           className="text-cream-dim hover:text-gold-bright"
                         >
                           {c.name}
+                          {c.consolidatedWith?.length ? (
+                            <span className="text-cream-faint">
+                              {" "}
+                              +{c.consolidatedWith.length}
+                            </span>
+                          ) : null}
                         </a>
                         {i < s.pending.length - 1 && (
                           <span className="text-cream-faint"> ·</span>
