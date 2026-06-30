@@ -97,6 +97,13 @@ export interface BingoSitting {
 export interface BingoGrid {
   term: number;
   sittings: BingoSitting[];
+  /**
+   * Cases granted for the term but not yet calendared into a sitting (no
+   * argument date). For an upcoming term this is the whole board until the
+   * Court publishes its argument calendar; they migrate into sittings as Oyez
+   * picks up argument dates.
+   */
+  granted: BingoCaseLite[];
   /** justice id → majorities authored this term */
   perJustice: Record<string, number>;
   decidedCount: number;
@@ -121,11 +128,14 @@ export function buildBingoGrid(term: number, cases: BingoCase[]): BingoGrid {
   // tile (and a companion never lingers as "still out" once the group is down).
   cases = collapseConsolidated(cases);
 
-  // Only cases argued during this term's sittings. Drops holdovers argued before
-  // the term opened (a case carried over from the prior term and decided now).
+  // Only cases argued during this term's own sittings (Oct of `term` through the
+  // following summer). The lower bound drops prior-term holdovers decided now;
+  // the upper bound drops next-term cases Oyez sometimes files under their grant
+  // term with an argument date in the term that follows.
   const termStart = `${term}-10-01`;
+  const nextTermStart = `${term + 1}-10-01`;
   const argued = cases
-    .filter((c) => c.argued && c.argued >= termStart)
+    .filter((c) => c.argued && c.argued >= termStart && c.argued < nextTermStart)
     .sort((a, b) => a.argued!.localeCompare(b.argued!));
 
   // Split the chronological list into sessions on large date gaps.
@@ -166,9 +176,21 @@ export function buildBingoGrid(term: number, cases: BingoCase[]): BingoGrid {
     return { sitting, byAuthor, pending, authored, owed };
   });
 
+  // Granted but not yet calendared (cert granted, no argument date, not decided).
+  // Only meaningful for an upcoming term whose arguments haven't begun: once a
+  // term has sittings, its still-uncalendared grants are really next-term cases
+  // Oyez filed under their grant term, so we suppress them here.
+  const granted = sessions.length
+    ? []
+    : cases
+        .filter((c) => !c.argued && c.granted && !c.decided)
+        .sort((a, b) => a.granted!.localeCompare(b.granted!))
+        .map(lite);
+
   return {
     term,
     sittings,
+    granted,
     perJustice,
     // authored opinions actually shown — excludes DIG'd / per-curiam argued
     // cases (decided but no assigned author), so it matches the visible tiles.

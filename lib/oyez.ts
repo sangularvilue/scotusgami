@@ -187,10 +187,14 @@ function majorityAuthorOf(detail: OyezCaseDetail): string | null {
 }
 
 /**
- * Reduce an Oyez case to its bingo-card row. Only argued merits cases qualify
- * (they have an "Argued" timeline event); cert-stage entries return null. A case
- * with no "Decided" date is still pending — that's how Trump v. Cook et al. show
- * up as open cells.
+ * Reduce an Oyez case to its bingo-card row. Two kinds of case qualify:
+ *   • argued merits cases — they carry an "Argued" timeline event and slot into
+ *     their argument sitting (pending until a "Decided" event lands);
+ *   • granted-but-uncalendared cases — cert granted for an upcoming term whose
+ *     argument calendar isn't out yet, so they have no argument date. These
+ *     carry a `granted` date and a null sitting, and live in the granted pool
+ *     until an argued date moves them into a sitting.
+ * Pure cert-stage entries (neither argued nor granted) return null.
  */
 export function parseBingoCase(detail: OyezCaseDetail): BingoCase | null {
   // Use the latest sitting the case was heard in: a case set for reargument
@@ -200,13 +204,15 @@ export function parseBingoCase(detail: OyezCaseDetail): BingoCase | null {
     .filter((d): d is string => !!d)
     .sort();
   const argued = heard.length ? heard[heard.length - 1] : null;
-  if (!argued) return null;
+  const granted = timelineDate(detail, "Granted");
+  if (!argued && !granted) return null; // not a merits case yet
   const decided = timelineDate(detail, "Decided");
   return {
     term: detail.term,
     docket: detail.docket_number.trim(),
     name: detail.name,
     argued,
+    granted,
     sitting: sittingOf(argued),
     decided,
     majorityAuthor: decided ? majorityAuthorOf(detail) : null,

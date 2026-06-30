@@ -1,13 +1,26 @@
 import type { BingoCaseLite, BingoGrid } from "@/lib/bingo";
 import { IDEOLOGICAL_IDS, JUSTICE_BY_ID } from "@/lib/justices";
 
-const COLS = { gridTemplateColumns: "108px repeat(9, minmax(0, 1fr))" };
+// Fixed track widths so the still-out / granted cards can stack outward to the
+// right of the nine-justice grid and the whole board scrolls horizontally.
+const LABEL_W = 96;
+const CELL_W = 82;
+const COLS = { gridTemplateColumns: `${LABEL_W}px repeat(9, ${CELL_W}px)` };
+const GRID_W = LABEL_W + 9 * CELL_W + 9 * 4; // + gap-1 between 10 tracks
 
 // rubric red — flags a justice who took two opinions from one sitting (a
 // classic sign of a flipped majority or a colleague running behind).
 const DOUBLE = "#c0564b";
 
-function Cell({
+const caseTitle = (c: BingoCaseLite) =>
+  `${c.name}${
+    c.consolidatedWith?.length
+      ? ` (consolidated with ${c.consolidatedWith.join(", ")})`
+      : ""
+  }${c.decided ? ` — decided ${c.decided}` : ""}`;
+
+/** A justice's cell within a sitting: opinion(s) authored, owed, or empty. */
+function JusticeCell({
   authored,
   owed,
 }: {
@@ -40,11 +53,7 @@ function Cell({
             href={c.oyezUrl}
             target="_blank"
             rel="noreferrer"
-            title={`${c.name}${
-              c.consolidatedWith?.length
-                ? ` (consolidated with ${c.consolidatedWith.join(", ")})`
-                : ""
-            }${c.decided ? ` — decided ${c.decided}` : ""}`}
+            title={caseTitle(c)}
             className="block truncate text-[10px] leading-tight text-gold-bright hover:underline"
           >
             {c.name}
@@ -69,30 +78,112 @@ function Cell({
   return <div className="rounded border border-ink-line/50" />;
 }
 
-export default function BingoBoard({ grid }: { grid: BingoGrid }) {
+/**
+ * An unattributed case card — a still-out (argued, undecided) case or a
+ * granted-but-uncalendared one. Same shape as a written-opinion tile, dashed to
+ * read as "not yet placed"; when it comes down it moves into its author's cell.
+ */
+function SideCard({ c }: { c: BingoCaseLite }) {
   return (
-    <div className="relative z-10 mx-auto w-full max-w-5xl px-5 pb-16">
-      <div className="mb-5 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[11px] text-cream-dim">
-        <span className="flex items-center gap-1.5">
-          <span className="inline-block h-3 w-5 rounded-sm border border-gold/50 bg-gold/15" />
-          wrote the opinion
-        </span>
-        <span className="flex items-center gap-1.5">
-          <span className="inline-block h-3 w-5 rounded-sm border border-dashed border-slate-dissent/45 bg-slate-dissent/5" />
-          owed — candidate for a case still out
-        </span>
-        <span className="flex items-center gap-1.5">
-          <span
-            className="inline-block h-3 w-5 rounded-sm border border-gold/50 bg-gold/15"
-            style={{ outline: `1.5px solid ${DOUBLE}`, outlineOffset: "1px" }}
+    <a
+      href={c.oyezUrl}
+      target="_blank"
+      rel="noreferrer"
+      title={caseTitle(c)}
+      style={{ width: CELL_W + 18 }}
+      className="flex shrink-0 items-center rounded border border-dashed border-gold/40 bg-gold/[0.07] px-1.5 py-1 text-[10px] leading-tight text-gold transition-colors hover:border-gold/70 hover:bg-gold/15 hover:text-gold-bright"
+    >
+      <span className="line-clamp-2">
+        {c.name}
+        {c.consolidatedWith?.length ? (
+          <span className="text-gold/60"> +{c.consolidatedWith.length}</span>
+        ) : null}
+      </span>
+    </a>
+  );
+}
+
+/** A board row: the fixed label + 9-justice grid, then cards stacking right. */
+function Row({
+  label,
+  sub,
+  authoredBy,
+  owed,
+  cards,
+}: {
+  label: string;
+  sub?: string;
+  authoredBy?: Record<string, BingoCaseLite[]>;
+  owed?: string[];
+  cards: BingoCaseLite[];
+}) {
+  return (
+    <div className="flex items-stretch gap-1">
+      <div className="grid shrink-0 items-stretch gap-1" style={{ ...COLS, width: GRID_W }}>
+        <div className="flex flex-col justify-center">
+          <span className="font-display text-[15px] text-cream">{label}</span>
+          {sub && (
+            <span className="font-mono text-[10px] text-cream-faint">{sub}</span>
+          )}
+        </div>
+        {IDEOLOGICAL_IDS.map((id) => (
+          <JusticeCell
+            key={id}
+            authored={authoredBy?.[id]}
+            owed={!!owed?.includes(id)}
           />
-          two from one sitting
-        </span>
+        ))}
       </div>
-      <div className="overflow-x-auto">
-        <div className="min-w-[680px]">
+      {cards.length > 0 && (
+        <div className="flex items-stretch gap-1 pl-1">
+          {cards.map((c) => (
+            <SideCard key={c.docket} c={c} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default function BingoBoard({
+  grid,
+  showLegend = false,
+}: {
+  grid: BingoGrid;
+  showLegend?: boolean;
+}) {
+  return (
+    <div className="relative z-10 mx-auto w-full max-w-5xl px-5">
+      {showLegend && (
+        <div className="mb-5 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[11px] text-cream-dim">
+          <span className="flex items-center gap-1.5">
+            <span className="inline-block h-3 w-5 rounded-sm border border-gold/50 bg-gold/15" />
+            wrote the opinion
+          </span>
+          <span className="flex items-center gap-1.5">
+            <span className="inline-block h-3 w-5 rounded-sm border border-dashed border-gold/40 bg-gold/[0.07]" />
+            still out — author unknown
+          </span>
+          <span className="flex items-center gap-1.5">
+            <span className="inline-block h-3 w-5 rounded-sm border border-dashed border-slate-dissent/45 bg-slate-dissent/5" />
+            owed — candidate to be holding it
+          </span>
+          <span className="flex items-center gap-1.5">
+            <span
+              className="inline-block h-3 w-5 rounded-sm border border-gold/50 bg-gold/15"
+              style={{ outline: `1.5px solid ${DOUBLE}`, outlineOffset: "1px" }}
+            />
+            two from one sitting
+          </span>
+        </div>
+      )}
+      <div className="overflow-x-auto pb-2">
+        <div className="w-max min-w-full">
           {/* justice column headers + term tallies */}
-          <div className="sticky top-0 z-10 grid gap-1 border-b border-ink-line bg-ink/85 py-2 backdrop-blur" style={COLS}>
+          <div
+            className="sticky top-0 z-10 grid gap-1 border-b border-ink-line bg-ink/85 py-2 backdrop-blur"
+            style={{ ...COLS, width: GRID_W }}
+          >
             <div className="smallcaps self-end pb-0.5 text-[10px] text-cream-faint">
               sitting
             </div>
@@ -110,65 +201,38 @@ export default function BingoBoard({ grid }: { grid: BingoGrid }) {
             })}
           </div>
 
-          {/* one block per sitting */}
+          {/* one row per sitting, with still-out cases stacking to the right */}
           <div className="mt-1 space-y-1.5">
             {grid.sittings.map((s) => (
-              <div key={s.sitting}>
-                <div className="grid items-stretch gap-1" style={COLS}>
-                  <div className="flex flex-col justify-center">
-                    <span className="font-display text-[15px] text-cream">
-                      {s.sitting}
-                    </span>
-                    <span className="font-mono text-[10px] text-cream-faint">
-                      {s.authored.length} writ
-                      {s.pending.length > 0 && ` · ${s.pending.length} out`}
-                    </span>
-                  </div>
-                  {IDEOLOGICAL_IDS.map((id) => (
-                    <Cell
-                      key={id}
-                      authored={s.byAuthor[id]}
-                      owed={s.owed.includes(id)}
-                    />
-                  ))}
-                </div>
-
-                {s.pending.length > 0 && (
-                  <div className="mt-1 ml-[112px] flex flex-wrap items-baseline gap-x-2 gap-y-0.5 text-[11px] leading-snug">
-                    <span className="smallcaps text-[9px] text-slate-dissent/80">
-                      still out
-                    </span>
-                    {s.pending.map((c, i) => (
-                      <span key={c.docket}>
-                        <a
-                          href={c.oyezUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          title={
-                            c.consolidatedWith?.length
-                              ? `${c.name} (consolidated with ${c.consolidatedWith.join(", ")})`
-                              : c.name
-                          }
-                          className="text-cream-dim hover:text-gold-bright"
-                        >
-                          {c.name}
-                          {c.consolidatedWith?.length ? (
-                            <span className="text-cream-faint">
-                              {" "}
-                              +{c.consolidatedWith.length}
-                            </span>
-                          ) : null}
-                        </a>
-                        {i < s.pending.length - 1 && (
-                          <span className="text-cream-faint"> ·</span>
-                        )}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </div>
+              <Row
+                key={s.sitting}
+                label={s.sitting}
+                sub={`${s.authored.length} writ${
+                  s.pending.length > 0 ? ` · ${s.pending.length} out` : ""
+                }`}
+                authoredBy={s.byAuthor}
+                owed={s.owed}
+                cards={s.pending}
+              />
             ))}
+
+            {/* granted-but-uncalendared cases (an upcoming term before its
+                argument calendar drops) — no sitting yet, so they stack to the
+                right of an empty grid until a date slots them in. */}
+            {grid.granted.length > 0 && (
+              <Row
+                label="Granted"
+                sub={`${grid.granted.length} awaiting`}
+                cards={grid.granted}
+              />
+            )}
           </div>
+
+          {grid.sittings.length === 0 && grid.granted.length === 0 && (
+            <p className="py-6 text-[13px] text-cream-dim">
+              No argued or granted cases recorded for this term yet.
+            </p>
+          )}
         </div>
       </div>
     </div>

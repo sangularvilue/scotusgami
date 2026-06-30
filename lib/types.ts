@@ -54,6 +54,13 @@ export interface BingoCase {
   name: string;
   /** ISO date (YYYY-MM-DD) the case was argued, or null if unknown */
   argued: string | null;
+  /**
+   * ISO date cert was granted, or null. Used to surface cases granted for an
+   * upcoming term that have no argument date yet (the Court hasn't published
+   * the calendar) — they sit in a "granted, awaiting calendar" pool until an
+   * argued date slots them into a sitting.
+   */
+  granted: string | null;
   /** argument sitting label: "October" … "April", or null if off-calendar */
   sitting: string | null;
   /** ISO date decided, or null while still pending */

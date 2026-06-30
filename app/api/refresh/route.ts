@@ -66,6 +66,25 @@ export async function GET(req: NextRequest) {
   }
   await saveBingo(term, bingoCases);
 
+  // Also refresh the upcoming term's bingo so its granted-but-uncalendared
+  // cases show on the board before the Court publishes its argument calendar.
+  // It carries no decided cases yet, so we only need the (cheap) bingo list.
+  let nextBingo = 0;
+  try {
+    const next = term + 1;
+    const { bingo: nb } = await scrapeTerm(next);
+    let nbCases = nb;
+    try {
+      nbCases = reconcileDecided(nb, await fetchDecided(next));
+    } catch {
+      /* slip list usually empty for a not-yet-started term; ignore */
+    }
+    await saveBingo(next, nbCases);
+    nextBingo = nbCases.length;
+  } catch {
+    /* leave the upcoming term as-is if its scrape fails */
+  }
+
   // Brand-new alignments contributed by this term (one entry per lineup key).
   const newByKey = new Map<string, CaseRecord>();
   for (const c of cases) {
@@ -106,6 +125,7 @@ export async function GET(req: NextRequest) {
     parsed: cases.length,
     skipped: skipped.length,
     bingo: bingo.length,
+    nextBingo,
     totalCases: all.length,
     newGamis: newGamis.length,
     email,
