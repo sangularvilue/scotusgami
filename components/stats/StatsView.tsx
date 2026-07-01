@@ -58,30 +58,38 @@ function VarianceBars({ rows }: { rows: { label: string; pc1: number; pc12: numb
   );
 }
 
-/** Condition number over time (terms on x, log scale on y). */
+/** A value-over-time line (terms on x); log or linear y. */
 function LineChart({
   points,
   baseline: refLine,
+  log = true,
+  digits = 0,
 }: {
   points: { label: string; value: number }[];
   baseline?: { value: number; label: string };
+  log?: boolean;
+  digits?: number;
 }) {
   const W = 440, H = 150, padL = 34, padB = 22, padT = 14, padR = 12;
+  const tx = (v: number) => (log ? Math.log10(Math.max(1, v)) : v);
   const vals = points.map((p) => (isFinite(p.value) ? p.value : 1));
-  const logs = [...vals, refLine?.value ?? 1].filter((v) => v > 0).map(Math.log10);
-  const lo = Math.min(...logs, 0);
-  const hi = Math.max(...logs, 1) * 1.05;
+  const tvals = [...vals, ...(refLine ? [refLine.value] : [])].map(tx);
+  let lo = Math.min(...tvals), hi = Math.max(...tvals);
+  const pad = (hi - lo) * 0.12 || 1;
+  lo = log ? Math.min(lo, 0) : lo - pad;
+  hi += pad;
   const x = (i: number) => padL + (i / Math.max(1, points.length - 1)) * (W - padL - padR);
-  const y = (v: number) => padT + (1 - (Math.log10(Math.max(1, v)) - lo) / (hi - lo || 1)) * (H - padT - padB);
+  const y = (v: number) => padT + (1 - (tx(v) - lo) / (hi - lo || 1)) * (H - padT - padB);
   const path = points.map((p, i) => `${i ? "L" : "M"}${x(i)},${y(p.value)}`).join(" ");
+  const fmt = (v: number) => (isFinite(v) ? v.toFixed(digits) : "∞");
 
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} className="w-full" role="img" aria-label="condition number over time">
+    <svg viewBox={`0 0 ${W} ${H}`} className="w-full" role="img" aria-label="value over time">
       {refLine && (
         <g>
           <line x1={padL} y1={y(refLine.value)} x2={W - padR} y2={y(refLine.value)} stroke="#5d5f60" strokeDasharray="4 3" />
           <text x={W - padR} y={y(refLine.value) - 3} fontSize={8} textAnchor="end" fill="#5d5f60" className="font-mono">
-            {refLine.label} {refLine.value.toFixed(0)}
+            {refLine.label} {fmt(refLine.value)}
           </text>
         </g>
       )}
@@ -90,7 +98,7 @@ function LineChart({
         <g key={p.label}>
           <circle cx={x(i)} cy={y(p.value)} r={3} fill="#6f8fbf" />
           <text x={x(i)} y={y(p.value) - 7} fontSize={9} textAnchor="middle" fill="#c9c3b4" className="font-mono">
-            {isFinite(p.value) ? p.value.toFixed(0) : "∞"}
+            {fmt(p.value)}
           </text>
           <text x={x(i)} y={H - 7} fontSize={9} textAnchor="middle" fill="#9a958a" className="font-mono">
             {p.label}
@@ -218,8 +226,9 @@ export default function StatsView({ stats }: { stats: AllStats }) {
           PC1 <span className="text-gold-bright">{pct1(d.pc1)}</span> · PC1+PC2{" "}
           <span className="text-gold-bright">{pct1(d.pc12)}</span>
         </Callout>
-        <Callout label="condition number (λmax/λmin)">
-          <span className="text-gold-bright">{isFinite(d.conditionNumber) ? d.conditionNumber.toFixed(1) : "∞"}</span>
+        <Callout label="effective # of components (participation ratio)">
+          <span className="text-gold-bright">{d.effectiveComponents.toFixed(1)}</span> of 9 — the term votes like ~
+          {d.effectiveComponents.toFixed(1)} independent factors
         </Callout>
         <Callout label="splits on party lines">
           <span className="text-gold-bright">{pct(d.partyLinePct)}</span> of divided cases
@@ -276,28 +285,24 @@ export default function StatsView({ stats }: { stats: AllStats }) {
           <VarianceBars rows={varRows} />
         </div>
         <div>
-          <h3 className="smallcaps mb-3 text-[10px] text-gold">condition number over time (log scale)</h3>
+          <h3 className="smallcaps mb-3 text-[10px] text-gold">effective # of components over time (participation ratio)</h3>
           <LineChart
-            points={stats.terms.map((s) => ({ label: `OT${s.term}`, value: s.conditionNumber }))}
-            baseline={stats.overall ? { value: stats.overall.conditionNumber, label: "all-time" } : undefined}
+            points={stats.terms.map((s) => ({ label: `OT${s.term}`, value: s.effectiveComponents }))}
+            baseline={stats.overall ? { value: stats.overall.effectiveComponents, label: "all-time" } : undefined}
+            log={false}
+            digits={1}
           />
           <p className="mt-3 text-[12px] leading-relaxed text-cream-dim">
-            The condition number is λ<sub>max</sub> ÷ λ<sub>min</sub>, but its swings come from the{" "}
-            <span className="text-cream">denominator</span> — the smallest eigenvalue (PC9), not PC1. Across these terms
-            PC1&apos;s variance barely shifts while the smallest one moves much more, and the condition number tracks it
-            almost inversely. So it&apos;s really a gauge of the <span className="text-cream">most collinear direction</span>:
-            a combination of justices whose votes are nearly redundant.
-          </p>
-          <p className="mt-2 text-[12px] leading-relaxed text-cream-dim">
-            <span className="text-gold">Rising</span> → that least-independent direction is collapsing toward zero — some
-            justices voting almost interchangeably (very tight bloc behavior) — and/or too few cases to fill out all nine
-            dimensions. <span className="text-gold">Falling</span> → even the most redundant direction carries real
-            variance, so the nine are voting more independently.
+            Effective components = 1 ÷ Σ(variance shareᵢ²) — the participation ratio (reciprocal of the Herfindahl index
+            of variance concentration). It reads voting <span className="text-cream">dimensionality</span> directly:
+            near <span className="text-cream">1</span> is a one-factor Court (everything rides the ideological axis), up
+            to <span className="text-cream">9</span> when variance is spread evenly across independent blocs. So a term
+            here &ldquo;behaves like ~N independent factors.&rdquo;
           </p>
           <p className="mt-2 text-[12px] leading-relaxed text-cream-faint">
-            Because it hinges on that tiny, noisy smallest eigenvalue, read it as a rough collinearity gauge, not a
-            precise trend — and discount early or provisional terms, where thin data drives λ<sub>min</sub> toward zero
-            on its own.
+            It weights every PC by its size, so it isn&apos;t hostage to any single noisy eigenvalue — a steady read on
+            how many dimensions the Court&apos;s divisions really span. <span className="text-gold">Rising</span> = more
+            independent voting blocs; <span className="text-gold">falling</span> = collapsing toward a single axis.
           </p>
         </div>
       </div>

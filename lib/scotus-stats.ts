@@ -104,7 +104,14 @@ export interface StatsResult {
   varianceExplained: number[];
   pc1: number;
   pc12: number;
-  conditionNumber: number;
+  /**
+   * Participation ratio = 1 / Σ(variance shareᵢ²) — the effective number of
+   * principal components (1 = one-factor court, up to 9 = variance spread evenly).
+   * The reciprocal of the Herfindahl index of variance concentration; a robust
+   * read on voting dimensionality (weights every PC by size, unlike the
+   * condition number, which hinges on the noisy smallest eigenvalue).
+   */
+  effectiveComponents: number;
   /** justice ids ordered by PC1 loading (most liberal → most conservative) */
   pc1Order: string[];
   maverick: { id: string; lastName: string; score: number };
@@ -283,7 +290,7 @@ export function computeStats(
     varianceExplained: r.varianceExplained,
     pc1: r.varianceExplained[0],
     pc12: r.varianceExplained[0] + (r.varianceExplained[1] ?? 0),
-    conditionNumber: r.conditionNumber,
+    effectiveComponents: 1 / r.varianceExplained.reduce((s, p) => s + p * p, 0),
     pc1Order,
     maverick: { id: maverickL.id, lastName: maverickL.lastName, score: maverickL.maverick },
     mostRedundant: { lastNames: namesAt(minFlips), changes: minFlips },
