@@ -120,6 +120,8 @@ export interface StatsResult {
   leastRedundant: { lastNames: string[]; changes: number };
   /** the closest pair of justices by the maverick distance metric */
   twins: { aName: string; bName: string; dist: number } | null;
+  /** smallest set of justices whose votes determine the winner (relative encoding) */
+  winnerInference: WinnerInference | null;
   /** share of decided cases with no dissent (unanimous in judgment) */
   unanimityRate: number;
   nDivided: number;
@@ -296,12 +298,93 @@ export function computeStats(
     mostRedundant: { lastNames: namesAt(minFlips), changes: minFlips },
     leastRedundant: { lastNames: namesAt(maxFlips), changes: maxFlips },
     twins,
+    winnerInference: computeWinnerInference(X),
     unanimityRate: unanimous / cases.length,
     nDivided,
     partyLinePct: nDivided ? partyLine / nDivided : 0,
     anyLinePct: nDivided ? anyLine / nDivided : 0,
     mostUnexpected: worst,
   };
+}
+
+export interface WinnerInference {
+  /** the reference justice (A): everyone else is coded relative to their side */
+  reference: string;
+  /** the other justices in the minimal set, in table-column order */
+  others: string[];
+  size: number;
+  /** cases excluded because the reference justice recused (couldn't be encoded) */
+  skipped: number;
+  /** fraction of cases where a plain majority vote of the set gives the winner */
+  linearity: number;
+  /** true when the mapping is exactly a majority vote of the set */
+  majorityVote: boolean;
+  /** distinct observed patterns → winner. pattern[i]: +1 same side as ref, -1 opposite, 0 abstain */
+  table: { pattern: number[]; winner: "ref" | "opp" }[];
+}
+
+function combos(n: number, k: number): number[][] {
+  const out: number[][] = [];
+  const rec = (start: number, cur: number[]) => {
+    if (cur.length === k) { out.push([...cur]); return; }
+    for (let i = start; i < n; i++) { cur.push(i); rec(i + 1, cur); cur.pop(); }
+  };
+  rec(0, []);
+  return out;
+}
+
+/**
+ * Smallest set of justices whose votes determine who won, encoded relative to a
+ * reference justice A (never-abstaining, so the table is clean): every other
+ * justice is "same side as A / opposite / abstain," and the winner is "A's side
+ * or the opposite." Among minimal sets we return the MOST LINEAR one — the one
+ * whose mapping best matches a plain majority vote of the set.
+ */
+function computeWinnerInference(X: number[][]): WinnerInference | null {
+  const p = SENIORITY_IDS.length;
+  if (X.length < 4) return null;
+  const abst = SENIORITY_IDS.map((_, j) => X.filter((v) => v[j] === 0).length);
+  const minAbst = Math.min(...abst); // reference = a least-recusing justice
+  for (let k = 2; k <= p; k++) {
+    let best: { S: number[]; A: number; others: number[]; table: Map<string, number>; lin: number; n: number } | null = null;
+    for (const S of combos(p, k)) {
+      for (const A of S) {
+        if (abst[A] !== minAbst) continue; // reference must be a least-abstaining justice
+        const others = S.filter((i) => i !== A);
+        const table = new Map<string, number>();
+        let lin = 0, n = 0, ok = true;
+        for (const v of X) {
+          if (v[A] === 0) continue; // reference recused → outside the A-relative frame
+          n++;
+          const feats = others.map((m) => v[m] * v[A]);
+          const label = v[A] > 0 ? 1 : -1;
+          const key = feats.join(",");
+          const prev = table.get(key);
+          if (prev !== undefined && prev !== label) { ok = false; break; }
+          table.set(key, label);
+          if ((1 + feats.reduce((a, b) => a + b, 0) > 0 ? 1 : -1) === label) lin++;
+        }
+        if (ok && (!best || lin / n > best.lin / best.n)) best = { S, A, others, table, lin, n };
+      }
+    }
+    if (best) {
+      const rows = [...best.table.entries()]
+        .map(([key, w]) => ({ pattern: key.split(",").map(Number), winner: (w > 0 ? "ref" : "opp") as "ref" | "opp" }))
+        .sort((a, b) =>
+          a.winner === b.winner ? a.pattern.join().localeCompare(b.pattern.join()) : a.winner === "ref" ? -1 : 1
+        );
+      return {
+        reference: JUSTICE_BY_ID[SENIORITY_IDS[best.A]].lastName,
+        others: best.others.map((i) => JUSTICE_BY_ID[SENIORITY_IDS[i]].lastName),
+        size: best.S.length,
+        skipped: abst[best.A],
+        linearity: best.lin / best.n,
+        majorityVote: best.lin / best.n >= 0.999,
+        table: rows,
+      };
+    }
+  }
+  return null;
 }
 
 export interface AllStats {

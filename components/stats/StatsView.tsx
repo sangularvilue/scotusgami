@@ -272,6 +272,54 @@ export default function StatsView({ stats }: { stats: AllStats }) {
         </div>
       )}
 
+      {/* minimum set to infer the winner (relative encoding) */}
+      {d.winnerInference && (
+        <div className="mt-3 rounded border border-ink-line bg-ink-raised/40 p-3">
+          <div className="smallcaps mb-1 text-[10px] text-gold/80">
+            minimum set to infer the winner — {d.winnerInference.size} justices
+            {d.winnerInference.majorityVote ? " · a simple majority vote" : ` · ${pct(d.winnerInference.linearity)} like a majority vote`}
+          </div>
+          <p className="mb-2 text-[12px] leading-snug text-cream-dim">
+            Take <span className="text-gold-bright">{d.winnerInference.reference}</span> as the reference; each other
+            justice is coded by whether they voted the <span className="text-cream">same</span> side or the{" "}
+            <span className="text-cream">opposite</span>, and the winner is {d.winnerInference.reference}&apos;s side or
+            the opposite. Knowing just these {d.winnerInference.size} determines who won in every case
+            {d.winnerInference.majorityVote ? " — and it reduces to a plain majority vote of the set" : ""}
+            {d.winnerInference.skipped > 0
+              ? ` (excludes ${d.winnerInference.skipped} case${d.winnerInference.skipped === 1 ? "" : "s"} where ${d.winnerInference.reference} recused)`
+              : ""}.
+          </p>
+          <div className="overflow-x-auto">
+            <table className="font-mono text-[11px]">
+              <thead>
+                <tr className="text-cream-faint">
+                  <th className="px-2 py-1 text-left font-normal">{d.winnerInference.reference} (ref)</th>
+                  {d.winnerInference.others.map((n) => (
+                    <th key={n} className="px-2 py-1 text-left font-normal">{n}</th>
+                  ))}
+                  <th className="px-2 py-1 text-left font-normal">→ winner</th>
+                </tr>
+              </thead>
+              <tbody>
+                {d.winnerInference.table.map((row, i) => (
+                  <tr key={i} className="border-t border-ink-line/60">
+                    <td className="px-2 py-1 text-gold/70">same</td>
+                    {row.pattern.map((c, j) => (
+                      <td key={j} className="px-2 py-1 text-cream-dim">
+                        {c > 0 ? "same" : c < 0 ? "opp" : "—"}
+                      </td>
+                    ))}
+                    <td className="px-2 py-1 text-gold-bright">
+                      {row.winner === "ref" ? `${d.winnerInference!.reference}’s side` : "opposite"}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
       {/* scree for selected dataset */}
       <div className="mt-6">
         <h3 className="smallcaps mb-2 text-[10px] text-gold">scree — variance per PC ({d.term ? `OT${d.term}` : "all time"})</h3>
