@@ -281,6 +281,20 @@ export default function StatsView({ stats }: { stats: AllStats }) {
             points={stats.terms.map((s) => ({ label: `OT${s.term}`, value: s.conditionNumber }))}
             baseline={stats.overall ? { value: stats.overall.conditionNumber, label: "all-time" } : undefined}
           />
+          <p className="mt-3 text-[12px] leading-relaxed text-cream-dim">
+            The condition number (largest ÷ smallest principal-component variance) measures how close the voting matrix
+            is to <span className="text-cream">collinear</span> — how few dimensions the justices&apos; votes really move
+            along. A <span className="text-gold">rising</span> number means the Court is collapsing toward{" "}
+            <span className="text-cream">one axis</span>: tighter, more predictable bloc voting where divisions line up
+            on a single left–right dimension. A <span className="text-gold">falling</span> number means more{" "}
+            <span className="text-cream">cross-cutting</span> coalitions — cases splitting along several independent
+            dimensions, so votes are harder to predict from ideology alone.
+          </p>
+          <p className="mt-2 text-[12px] leading-relaxed text-cream-faint">
+            Caveat: it&apos;s also inflated when a term has few decided cases (a small sample makes the covariance
+            near-singular), so an early or provisional term&apos;s spike reflects thin data as much as real dynamics —
+            it settles as cases accumulate.
+          </p>
         </div>
       </div>
     </div>
