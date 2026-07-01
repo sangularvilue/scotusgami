@@ -230,13 +230,13 @@ export default function StatsView({ stats }: { stats: AllStats }) {
         <Callout label="unanimous (no dissent)">
           <span className="text-gold-bright">{pct(d.unanimityRate)}</span> of decisions
         </Callout>
-        <Callout label="most redundant (removal flips fewest)">
-          <span className="text-gold-bright">{d.mostRedundant.lastNames.join(", ")}</span> — removing any changes{" "}
-          {d.mostRedundant.changes} outcome{d.mostRedundant.changes === 1 ? "" : "s"}
+        <Callout label="most redundant (vote-flip changes fewest)">
+          <span className="text-gold-bright">{d.mostRedundant.lastNames.join(", ")}</span> — flipping their vote
+          changes {d.mostRedundant.changes} outcome{d.mostRedundant.changes === 1 ? "" : "s"}
         </Callout>
-        <Callout label="least redundant (most pivotal)">
-          <span className="text-gold-bright">{d.leastRedundant.lastNames.join(", ")}</span> — removal flips{" "}
-          {d.leastRedundant.changes} outcome{d.leastRedundant.changes === 1 ? "" : "s"}
+        <Callout label="least redundant (most decisive)">
+          <span className="text-gold-bright">{d.leastRedundant.lastNames.join(", ")}</span> — flipping their vote
+          changes {d.leastRedundant.changes} outcome{d.leastRedundant.changes === 1 ? "" : "s"}
         </Callout>
         {d.twins && (
           <Callout label="twins (closest by maverick distance)">

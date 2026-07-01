@@ -232,10 +232,12 @@ export function computeStats(
     anyLine = 0,
     unanimous = 0;
   let worst: UnexpectedLineup | null = null;
-  // redundancy: for each justice, how many case outcomes flip if they're
-  // removed. Removing a justice only changes the winner when they were in a
-  // one-vote majority (5–4 etc.) — it becomes a tie — so every justice on the
-  // majority side of a margin-1 case is "pivotal" there.
+  // redundancy: for each justice, how many case outcomes would change if that
+  // justice had voted the other way. Flipping a vote shifts the margin by two,
+  // so it changes the result only in a one- or two-vote decision (5–4 → 4–5, or
+  // 5–3 with a recusal → a 4–4 tie). Flipping a dissent only pads the majority,
+  // so dissenters are never pivotal; every justice on the majority side of such
+  // a close case is "decisive" there.
   const flips = new Array(p).fill(0);
 
   cases.forEach((c, i) => {
@@ -248,7 +250,7 @@ export function computeStats(
       if (isPartyLine(s)) partyLine++;
       if (isAnyLine(s, pc1Index)) anyLine++;
     }
-    if (nMaj - nDis === 1) for (let j = 0; j < p; j++) if (s[j] > 0) flips[j]++;
+    if (nMaj > nDis && nMaj - nDis <= 2) for (let j = 0; j < p; j++) if (s[j] > 0) flips[j]++;
     const z = project(s, r);
     let d2 = 0;
     for (let k = 0; k < z.length; k++)
