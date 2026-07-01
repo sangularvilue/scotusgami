@@ -31,8 +31,8 @@ export interface CaseRecord {
   opinions: OpinionInfo[];
   oyezUrl: string;
   justiaUrl: string | null;
-  /** vote-data source: Oyez (default) or SCDB supplement while Oyez catches up */
-  source?: "oyez" | "scdb";
+  /** vote-data source: Oyez (default), SCDB supplement, or a manual /admin edit */
+  source?: "oyez" | "scdb" | "manual";
   /** Wikipedia pageviews (recent ~60 days) — fame proxy for game rarity scoring; 0 = no article */
   fame?: number;
 }
