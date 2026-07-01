@@ -282,18 +282,22 @@ export default function StatsView({ stats }: { stats: AllStats }) {
             baseline={stats.overall ? { value: stats.overall.conditionNumber, label: "all-time" } : undefined}
           />
           <p className="mt-3 text-[12px] leading-relaxed text-cream-dim">
-            The condition number (largest ÷ smallest principal-component variance) measures how close the voting matrix
-            is to <span className="text-cream">collinear</span> — how few dimensions the justices&apos; votes really move
-            along. A <span className="text-gold">rising</span> number means the Court is collapsing toward{" "}
-            <span className="text-cream">one axis</span>: tighter, more predictable bloc voting where divisions line up
-            on a single left–right dimension. A <span className="text-gold">falling</span> number means more{" "}
-            <span className="text-cream">cross-cutting</span> coalitions — cases splitting along several independent
-            dimensions, so votes are harder to predict from ideology alone.
+            The condition number is λ<sub>max</sub> ÷ λ<sub>min</sub>, but its swings come from the{" "}
+            <span className="text-cream">denominator</span> — the smallest eigenvalue (PC9), not PC1. Across these terms
+            PC1&apos;s variance barely shifts while the smallest one moves much more, and the condition number tracks it
+            almost inversely. So it&apos;s really a gauge of the <span className="text-cream">most collinear direction</span>:
+            a combination of justices whose votes are nearly redundant.
+          </p>
+          <p className="mt-2 text-[12px] leading-relaxed text-cream-dim">
+            <span className="text-gold">Rising</span> → that least-independent direction is collapsing toward zero — some
+            justices voting almost interchangeably (very tight bloc behavior) — and/or too few cases to fill out all nine
+            dimensions. <span className="text-gold">Falling</span> → even the most redundant direction carries real
+            variance, so the nine are voting more independently.
           </p>
           <p className="mt-2 text-[12px] leading-relaxed text-cream-faint">
-            Caveat: it&apos;s also inflated when a term has few decided cases (a small sample makes the covariance
-            near-singular), so an early or provisional term&apos;s spike reflects thin data as much as real dynamics —
-            it settles as cases accumulate.
+            Because it hinges on that tiny, noisy smallest eigenvalue, read it as a rough collinearity gauge, not a
+            precise trend — and discount early or provisional terms, where thin data drives λ<sub>min</sub> toward zero
+            on its own.
           </p>
         </div>
       </div>
