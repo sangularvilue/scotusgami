@@ -54,6 +54,12 @@ export default async function Home() {
           >
             ◇ opinion-authorship bingo →
           </a>
+          <a
+            href="/stats"
+            className="inline-block rounded border border-gold/60 px-4 py-1.5 font-mono text-[12px] text-gold transition-colors hover:bg-gold/10"
+          >
+            ◈ voting-bloc PCA stats →
+          </a>
         </div>
       </header>
 
