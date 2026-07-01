@@ -179,16 +179,17 @@ export function buildBingoGrid(term: number, cases: BingoCase[]): BingoGrid {
     return { sitting, byAuthor, pending, authored, owed };
   });
 
-  // Granted but not yet calendared (cert granted, no argument date, not decided).
-  // Only meaningful for an upcoming term whose arguments haven't begun: once a
-  // term has sittings, its still-uncalendared grants are really next-term cases
-  // Oyez filed under their grant term, so we suppress them here.
-  const granted = sessions.length
-    ? []
-    : cases
-        .filter((c) => !c.argued && c.granted && !c.decided)
-        .sort((a, b) => a.granted!.localeCompare(b.granted!))
-        .map(lite);
+  // Granted but not yet calendared (cert granted, no argument date, not decided)
+  // — shown in the granted pool. This coexists with sittings: an upcoming term
+  // gradually moves cases out of the pool and into sittings as the Court sets
+  // argument dates, so we do NOT suppress the pool once sittings exist. Only the
+  // authoritative Granted/Noted source emits these (Oyez-sourced current-term
+  // data carries no granted-but-unargued cases — see parseBingoCase), so there's
+  // no next-term spillover to worry about.
+  const granted = cases
+    .filter((c) => !c.argued && c.granted && !c.decided)
+    .sort((a, b) => a.granted!.localeCompare(b.granted!))
+    .map(lite);
 
   return {
     term,

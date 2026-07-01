@@ -21,6 +21,11 @@ import type { BingoCase } from "../lib/types";
 const UA =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36";
 
+const MONTH = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December",
+];
+
 const KEEP_UPPER = new Set([
   "LLC", "L.L.C.", "USA", "U.S.", "U.S.A.", "GA", "SEC", "RNC", "FCC", "EPA",
   "NLRB", "IRS", "TVA", "WBI", "CSX", "II", "III", "FBI", "DHS", "DOJ", "VA",
@@ -75,18 +80,38 @@ async function main() {
   const { text } = await new PDFParse({ data: buf }).getText();
   const lines = text.split(/\r?\n/).map((s) => s.trim()).filter(Boolean);
 
-  // Each case: "{docket} {3-letter code} {NAME}" then a "... Granted: m/d/yy" line.
-  const caseLine = /^(\d{2}-\d{1,5})\s+([CAQ][SFTMO][XYH])\s+(.+)$/;
-  const parsed: { docket: string; name: string; granted: string | null }[] = [];
+  // Each case starts "{docket} {3-letter code} {NAME}" (name may wrap to the
+  // next line), followed by "Granted: m/d/yy" and — once the Court calendars it
+  // — an "Argument Date: m/d/yy". We scan a small window after each case line
+  // for both. The argument date is what slots the case into a sitting; until it
+  // appears the case stays in the granted pool.
+  const caseLine = /^(\d{2}-\d{1,5})\*?\s+([CAQ][SFTMO][XYH])\s+(.+)$/;
+  const parsed: {
+    docket: string;
+    name: string;
+    granted: string | null;
+    argued: string | null;
+  }[] = [];
   for (let i = 0; i < lines.length; i++) {
     const m = lines[i].match(caseLine);
     if (!m) continue;
-    const granted =
-      (lines[i].match(/Granted:\s*([\d/]+)/) ??
-        lines[i + 1]?.match(/Granted:\s*([\d/]+)/))?.[1] ?? null;
-    parsed.push({ docket: m[1], name: m[3], granted: granted ? toIso(granted) : null });
+    // window = this line through the line before the next case (or +4 lines)
+    let end = i + 1;
+    while (end < lines.length && end < i + 5 && !lines[end].match(caseLine)) end++;
+    const window = lines.slice(i, end).join(" ");
+    const granted = window.match(/Granted:\s*(\d{1,2}\/\d{1,2}\/\d{2})/)?.[1] ?? null;
+    const argued = window.match(/Argument Date:\s*(\d{1,2}\/\d{1,2}\/\d{2})/)?.[1] ?? null;
+    parsed.push({
+      docket: m[1],
+      name: m[3],
+      granted: granted ? toIso(granted) : null,
+      argued: argued ? toIso(argued) : null,
+    });
   }
-  console.log(`granted/noted list: ${parsed.length} cases for argument`);
+  const scheduled = parsed.filter((c) => c.argued).length;
+  console.log(
+    `granted/noted list: ${parsed.length} cases for argument (${scheduled} calendared)`
+  );
 
   // Oyez names where available (nicer casing than the all-caps official list).
   const oyezByDocket = new Map<string, string>();
@@ -107,9 +132,11 @@ async function main() {
       term: String(term),
       docket: c.docket,
       name: oyezName ?? titleCase(c.name),
-      argued: null,
+      argued: c.argued,
       granted: c.granted,
-      sitting: null,
+      // sitting label is recomputed from the argument date by buildBingoGrid's
+      // session clustering; store it too for reference.
+      sitting: c.argued ? MONTH[new Date(`${c.argued}T00:00:00Z`).getUTCMonth()] : null,
       decided: null,
       majorityAuthor: null,
       oyezUrl: oyezName
@@ -118,7 +145,11 @@ async function main() {
     };
   });
 
-  cases.forEach((c) => console.log(`  ${c.docket}  ${c.name}  (granted ${c.granted})`));
+  cases.forEach((c) =>
+    console.log(
+      `  ${c.docket}  ${c.name}  (granted ${c.granted}${c.argued ? `, argued ${c.argued}` : ""})`
+    )
+  );
 
   const outDir = join(process.cwd(), "data");
   mkdirSync(outDir, { recursive: true });
