@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { PARTY_COLOR } from "./colors";
+import { spreadY } from "./layout";
 
 export interface Pt3D {
   label: string;
@@ -26,9 +27,10 @@ function rotate(p: V3, yaw: number, pitch: number): V3 {
 }
 
 /**
- * Drag-to-rotate 3-D scatter of justice loadings on PC1/PC2/PC3. Orthographic
- * projection with a depth cue (nearer points larger/brighter). No dependency —
- * hand-rolled rotation so it stays self-contained.
+ * Drag-to-rotate 3-D scatter of justice loadings on PC1/PC2/PC3. Orthographic,
+ * with a depth cue (nearer points larger/brighter). The view auto-fits the
+ * rotated cloud (points + axes) into the frame each render, so the origin moves
+ * around as you rotate and nothing clips. No dependency — hand-rolled.
  */
 export default function Scatter3D({
   points,
@@ -43,16 +45,34 @@ export default function Scatter3D({
   const [pitch, setPitch] = useState(0.35);
   const drag = useRef<{ x: number; y: number } | null>(null);
 
-  const cx = size / 2;
-  const cy = size / 2;
   const max =
     Math.max(0.05, ...points.flatMap((p) => [Math.abs(p.x), Math.abs(p.y), Math.abs(p.z)])) *
-    1.2;
-  const scale = (size / 2 - 30) / max;
-  const proj = (p: V3) => {
-    const r = rotate(p, yaw, pitch);
-    return { X: cx + r.x * scale, Y: cy - r.y * scale, depth: r.z };
-  };
+    1.05;
+
+  const axisEnds: { v: V3; label: string }[] = [
+    { v: { x: max, y: 0, z: 0 }, label: labels[0] },
+    { v: { x: 0, y: max, z: 0 }, label: labels[1] },
+    { v: { x: 0, y: 0, z: max }, label: labels[2] },
+  ];
+
+  // rotate everything, then fit the rotated (x,y) bounding box to the frame so
+  // the cloud always fills it and the origin is free to move.
+  const rPts = points.map((p) => rotate(p, yaw, pitch));
+  const rAxes = axisEnds.map((a) => rotate(a.v, yaw, pitch));
+  const rOrigin = rotate({ x: 0, y: 0, z: 0 }, yaw, pitch);
+  const all = [...rPts, ...rAxes, rOrigin];
+  const xs = all.map((r) => r.x);
+  const ys = all.map((r) => r.y);
+  const minX = Math.min(...xs), maxX = Math.max(...xs);
+  const minY = Math.min(...ys), maxY = Math.max(...ys);
+  const pad = 42;
+  const w = maxX - minX || 1;
+  const h = maxY - minY || 1;
+  const scale = Math.min((size - 2 * pad) / w, (size - 2 * pad) / h);
+  const offX = pad + ((size - 2 * pad) - w * scale) / 2;
+  const offY = pad + ((size - 2 * pad) - h * scale) / 2;
+  const toX = (r: V3) => offX + (r.x - minX) * scale;
+  const toY = (r: V3) => offY + (maxY - r.y) * scale; // flip y
 
   const onDown = (e: React.PointerEvent) => {
     drag.current = { x: e.clientX, y: e.clientY };
@@ -68,24 +88,19 @@ export default function Scatter3D({
   };
   const onUp = () => (drag.current = null);
 
-  // axes: from origin to +extent on each PC
-  const axisEnds: { v: V3; label: string }[] = [
-    { v: { x: max, y: 0, z: 0 }, label: labels[0] },
-    { v: { x: 0, y: max, z: 0 }, label: labels[1] },
-    { v: { x: 0, y: 0, z: max }, label: labels[2] },
-  ];
-  const origin = proj({ x: 0, y: 0, z: 0 });
+  const origin = { X: toX(rOrigin), Y: toY(rOrigin) };
 
-  // draw far points first
+  // draw far points first; de-collide labels vertically
   const ordered = points
-    .map((p) => ({ p, pr: proj(p) }))
-    .sort((a, b) => a.pr.depth - b.pr.depth);
-  const depthNorm = (d: number) => (d / max + 1) / 2; // 0 far … 1 near
+    .map((p, i) => ({ p, r: rPts[i], X: toX(rPts[i]), Y: toY(rPts[i]) }))
+    .sort((a, b) => a.r.z - b.r.z);
+  const labelY = spreadY(ordered.map((o) => o.Y), 12, 12, size - 12);
+  const depthNorm = (d: number) => (d / max + 1) / 2;
 
   return (
     <svg
       viewBox={`0 0 ${size} ${size}`}
-      className="w-full max-w-[440px] cursor-grab touch-none active:cursor-grabbing select-none"
+      className="w-full max-w-[440px] cursor-grab touch-none select-none active:cursor-grabbing"
       onPointerDown={onDown}
       onPointerMove={onMove}
       onPointerUp={onUp}
@@ -94,9 +109,8 @@ export default function Scatter3D({
       aria-label="3-D PC loadings, drag to rotate"
     >
       <rect x={0} y={0} width={size} height={size} fill="transparent" />
-      {/* axes */}
-      {axisEnds.map((a) => {
-        const e = proj(a.v);
+      {axisEnds.map((a, i) => {
+        const e = { X: toX(rAxes[i]), Y: toY(rAxes[i]) };
         return (
           <g key={a.label}>
             <line x1={origin.X} y1={origin.Y} x2={e.X} y2={e.Y} stroke="#3a4453" />
@@ -106,14 +120,17 @@ export default function Scatter3D({
           </g>
         );
       })}
-      {/* points */}
-      {ordered.map(({ p, pr }) => {
-        const dn = depthNorm(pr.depth);
+      {ordered.map((o, i) => {
+        const dn = depthNorm(o.r.z);
+        const ly = labelY[i];
+        const lx = o.X + 7;
+        const leader = Math.abs(ly - o.Y) > 5;
         return (
-          <g key={p.label} opacity={0.45 + 0.55 * dn}>
-            <circle cx={pr.X} cy={pr.Y} r={3 + 3 * dn} fill={PARTY_COLOR[p.party]} />
-            <text x={pr.X + 6} y={pr.Y - 4} fontSize={9.5} fill="#c9c3b4" className="font-mono">
-              {p.label}
+          <g key={o.p.label} opacity={0.5 + 0.5 * dn}>
+            {leader && <line x1={o.X} y1={o.Y} x2={lx - 1} y2={ly - 3} stroke="#3a4453" strokeWidth={0.75} />}
+            <circle cx={o.X} cy={o.Y} r={3 + 3 * dn} fill={PARTY_COLOR[o.p.party]} />
+            <text x={lx} y={ly} fontSize={9.5} fill="#c9c3b4" className="font-mono">
+              {o.p.label}
             </text>
           </g>
         );

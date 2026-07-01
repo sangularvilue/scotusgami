@@ -106,6 +106,11 @@ export interface StatsResult {
   /** justice ids ordered by PC1 loading (most liberal → most conservative) */
   pc1Order: string[];
   maverick: { id: string; lastName: string; score: number };
+  /** justices whose removal would flip the fewest / most case outcomes */
+  mostRedundant: { lastNames: string[]; changes: number };
+  leastRedundant: { lastNames: string[]; changes: number };
+  /** the closest pair of justices by the maverick distance metric */
+  twins: { aName: string; bName: string; dist: number } | null;
   /** share of decided cases with no dissent (unanimous in judgment) */
   unanimityRate: number;
   nDivided: number;
@@ -172,30 +177,43 @@ export function computeStats(
     return loadings[best][k] || 1;
   });
 
-  // Maverick = greatest ideological distance from the court's center, measured
-  // in PC-loading space, weighting each axis by its importance (variance
-  // explained) and dropping PC1 so it captures standing apart on the secondary
-  // (non-left/right) dimensions rather than simply being far left or far right.
+  // Distance in PC-loading space, weighting each axis by its importance
+  // (variance explained) and dropping PC1 — so it measures how justices differ
+  // on the secondary (non-left/right) dimensions, not simply on left vs right.
   const p = r.loadings.length;
-  const centroid = r.eigenvalues.map(
-    (_, k) => r.loadings.reduce((s, row) => s + row[k], 0) / p
-  );
-  const maverickDist = (j: number) => {
+  const wdist = (a: number[], b: number[]) => {
     let d2 = 0;
     for (let k = 1; k < p; k++) {
-      const diff = r.loadings[j][k] - centroid[k];
+      const diff = a[k] - b[k];
       d2 += r.varianceExplained[k] * diff * diff;
     }
     return Math.sqrt(d2);
   };
+  const centroid = r.eigenvalues.map(
+    (_, k) => r.loadings.reduce((s, row) => s + row[k], 0) / p
+  );
 
+  // Maverick = greatest such distance from the court's center.
   const loadings: JusticeLoading[] = SENIORITY_IDS.map((id, j) => ({
     id,
     lastName: JUSTICE_BY_ID[id].lastName,
     party: PARTY[id],
     pc: r.loadings[j],
-    maverick: maverickDist(j),
+    maverick: wdist(r.loadings[j], centroid),
   }));
+
+  // "Twins" = the closest pair by that same distance metric.
+  let twins: StatsResult["twins"] = null;
+  for (let a = 0; a < p; a++)
+    for (let b = a + 1; b < p; b++) {
+      const dist = wdist(r.loadings[a], r.loadings[b]);
+      if (!twins || dist < twins.dist)
+        twins = {
+          aName: JUSTICE_BY_ID[SENIORITY_IDS[a]].lastName,
+          bName: JUSTICE_BY_ID[SENIORITY_IDS[b]].lastName,
+          dist,
+        };
+    }
 
   const pc1Order = [...loadings]
     .sort((a, b) => a.pc[0] - b.pc[0])
@@ -212,6 +230,11 @@ export function computeStats(
     anyLine = 0,
     unanimous = 0;
   let worst: UnexpectedLineup | null = null;
+  // redundancy: for each justice, how many case outcomes flip if they're
+  // removed. Removing a justice only changes the winner when they were in a
+  // one-vote majority (5–4 etc.) — it becomes a tie — so every justice on the
+  // majority side of a margin-1 case is "pivotal" there.
+  const flips = new Array(p).fill(0);
 
   cases.forEach((c, i) => {
     const s = X[i];
@@ -223,6 +246,7 @@ export function computeStats(
       if (isPartyLine(s)) partyLine++;
       if (isAnyLine(s, pc1Index)) anyLine++;
     }
+    if (nMaj - nDis === 1) for (let j = 0; j < p; j++) if (s[j] > 0) flips[j]++;
     const z = project(s, r);
     let d2 = 0;
     for (let k = 0; k < z.length; k++)
@@ -240,6 +264,11 @@ export function computeStats(
     }
   });
 
+  const minFlips = Math.min(...flips);
+  const maxFlips = Math.max(...flips);
+  const namesAt = (v: number) =>
+    SENIORITY_IDS.filter((_, j) => flips[j] === v).map((id) => JUSTICE_BY_ID[id].lastName);
+
   return {
     label,
     term,
@@ -252,6 +281,9 @@ export function computeStats(
     conditionNumber: r.conditionNumber,
     pc1Order,
     maverick: { id: maverickL.id, lastName: maverickL.lastName, score: maverickL.maverick },
+    mostRedundant: { lastNames: namesAt(minFlips), changes: minFlips },
+    leastRedundant: { lastNames: namesAt(maxFlips), changes: maxFlips },
+    twins,
     unanimityRate: unanimous / cases.length,
     nDivided,
     partyLinePct: nDivided ? partyLine / nDivided : 0,
