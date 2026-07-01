@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { JUSTICE_BY_ID, SENIORITY_IDS } from "@/lib/justices";
+import { IDEOLOGICAL_IDS, JUSTICE_BY_ID, SENIORITY_IDS } from "@/lib/justices";
 import type { AllStats, StatsResult } from "@/lib/scotus-stats";
 import { PARTY_COLOR } from "./colors";
 import Scatter2D from "./Scatter2D";
@@ -128,6 +128,51 @@ function Scree({ ve }: { ve: number[] }) {
   );
 }
 
+/** Ideology-ordered heatmap of pairwise voting agreement. */
+function AgreementMatrix({ agreement }: { agreement: (number | null)[][] }) {
+  const order = IDEOLOGICAL_IDS.map((id) => SENIORITY_IDS.indexOf(id));
+  const vals: number[] = [];
+  for (let a = 0; a < 9; a++) for (let b = 0; b < 9; b++)
+    if (a !== b && agreement[a][b] != null) vals.push(agreement[a][b] as number);
+  const lo = Math.min(...vals), hi = Math.max(...vals);
+  const SZ = 34;
+
+  const cells: React.ReactNode[] = [<div key="corner" />];
+  for (const si of order)
+    cells.push(
+      <div key={`h${si}`} title={JUSTICE_BY_ID[SENIORITY_IDS[si]].fullName}
+        className="flex items-end justify-center pb-0.5 font-mono text-[9px] text-cream-faint" style={{ height: 22 }}>
+        {JUSTICE_BY_ID[SENIORITY_IDS[si]].tick}
+      </div>
+    );
+  for (const r of order) {
+    cells.push(
+      <div key={`r${r}`} title={JUSTICE_BY_ID[SENIORITY_IDS[r]].fullName}
+        className="flex items-center justify-end pr-1.5 font-mono text-[9px] text-cream-faint" style={{ height: SZ }}>
+        {JUSTICE_BY_ID[SENIORITY_IDS[r]].tick}
+      </div>
+    );
+    for (const c of order) {
+      if (r === c) { cells.push(<div key={`${r}-${c}`} className="border border-ink" style={{ background: "#1a1f28" }} />); continue; }
+      const v = agreement[r][c];
+      const t = v == null ? 0 : hi > lo ? (v - lo) / (hi - lo) : 0.5;
+      const bg = v == null ? "transparent" : `rgba(201,165,88,${(0.08 + 0.9 * t).toFixed(2)})`;
+      cells.push(
+        <div key={`${r}-${c}`} title={`${JUSTICE_BY_ID[SENIORITY_IDS[r]].lastName} & ${JUSTICE_BY_ID[SENIORITY_IDS[c]].lastName}: ${v == null ? "—" : Math.round(v * 100) + "%"}`}
+          className="flex items-center justify-center border border-ink font-mono text-[9px]"
+          style={{ height: SZ, background: bg, color: t > 0.55 ? "#0d1015" : "#c9c3b4" }}>
+          {v == null ? "—" : Math.round(v * 100)}
+        </div>
+      );
+    }
+  }
+  return (
+    <div className="overflow-x-auto pb-1">
+      <div className="inline-grid" style={{ gridTemplateColumns: `28px repeat(9, ${SZ}px)` }}>{cells}</div>
+    </div>
+  );
+}
+
 function Callout({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="rounded border border-ink-line bg-ink-raised/40 p-3">
@@ -214,6 +259,18 @@ export default function StatsView({ stats }: { stats: AllStats }) {
             );
           })}
         </div>
+      </div>
+
+      {/* agreement matrix */}
+      <div className="mt-6">
+        <h3 className="smallcaps mb-2 text-[10px] text-gold">
+          agreement matrix — % of shared cases on the same side (ordered by ideology)
+        </h3>
+        <AgreementMatrix agreement={d.agreement} />
+        <p className="mt-2 text-[12px] leading-relaxed text-cream-faint">
+          Share of cases (in which both participated) where the two justices landed on the same side — both in the
+          majority or both in dissent. Brighter = more agreement; the ideological blocs show up as bright squares.
+        </p>
       </div>
 
       {/* callouts */}

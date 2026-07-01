@@ -114,6 +114,12 @@ export interface StatsResult {
   effectiveComponents: number;
   /** justice ids ordered by PC1 loading (most liberal → most conservative) */
   pc1Order: string[];
+  /**
+   * Pairwise agreement matrix in seniority order: agreement[a][b] = fraction of
+   * cases (in which both participated) where a and b were on the same side
+   * (both majority or both dissent). null if they never shared a case.
+   */
+  agreement: (number | null)[][];
   maverick: { id: string; lastName: string; score: number };
   /** justices whose removal would flip the fewest / most case outcomes */
   mostRedundant: { lastNames: string[]; changes: number };
@@ -277,6 +283,19 @@ export function computeStats(
     }
   });
 
+  // pairwise agreement: share of co-participated cases on the same side
+  const agreement: (number | null)[][] = SENIORITY_IDS.map(() => new Array(p).fill(null));
+  for (let a = 0; a < p; a++) {
+    for (let b = 0; b < p; b++) {
+      if (a === b) { agreement[a][b] = 1; continue; }
+      let same = 0, tot = 0;
+      for (const v of X) {
+        if (v[a] !== 0 && v[b] !== 0) { tot++; if (Math.sign(v[a]) === Math.sign(v[b])) same++; }
+      }
+      agreement[a][b] = tot ? same / tot : null;
+    }
+  }
+
   const minFlips = Math.min(...flips);
   const maxFlips = Math.max(...flips);
   const namesAt = (v: number) =>
@@ -294,6 +313,7 @@ export function computeStats(
     pc12: r.varianceExplained[0] + (r.varianceExplained[1] ?? 0),
     effectiveComponents: 1 / r.varianceExplained.reduce((s, p) => s + p * p, 0),
     pc1Order,
+    agreement,
     maverick: { id: maverickL.id, lastName: maverickL.lastName, score: maverickL.maverick },
     mostRedundant: { lastNames: namesAt(minFlips), changes: minFlips },
     leastRedundant: { lastNames: namesAt(maxFlips), changes: maxFlips },
