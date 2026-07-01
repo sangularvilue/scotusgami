@@ -123,7 +123,7 @@ function Scree({ ve }: { ve: number[] }) {
 function Callout({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="rounded border border-ink-line bg-ink-raised/40 p-3">
-      <div className="smallcaps mb-1 text-[9px] text-cream-faint">{label}</div>
+      <div className="smallcaps mb-1 text-[10px] text-gold/80">{label}</div>
       <div className="text-[13px] leading-snug text-cream">{children}</div>
     </div>
   );
@@ -244,7 +244,7 @@ export default function StatsView({ stats }: { stats: AllStats }) {
       {/* most unexpected lineup */}
       {d.mostUnexpected && (
         <div className="mt-3 rounded border border-ink-line bg-ink-raised/40 p-3">
-          <div className="smallcaps mb-1 text-[9px] text-cream-faint">
+          <div className="smallcaps mb-1 text-[10px] text-gold/80">
             most unexpected lineup (largest Mahalanobis distance in PC space)
           </div>
           <div className="mb-2 text-[13px] text-cream">
