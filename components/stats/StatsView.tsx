@@ -164,6 +164,12 @@ export default function StatsView({ stats }: { stats: AllStats }) {
 
       <p className="mb-4 font-mono text-[11px] text-cream-faint">
         {d.label} · {d.nCases} cases · {d.nDivided} divided
+        {d.provisional && (
+          <span className="ml-2 rounded-sm border border-slate-dissent/50 px-1.5 py-0.5 text-slate-dissent">
+            provisional — includes Oyez data for the in-progress term (incomplete
+            until the Supreme Court Database releases); numbers will shift
+          </span>
+        )}
       </p>
 
       {/* loadings plots */}

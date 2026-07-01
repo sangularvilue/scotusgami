@@ -56,6 +56,10 @@ export default async function StatsPage() {
             single cut in the PC1 ordering separates the two sides of a divided case. &ldquo;Most unexpected&rdquo; =
             the lineup with the largest Mahalanobis distance in PC space (least likely under a Gaussian PC model).
           </p>
+          <p className="mt-2">
+            Votes for completed terms come from the Supreme Court Database (SCDB), the canonical source behind the
+            SCOTUSblog StatPack; the in-progress term falls back to Oyez until SCDB releases and is flagged provisional.
+          </p>
         </div>
       </footer>
     </main>

@@ -97,6 +97,8 @@ export interface StatsResult {
   label: string;
   term: number | null; // null = all-time
   nCases: number;
+  /** true if any case is Oyez-sourced (not yet canonical SCDB) → numbers provisional */
+  provisional: boolean;
   loadings: JusticeLoading[];
   eigenvalues: number[];
   varianceExplained: number[];
@@ -273,6 +275,7 @@ export function computeStats(
     label,
     term,
     nCases: cases.length,
+    provisional: cases.some((c) => c.source !== "scdb"),
     loadings,
     eigenvalues: r.eigenvalues,
     varianceExplained: r.varianceExplained,
