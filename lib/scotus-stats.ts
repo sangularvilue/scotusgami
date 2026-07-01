@@ -72,7 +72,12 @@ export interface JusticeLoading {
   party: "R" | "D";
   /** loading on each PC (PC1, PC2, PC3, …) */
   pc: number[];
-  /** fraction of this justice's loading energy off PC1 — higher = more maverick */
+  /**
+   * Maverick score: PC-importance-weighted distance of this justice's loadings
+   * from the court's centroid, with PC1 (the main ideological axis) removed —
+   * i.e. how far the justice stands apart from the pack on the *secondary*
+   * dimensions. Higher = more maverick.
+   */
   maverick: number;
 }
 
@@ -167,12 +172,29 @@ export function computeStats(
     return loadings[best][k] || 1;
   });
 
+  // Maverick = greatest ideological distance from the court's center, measured
+  // in PC-loading space, weighting each axis by its importance (variance
+  // explained) and dropping PC1 so it captures standing apart on the secondary
+  // (non-left/right) dimensions rather than simply being far left or far right.
+  const p = r.loadings.length;
+  const centroid = r.eigenvalues.map(
+    (_, k) => r.loadings.reduce((s, row) => s + row[k], 0) / p
+  );
+  const maverickDist = (j: number) => {
+    let d2 = 0;
+    for (let k = 1; k < p; k++) {
+      const diff = r.loadings[j][k] - centroid[k];
+      d2 += r.varianceExplained[k] * diff * diff;
+    }
+    return Math.sqrt(d2);
+  };
+
   const loadings: JusticeLoading[] = SENIORITY_IDS.map((id, j) => ({
     id,
     lastName: JUSTICE_BY_ID[id].lastName,
     party: PARTY[id],
     pc: r.loadings[j],
-    maverick: 1 - r.loadings[j][0] * r.loadings[j][0],
+    maverick: maverickDist(j),
   }));
 
   const pc1Order = [...loadings]

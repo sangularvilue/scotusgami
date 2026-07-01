@@ -181,10 +181,9 @@ export default function StatsView({ stats }: { stats: AllStats }) {
 
       {/* callouts */}
       <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        <Callout label="most maverick (least PC1-aligned)">
-          <span className="text-gold-bright">{d.maverick.lastName}</span> — PC1 loading{" "}
-          {d.loadings.find((l) => l.id === d.maverick.id)!.pc[0].toFixed(2)}, the least of any justice (votes
-          least explained by the ideological axis)
+        <Callout label="most maverick (farthest from center, PC1 removed)">
+          <span className="text-gold-bright">{d.maverick.lastName}</span> — stands apart from the pack on the
+          secondary axes (PC-importance-weighted distance {d.maverick.score.toFixed(3)}, ignoring left/right)
         </Callout>
         <Callout label="variance explained">
           PC1 <span className="text-gold-bright">{pct1(d.pc1)}</span> · PC1+PC2{" "}

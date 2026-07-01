@@ -50,8 +50,9 @@ export default async function StatsPage() {
       <footer className="relative z-10 mt-12 border-t border-ink-line">
         <div className="mx-auto w-full max-w-5xl px-5 py-6 font-mono text-[11px] leading-relaxed text-cream-faint">
           <p>
-            PC1 is oriented so conservative loads positive. &ldquo;Maverick&rdquo; = the justice whose loading sits
-            least on PC1 (least explained by the dominant ideological axis). &ldquo;Any ideological line&rdquo; = a
+            PC1 is oriented so conservative loads positive. &ldquo;Maverick&rdquo; = the justice farthest from the
+            court&apos;s center in PC-loading space, weighting each axis by its variance explained and dropping PC1 —
+            i.e. who stands most apart on the secondary (non-left/right) dimensions. &ldquo;Any ideological line&rdquo; = a
             single cut in the PC1 ordering separates the two sides of a divided case. &ldquo;Most unexpected&rdquo; =
             the lineup with the largest Mahalanobis distance in PC space (least likely under a Gaussian PC model).
           </p>
