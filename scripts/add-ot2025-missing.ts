@@ -5,10 +5,11 @@
  * alignment paragraph on supremecourt.gov (seniority order:
  * Roberts, Thomas, Alito, Sotomayor, Kagan, Gorsuch, Kavanaugh, Barrett, Jackson).
  *
- * Per-curiam / emergency-docket orders are intentionally excluded — SCDB and the
- * SCOTUSblog StatPack exclude them from merits analysis, so including them here
- * would skew the (already provisional) term. When SCDB releases OT2025 these
- * manual entries should be removed so SCDB becomes authoritative.
+ * Per-curiam opinions of the Court were originally excluded here on the belief
+ * that the StatPack/SCDB leave them out — the final OT2025 Stat Pack proved
+ * otherwise (66 opinions = 56 signed + 10 PC), so they are added separately by
+ * add-ot2025-percuriam.ts. When SCDB releases OT2025 all these manual entries
+ * should be removed so SCDB becomes authoritative.
  *
  * Usage: npx tsx scripts/add-ot2025-missing.ts
  */
