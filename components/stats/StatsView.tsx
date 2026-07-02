@@ -321,15 +321,19 @@ function SplitBreakdownBars({ rows }: { rows: { label: string; b: SplitBreakdown
   );
 }
 
+/** Brighter text tints of the party colors, for small labels on a dark ground. */
+const LABEL_TINT: Record<"R" | "D", string> = { R: "#e8988d", D: "#a9c4ec" };
+
 /** Each justice's PC1 (ideology) loading traced across terms. */
 function PC1Drift({ terms }: { terms: StatsResult[] }) {
-  const W = 460, H = 240, padL = 24, padR = 52, padT = 18, padB = 26;
+  const W = 480, H = 260, padL = 26, padR = 82, padT = 22, padB = 28;
   if (terms.length < 2)
     return <p className="text-[12px] text-cream-faint">Need at least two terms to trace drift.</p>;
   const series = SENIORITY_IDS.map((id) => ({
     id,
-    tick: JUSTICE_BY_ID[id].tick,
-    party: PARTY_COLOR[PARTY[id]],
+    lastName: JUSTICE_BY_ID[id].lastName,
+    line: PARTY_COLOR[PARTY[id]],
+    tint: LABEL_TINT[PARTY[id]],
     vals: terms.map((t) => t.loadings.find((l) => l.id === id)?.pc[0] ?? 0),
   }));
   const all = series.flatMap((s) => s.vals);
@@ -340,39 +344,39 @@ function PC1Drift({ terms }: { terms: StatsResult[] }) {
   const x = (i: number) => padL + (i / (terms.length - 1)) * (W - padL - padR);
   const y = (v: number) => padT + (1 - (v - lo) / (hi - lo)) * (H - padT - padB);
   const endY = series.map((s) => y(s.vals[s.vals.length - 1]));
-  const labelY = spreadY(endY.slice(), 11, padT + 4, H - padB - 2);
+  const labelY = spreadY(endY.slice(), 14, padT + 5, H - padB - 2);
   return (
     <svg viewBox={`0 0 ${W} ${H}`} className="w-full" role="img" aria-label="PC1 loading drift across terms">
       {lo < 0 && hi > 0 && (
         <line x1={padL} y1={y(0)} x2={W - padR} y2={y(0)} stroke="#3a4453" strokeDasharray="3 3" />
       )}
       {terms.map((t, i) => (
-        <text key={t.term} x={x(i)} y={H - 8} fontSize={9} textAnchor="middle" fill="#9a958a" className="font-mono">
+        <text key={t.term} x={x(i)} y={H - 9} fontSize={10} textAnchor="middle" fill="#9a958a" className="font-mono">
           OT{t.term}
         </text>
       ))}
       {series.map((s, si) => {
         const path = s.vals.map((v, i) => `${i ? "L" : "M"}${x(i)},${y(v)}`).join(" ");
-        const lx = W - padR + 5;
+        const lx = W - padR + 7;
         const ly = labelY[si];
         const ey = endY[si];
         return (
           <g key={s.id}>
-            <path d={path} fill="none" stroke={s.party} strokeWidth={1.4} opacity={0.85} />
+            <path d={path} fill="none" stroke={s.line} strokeWidth={1.4} opacity={0.8} />
             {s.vals.map((v, i) => (
-              <circle key={i} cx={x(i)} cy={y(v)} r={2.2} fill={s.party} />
+              <circle key={i} cx={x(i)} cy={y(v)} r={2.4} fill={s.line} />
             ))}
-            {Math.abs(ly - ey) > 4 && (
-              <line x1={W - padR} y1={ey} x2={lx - 1} y2={ly - 3} stroke="#3a4453" strokeWidth={0.6} />
+            {Math.abs(ly - ey) > 3 && (
+              <line x1={W - padR + 1} y1={ey} x2={lx - 2} y2={ly - 3} stroke="#4a5464" strokeWidth={0.7} />
             )}
-            <text x={lx} y={ly} fontSize={9} fill={s.party} className="font-mono">
-              {s.tick}
+            <text x={lx} y={ly} fontSize={11} fontWeight={500} fill={s.tint} className="font-mono">
+              {s.lastName}
             </text>
           </g>
         );
       })}
-      <text x={padL} y={padT - 6} fontSize={8} fill="#5d5f60" className="font-mono">
-        ↑ conservative loading · liberal below
+      <text x={padL} y={padT - 8} fontSize={9} fill="#7d7a70" className="font-mono">
+        ↑ conservative · liberal below
       </text>
     </svg>
   );
