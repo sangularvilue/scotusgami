@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { IDEOLOGICAL_IDS, JUSTICE_BY_ID, SENIORITY_IDS } from "@/lib/justices";
-import { PARTY } from "@/lib/scotus-stats";
 import type {
   AllStats,
   MajorityFreq,
@@ -321,19 +320,32 @@ function SplitBreakdownBars({ rows }: { rows: { label: string; b: SplitBreakdown
   );
 }
 
-/** Brighter text tints of the party colors, for small labels on a dark ground. */
-const LABEL_TINT: Record<"R" | "D", string> = { R: "#e8988d", D: "#a9c4ec" };
+/**
+ * A distinct per-justice colour for the drift lines, running cool (liberal) →
+ * warm (conservative) across the ideological spectrum so the bloc read survives
+ * while each of the nine lines stays individually traceable. Keyed by id.
+ */
+const DRIFT_COLOR: Record<string, string> = {
+  sonia_sotomayor: "#5aa3e0", // sky blue
+  ketanji_brown_jackson: "#4fc0a6", // teal
+  elena_kagan: "#8a90e6", // periwinkle
+  john_g_roberts_jr: "#d8bf6a", // gold (the median)
+  amy_coney_barrett: "#e8ab52", // amber
+  brett_m_kavanaugh: "#ee8f45", // orange
+  neil_gorsuch: "#e6764f", // coral
+  samuel_a_alito_jr: "#e25c4c", // red-coral
+  clarence_thomas: "#db4a44", // red
+};
 
 /** Each justice's PC1 (ideology) loading traced across terms. */
 function PC1Drift({ terms }: { terms: StatsResult[] }) {
-  const W = 480, H = 260, padL = 26, padR = 82, padT = 22, padB = 28;
+  const W = 480, H = 260, padL = 26, padR = 96, padT = 22, padB = 28;
   if (terms.length < 2)
     return <p className="text-[12px] text-cream-faint">Need at least two terms to trace drift.</p>;
   const series = SENIORITY_IDS.map((id) => ({
     id,
     lastName: JUSTICE_BY_ID[id].lastName,
-    line: PARTY_COLOR[PARTY[id]],
-    tint: LABEL_TINT[PARTY[id]],
+    color: DRIFT_COLOR[id],
     vals: terms.map((t) => t.loadings.find((l) => l.id === id)?.pc[0] ?? 0),
   }));
   const all = series.flatMap((s) => s.vals);
@@ -357,19 +369,28 @@ function PC1Drift({ terms }: { terms: StatsResult[] }) {
       ))}
       {series.map((s, si) => {
         const path = s.vals.map((v, i) => `${i ? "L" : "M"}${x(i)},${y(v)}`).join(" ");
-        const lx = W - padR + 7;
+        const dotX = W - padR + 8;
+        const textX = dotX + 8;
         const ly = labelY[si];
         const ey = endY[si];
         return (
           <g key={s.id}>
-            <path d={path} fill="none" stroke={s.line} strokeWidth={1.4} opacity={0.8} />
+            <path d={path} fill="none" stroke={s.color} strokeWidth={1.6} opacity={0.9} />
             {s.vals.map((v, i) => (
-              <circle key={i} cx={x(i)} cy={y(v)} r={2.4} fill={s.line} />
+              <circle key={i} cx={x(i)} cy={y(v)} r={2.4} fill={s.color} />
             ))}
-            {Math.abs(ly - ey) > 3 && (
-              <line x1={W - padR + 1} y1={ey} x2={lx - 2} y2={ly - 3} stroke="#4a5464" strokeWidth={0.7} />
-            )}
-            <text x={lx} y={ly} fontSize={11} fontWeight={500} fill={s.tint} className="font-mono">
+            {/* leader from the line's endpoint to its (de-collided) label */}
+            <line
+              x1={W - padR + 1}
+              y1={ey}
+              x2={dotX - 2}
+              y2={ly - 3}
+              stroke={s.color}
+              strokeWidth={0.8}
+              opacity={0.5}
+            />
+            <circle cx={dotX} cy={ly - 3.5} r={3} fill={s.color} />
+            <text x={textX} y={ly} fontSize={11} fontWeight={500} fill={s.color} className="font-mono">
               {s.lastName}
             </text>
           </g>
@@ -688,8 +709,11 @@ export default function StatsView({ stats }: { stats: AllStats }) {
         <div className="self-center">
           <p className="text-[12px] leading-relaxed text-cream-dim">
             PC1 is the Court&apos;s main left–right axis. Tracing each justice&apos;s loading on it term by term shows who is
-            <span className="text-cream"> drifting</span> and who holds station. Each term&apos;s PC1 is its own unit
-            eigenvector, oriented so a conservative vote loads positive, so the vertical scale is comparable across terms.
+            <span className="text-cream"> drifting</span> and who holds station. Each justice keeps their own colour —
+            running <span className="text-cream">cool</span> (liberal) to <span className="text-cream">warm</span>
+            (conservative) — so a line stays traceable through the crowded conservative cluster. Each term&apos;s PC1 is its
+            own unit eigenvector, oriented so a conservative vote loads positive, so the vertical scale is comparable across
+            terms.
           </p>
           <p className="mt-2 text-[12px] leading-relaxed text-cream-faint">
             Lines near the center are the swing justices; a justice crossing another signals a term where their voting
