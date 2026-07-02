@@ -93,6 +93,52 @@ export interface UnexpectedLineup {
   split: string;
 }
 
+export interface MajorityFreq {
+  id: string;
+  lastName: string;
+  party: "R" | "D";
+  /** frequency in the majority coalition among ALL participated cases (null if none) */
+  all: number | null;
+  allN: number;
+  /** … among non-unanimous decisions (at least one dissent) */
+  nonUnan: number | null;
+  nonUnanN: number;
+  /** … among closely divided decisions (6–3 / 5–4) */
+  close: number | null;
+  closeN: number;
+}
+
+export interface PivotalPower {
+  id: string;
+  lastName: string;
+  party: "R" | "D";
+  /**
+   * Empirical pivotality: number of closely decided cases (winning margin ≤ 2)
+   * in which flipping this justice's single vote would have flipped the result.
+   * A dissenter is never pivotal (flipping only pads the majority), so this is
+   * always a majority-side count. This is exactly the "vote-flip" quantity
+   * behind most/least-redundant, surfaced per justice.
+   */
+  pivotalCases: number;
+  /**
+   * Empirical Banzhaf index: this justice's share of all pivotal instances the
+   * term produced (Σ over justices = 1). The observed-coalition analogue of the
+   * classical Banzhaf power index — power measured from the votes that actually
+   * happened rather than all 2⁹ hypothetical coalitions.
+   */
+  banzhaf: number;
+}
+
+export interface SplitBreakdown {
+  unanimous: number; // 9–0 (incl. 8–0/7–0 with recusals)
+  oneDissent: number; // 8–1
+  twoDissent: number; // 7–2
+  threeIdeological: number; // 6–3 split cleanly on party lines
+  threeCross: number; // 6–3 with at least one cross-over
+  fourDissent: number; // 5–4
+  other: number; // ties / equally divided
+}
+
 export interface StatsResult {
   label: string;
   term: number | null; // null = all-time
@@ -126,6 +172,14 @@ export interface StatsResult {
   leastRedundant: { lastNames: string[]; changes: number };
   /** the closest pair of justices by the maverick distance metric */
   twins: { aName: string; bName: string; dist: number } | null;
+  /** per-justice frequency in the majority coalition (all / non-unanimous / close) */
+  majorityFreq: MajorityFreq[];
+  /** per-justice empirical pivotal (Banzhaf) power */
+  pivotalPower: PivotalPower[];
+  /** # of cases counted as pivotal-eligible (a decision with winning margin ≤ 2) */
+  nClose: number;
+  /** census of decided cases by coalition size */
+  splitBreakdown: SplitBreakdown;
   /** smallest set of justices whose votes determine the winner (relative encoding) */
   winnerInference: WinnerInference | null;
   /** share of decided cases with no dissent (unanimous in judgment) */
@@ -254,18 +308,51 @@ export function computeStats(
   // so dissenters are never pivotal; every justice on the majority side of such
   // a close case is "decisive" there.
   const flips = new Array(p).fill(0);
+  let nClose = 0;
+
+  // frequency in the majority: numerator = cases in the majority, denominator =
+  // cases participated, over three subsets (all / non-unanimous / closely divided).
+  const majAll = new Array(p).fill(0), partAll = new Array(p).fill(0);
+  const majNon = new Array(p).fill(0), partNon = new Array(p).fill(0);
+  const majClose = new Array(p).fill(0), partClose = new Array(p).fill(0);
+  const splits: SplitBreakdown = {
+    unanimous: 0, oneDissent: 0, twoDissent: 0,
+    threeIdeological: 0, threeCross: 0, fourDissent: 0, other: 0,
+  };
 
   cases.forEach((c, i) => {
     const s = X[i];
     const nDis = s.filter((v) => v < 0).length;
     const nMaj = s.filter((v) => v > 0).length;
+    const decided = nMaj > nDis; // a genuine majority (excludes 4–4 ties)
+    const close = decided && nDis >= 3; // 6–3 / 5–4 (and 5–3 recusals)
     if (nDis === 0) unanimous++;
     if (nDis > 0 && nMaj > 0) {
       nDivided++;
       if (isPartyLine(s)) partyLine++;
       if (isAnyLine(s, pc1Index)) anyLine++;
     }
-    if (nMaj > nDis && nMaj - nDis <= 2) for (let j = 0; j < p; j++) if (s[j] > 0) flips[j]++;
+
+    // per-justice majority-coalition membership across the three subsets
+    for (let j = 0; j < p; j++) {
+      const v = s[j];
+      if (v === 0) continue; // took no part / mixed → not counted
+      partAll[j]++; if (v > 0) majAll[j]++;
+      if (decided && nDis > 0) { partNon[j]++; if (v > 0) majNon[j]++; }
+      if (close) { partClose[j]++; if (v > 0) majClose[j]++; }
+    }
+
+    // coalition-size census (bucketed by number of dissents; recusals fold in)
+    if (nMaj === 0 && nDis === 0) splits.other++; // tie / all-abstain
+    else if (nDis === 0) splits.unanimous++;
+    else if (!decided) splits.other++; // participated tie
+    else if (nDis === 1) splits.oneDissent++;
+    else if (nDis === 2) splits.twoDissent++;
+    else if (nDis === 3) isPartyLine(s) ? splits.threeIdeological++ : splits.threeCross++;
+    else if (nDis === 4) splits.fourDissent++;
+    else splits.other++;
+
+    if (nMaj > nDis && nMaj - nDis <= 2) { nClose++; for (let j = 0; j < p; j++) if (s[j] > 0) flips[j]++; }
     const z = project(s, r);
     let d2 = 0;
     for (let k = 0; k < z.length; k++)
@@ -301,6 +388,25 @@ export function computeStats(
   const namesAt = (v: number) =>
     SENIORITY_IDS.filter((_, j) => flips[j] === v).map((id) => JUSTICE_BY_ID[id].lastName);
 
+  const freqOr = (m: number, d: number) => (d ? m / d : null);
+  const majorityFreq: MajorityFreq[] = SENIORITY_IDS.map((id, j) => ({
+    id,
+    lastName: JUSTICE_BY_ID[id].lastName,
+    party: PARTY[id],
+    all: freqOr(majAll[j], partAll[j]), allN: partAll[j],
+    nonUnan: freqOr(majNon[j], partNon[j]), nonUnanN: partNon[j],
+    close: freqOr(majClose[j], partClose[j]), closeN: partClose[j],
+  }));
+
+  const totFlips = flips.reduce((a, b) => a + b, 0);
+  const pivotalPower: PivotalPower[] = SENIORITY_IDS.map((id, j) => ({
+    id,
+    lastName: JUSTICE_BY_ID[id].lastName,
+    party: PARTY[id],
+    pivotalCases: flips[j],
+    banzhaf: totFlips ? flips[j] / totFlips : 0,
+  }));
+
   return {
     label,
     term,
@@ -318,6 +424,10 @@ export function computeStats(
     mostRedundant: { lastNames: namesAt(minFlips), changes: minFlips },
     leastRedundant: { lastNames: namesAt(maxFlips), changes: maxFlips },
     twins,
+    majorityFreq,
+    pivotalPower,
+    nClose,
+    splitBreakdown: splits,
     winnerInference: computeWinnerInference(X),
     unanimityRate: unanimous / cases.length,
     nDivided,
