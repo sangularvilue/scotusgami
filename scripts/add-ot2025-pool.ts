@@ -137,6 +137,9 @@ const META: Record<string, Meta> = {
   "24-621": { area: 3, issue: 30140, prec: true }, // NRSC v. FEC — coordinated spending
   "25-365": { area: 2 }, // Trump v. Barbara — birthright citizenship
   "25A1314": { area: 2, issue: 20010 }, // Allen v. Milligan — VRA §2 (emergency)
+  // Stay grants (disposition 1) resolved on standing, like Bost:
+  "26A124": { area: 9, resp: 28, disp: 1 }, // Trump v. California — States' standing
+  "26A203": { area: 9, disp: 1 }, // NPS v. National Trust — East Wing, Article III
 
   // ---- per curiams (subject matter from the Court's opinions) ----
   "24-1159": { area: 1, resp: 28, disp: 3 }, // Pitts — Confrontation Clause
