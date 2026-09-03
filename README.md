@@ -46,6 +46,7 @@ npx tsx scripts/backfill.ts        # scrape all terms from Oyez → data/
 npx tsx scripts/supplement-scdb.ts 2024   # SCDB gap-fill for one term → data/
 npx tsx scripts/load-redis.ts      # push data/ into Upstash
 npx tsx scripts/build-bingo.ts     # scrape current-term argued cases → data/bingo-*.json + Redis
+npx tsx --env-file=.env.local scripts/add-ot2025-pool.ts   # current term → game pool
 ```
 
 Note: build/dev use `--webpack` (Turbopack rejects projects on mapped network

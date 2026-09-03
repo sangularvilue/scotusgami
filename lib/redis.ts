@@ -54,8 +54,12 @@ export async function loadAllCases(): Promise<CaseRecord[]> {
   // Manual overrides (from /admin) win over — or add to — everything else.
   const manual = await loadManual();
   if (manual.length) {
-    const byKey = new Map(all.map((c) => [`${c.term}:${c.docket}`, c]));
-    for (const m of manual) byKey.set(`${m.term}:${m.docket}`, m);
+    // Oyez docket numbers sometimes carry stray whitespace ("24-856 "), so key
+    // on the trimmed docket or a manual correction lands beside the record it
+    // was meant to replace instead of on top of it.
+    const key = (c: CaseRecord) => `${c.term}:${c.docket.trim()}`;
+    const byKey = new Map(all.map((c) => [key(c), c]));
+    for (const m of manual) byKey.set(key(m), m);
     all.length = 0;
     all.push(...byKey.values());
   }

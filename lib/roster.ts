@@ -1,6 +1,6 @@
 /**
  * Full modern-era justice roster (1946–present) for the Immaculate Bench game.
- * Keyed by SCDB justiceName. Service spans are first/last argued term in SCDB.
+ * Keyed by SCDB justiceName. Service spans are first/last term with a decision in the pool.
  * (The homepage wall uses the separate current-9 list in justices.ts.)
  */
 export interface RosterJustice {
@@ -42,17 +42,17 @@ export const ROSTER: RosterJustice[] = [
   { id: "AScalia", display: "Scalia", firstTerm: 1986, lastTerm: 2015 },
   { id: "AMKennedy", display: "Kennedy", firstTerm: 1987, lastTerm: 2017 },
   { id: "DHSouter", display: "Souter", firstTerm: 1990, lastTerm: 2008 },
-  { id: "CThomas", display: "Thomas", firstTerm: 1991, lastTerm: 2024 },
+  { id: "CThomas", display: "Thomas", firstTerm: 1991, lastTerm: 2025 },
   { id: "RBGinsburg", display: "Ginsburg", firstTerm: 1993, lastTerm: 2019 },
   { id: "SGBreyer", display: "Breyer", firstTerm: 1994, lastTerm: 2021 },
-  { id: "JGRoberts", display: "Roberts", firstTerm: 2005, lastTerm: 2024 },
-  { id: "SAAlito", display: "Alito", firstTerm: 2005, lastTerm: 2024 },
-  { id: "SSotomayor", display: "Sotomayor", firstTerm: 2009, lastTerm: 2024 },
-  { id: "EKagan", display: "Kagan", firstTerm: 2010, lastTerm: 2024 },
-  { id: "NMGorsuch", display: "Gorsuch", firstTerm: 2016, lastTerm: 2024 },
-  { id: "BMKavanaugh", display: "Kavanaugh", firstTerm: 2018, lastTerm: 2024 },
-  { id: "ACBarrett", display: "Barrett", firstTerm: 2020, lastTerm: 2024 },
-  { id: "KBJackson", display: "Jackson", firstTerm: 2022, lastTerm: 2024 },
+  { id: "JGRoberts", display: "Roberts", firstTerm: 2005, lastTerm: 2025 },
+  { id: "SAAlito", display: "Alito", firstTerm: 2005, lastTerm: 2025 },
+  { id: "SSotomayor", display: "Sotomayor", firstTerm: 2009, lastTerm: 2025 },
+  { id: "EKagan", display: "Kagan", firstTerm: 2010, lastTerm: 2025 },
+  { id: "NMGorsuch", display: "Gorsuch", firstTerm: 2016, lastTerm: 2025 },
+  { id: "BMKavanaugh", display: "Kavanaugh", firstTerm: 2018, lastTerm: 2025 },
+  { id: "ACBarrett", display: "Barrett", firstTerm: 2020, lastTerm: 2025 },
+  { id: "KBJackson", display: "Jackson", firstTerm: 2022, lastTerm: 2025 },
 ];
 
 export const ROSTER_BY_ID: Record<string, RosterJustice> = Object.fromEntries(

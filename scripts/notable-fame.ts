@@ -18,6 +18,9 @@ const UA = {
 };
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
+// Latest term with rows in the pool (OT2025 arrives via add-ot2025-pool.ts).
+const CURRENT_TERM = 2025;
+
 // U.S. Reports volumes spanning the modern pool (329 = OT1946 … 606 = OT2024).
 const VOL_MIN = 329;
 const VOL_MAX = 606;
@@ -61,7 +64,7 @@ function parseCourtPage(html: string): Map<string, string> {
   const out = new Map<string, string>();
   for (const row of html.split("<tr")) {
     // the case article is the first /wiki/ link whose text contains " v. "
-    const link = row.match(/href="\/wiki\/([^"#?:]+)"[^>]*title="([^"]*\sv\.\s[^"]*)"/);
+    const link = row.match(/href="(?:https:\/\/en\.wikipedia\.org)?\/wiki\/([^"#?:]+)"[^>]*title="([^"]*\sv\.\s[^"]*)"/);
     if (!link) continue;
     const title = decodeURIComponent(link[1]).replace(/_/g, " ");
     if (!title.includes(" v. ") || title.startsWith("List of")) continue;
@@ -96,7 +99,7 @@ async function pageviews(title: string): Promise<number> {
 /** Case-article titles from a "{term} term opinions…" page (no cite needed). */
 function parseTermPage(html: string): string[] {
   const out = new Set<string>();
-  for (const m of html.matchAll(/href="\/wiki\/([^"#?:]+)"[^>]*title="([^"]*\sv\.\s[^"]*)"/g)) {
+  for (const m of html.matchAll(/href="(?:https:\/\/en\.wikipedia\.org)?\/wiki\/([^"#?:]+)"[^>]*title="([^"]*\sv\.\s[^"]*)"/g)) {
     const title = decodeURIComponent(m[1]).replace(/_/g, " ");
     if (title.includes(" v. ") && !title.startsWith("List of")) out.add(title);
   }
@@ -174,7 +177,7 @@ async function main() {
   console.log(`cite-join: ${titleByCase.size}`);
 
   // 2b. name-join from per-term opinion pages (fills recent terms)
-  for (let term = 2000; term <= 2024; term++) {
+  for (let term = 2000; term <= CURRENT_TERM; term++) {
     const html = await getText(
       `https://en.wikipedia.org/wiki/${term}_term_opinions_of_the_Supreme_Court_of_the_United_States`
     );
