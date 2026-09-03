@@ -321,7 +321,14 @@ function toPoolCase(rec: CaseRecord, fame: number, notable: boolean): PoolCase {
 }
 
 async function main() {
-  const records = (await loadAllCases()).filter((c) => Number(c.term) === TERM);
+  // Interim-docket *orders* stay out of the game: a one-paragraph stay ruling
+  // has no holding to build clues from, and the set of them we can source is
+  // skewed toward divided ones (see add-interim-orders.ts). Applications the
+  // Court resolved with a full opinion — Cook, Milligan, Mirabelli, the two
+  // August per curiams — are on the slip-opinion list and do count.
+  const records = (await loadAllCases()).filter(
+    (c) => Number(c.term) === TERM && c.decisionType !== "order (interim docket)"
+  );
   // one row per docket; prefer the record that carries opinion data
   const byDocket = new Map<string, CaseRecord>();
   for (const r of records) {

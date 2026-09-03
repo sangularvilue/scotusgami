@@ -43,3 +43,6 @@ next-env.d.ts
 
 .vercel
 data/.fame-cache.json
+
+# local scrape caches
+.order-pdfs/

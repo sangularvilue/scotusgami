@@ -27,6 +27,15 @@ Each case maps to a 9-character key over the justices in seniority order
 - **[Supreme Court Database](https://scdb.la.psu.edu)** — supplements terms
   where Oyez hasn't entered votes yet (currently most of OT2024). Oyez records
   replace SCDB ones per-docket automatically as Oyez catches up.
+- **supremecourt.gov** — the slip-opinion list (same-day authority on what has
+  come down, and on emergency-docket per curiams Oyez never lists) and
+  **Opinions Relating to Orders**, which is where interim-docket ("A") rulings
+  live. `scripts/add-interim-orders.ts` codes those lineups by hand: a justice
+  who dissented or is recorded "would grant"/"would deny" against the order
+  gets D, silence on an order of the Court reads as assent, "took no part" is A.
+  Only applications that drew a published writing are discoverable that way, so
+  the interim set skews toward divided outcomes — worth remembering before
+  reading much into how often a given division shows up.
 
 A Vercel cron hits `/api/refresh` daily at 11:15 ET to re-scrape the current
 term into Redis. The same job rebuilds the **bingo card** (`/bingo` — opinion
@@ -47,6 +56,7 @@ npx tsx scripts/supplement-scdb.ts 2024   # SCDB gap-fill for one term → data/
 npx tsx scripts/load-redis.ts      # push data/ into Upstash
 npx tsx scripts/build-bingo.ts     # scrape current-term argued cases → data/bingo-*.json + Redis
 npx tsx --env-file=.env.local scripts/add-ot2025-pool.ts   # current term → game pool
+npx tsx scripts/add-interim-orders.ts       # interim-docket orders → Redis
 ```
 
 Note: build/dev use `--webpack` (Turbopack rejects projects on mapped network
