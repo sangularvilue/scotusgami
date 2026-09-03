@@ -73,9 +73,15 @@ export async function GET(req: NextRequest) {
   // cron deliberately leaves that key alone so it isn't clobbered with Oyez's
   // partial list.
 
-  // Brand-new alignments contributed by this term (one entry per lineup key).
+  // Brand-new alignments, diffed against the SAME merged view the board shows
+  // (`loadAllCases` = SCDB supplement where one exists, plus /admin manual
+  // overrides). Diffing the raw Oyez scrape instead re-reported a case every
+  // single day whenever Oyez's vote matrix disagreed with the record we
+  // actually display — e.g. Oyez omitting a justice, so its 8–0 lineup key
+  // never appeared on the board and so never landed in `prevKeys`.
+  const all = await loadAllCases();
   const newByKey = new Map<string, CaseRecord>();
-  for (const c of cases) {
+  for (const c of all) {
     if (!prevKeys.has(c.lineupKey) && !newByKey.has(c.lineupKey)) {
       newByKey.set(c.lineupKey, c);
     }
@@ -94,7 +100,6 @@ export async function GET(req: NextRequest) {
       ? await sendNewGamiEmail(newGamis)
       : { sent: false, reason: "no baseline yet" };
 
-  const all = await loadAllCases();
   const terms = [...new Set([...(beforeMeta?.terms ?? []), term])].sort();
   await saveMeta({
     lastRefresh: new Date().toISOString(),
