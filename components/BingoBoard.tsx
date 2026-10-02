@@ -1,8 +1,9 @@
 import type { BingoCaseLite, BingoGrid } from "@/lib/bingo";
 import { IDEOLOGICAL_IDS, JUSTICE_BY_ID } from "@/lib/justices";
 
-// Fixed track widths so the still-out / granted cards can stack outward to the
-// right of the nine-justice grid and the whole board scrolls horizontally.
+// Fixed track widths for the nine-justice grid. Still-out cards wrap on a line
+// beneath their sitting, under the justice columns, so the board stays within
+// the page width (it only scrolls horizontally on screens narrower than the grid).
 const LABEL_W = 96;
 const CELL_W = 82;
 const COLS = { gridTemplateColumns: `${LABEL_W}px repeat(9, ${CELL_W}px)` };
@@ -108,7 +109,7 @@ function SideCard({ c, wide = false }: { c: BingoCaseLite; wide?: boolean }) {
   );
 }
 
-/** A board row: the fixed label + 9-justice grid, then cards stacking right. */
+/** A board row: the fixed label + 9-justice grid, then still-out cards wrapping beneath. */
 function Row({
   label,
   sub,
@@ -123,7 +124,7 @@ function Row({
   cards: BingoCaseLite[];
 }) {
   return (
-    <div className="flex items-stretch gap-1">
+    <div className="flex flex-col gap-1">
       <div className="grid shrink-0 items-stretch gap-1" style={{ ...COLS, width: GRID_W }}>
         <div className="flex flex-col justify-center">
           <span className="font-display text-[15px] text-cream">{label}</span>
@@ -140,7 +141,10 @@ function Row({
         ))}
       </div>
       {cards.length > 0 && (
-        <div className="flex items-stretch gap-1 pl-1">
+        <div
+          className="flex flex-wrap items-stretch gap-1"
+          style={{ marginLeft: LABEL_W + 4, width: GRID_W - LABEL_W - 4 }}
+        >
           {cards.map((c) => (
             <SideCard key={c.docket} c={c} />
           ))}
@@ -207,8 +211,8 @@ export default function BingoBoard({
               })}
             </div>
 
-            {/* one row per sitting, with still-out cases stacking to the right */}
-            <div className="mt-1 space-y-1.5">
+            {/* one row per sitting, with its still-out cases wrapping beneath */}
+            <div className="mt-1 space-y-3">
               {grid.sittings.map((s) => (
                 <Row
                   key={s.sitting}
@@ -230,7 +234,7 @@ export default function BingoBoard({
           calendar drops). No sittings yet, so rather than stack against an empty
           grid we lay them out as a gallery that fills rightward and wraps. */}
       {grid.granted.length > 0 && (
-        <div className="flex flex-wrap gap-1.5">
+        <div className={`flex flex-wrap gap-1.5${grid.sittings.length ? " mt-4" : ""}`}>
           {grid.granted.map((c) => (
             <SideCard key={c.docket} c={c} wide />
           ))}
