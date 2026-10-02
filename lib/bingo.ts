@@ -109,7 +109,10 @@ export interface BingoGrid {
   /** justice id → majorities authored this term */
   perJustice: Record<string, number>;
   decidedCount: number;
+  /** argued, awaiting decision */
   pendingCount: number;
+  /** calendared for a future argument date */
+  scheduledCount: number;
 }
 
 const lite = (c: BingoCase): BingoCaseLite => ({
@@ -137,6 +140,7 @@ export function buildBingoGrid(term: number, cases: BingoCase[]): BingoGrid {
   // term with an argument date in the term that follows.
   const termStart = `${term}-10-01`;
   const nextTermStart = `${term + 1}-10-01`;
+  const today = new Date().toISOString().slice(0, 10);
   const argued = cases
     .filter((c) => c.argued && c.argued >= termStart && c.argued < nextTermStart)
     .sort((a, b) => a.argued!.localeCompare(b.argued!));
@@ -155,8 +159,17 @@ export function buildBingoGrid(term: number, cases: BingoCase[]): BingoGrid {
 
   const perJustice: Record<string, number> = {};
   const sittings: BingoSitting[] = sessions.map((group) => {
-    const sitting =
-      MONTHS[new Date(`${group[0].argued}T00:00:00Z`).getUTCMonth()];
+    // Name the sitting for the month holding most of its argument days (ties go
+    // to the earlier month): the December sitting can open on Nov 30, while the
+    // February sitting runs late Feb into early March.
+    const days = new Map<number, number>();
+    for (const c of group) {
+      const m = new Date(`${c.argued}T00:00:00Z`).getUTCMonth();
+      days.set(m, (days.get(m) ?? 0) + 1);
+    }
+    let month = new Date(`${group[0].argued}T00:00:00Z`).getUTCMonth();
+    for (const [m, n] of days) if (n > days.get(month)!) month = m;
+    const sitting = MONTHS[month];
     const byAuthor: Record<string, BingoCaseLite[]> = {};
     const pending: BingoCaseLite[] = [];
 
@@ -202,6 +215,7 @@ export function buildBingoGrid(term: number, cases: BingoCase[]): BingoGrid {
       (n, s) => n + Object.values(s.byAuthor).reduce((m, a) => m + a.length, 0),
       0
     ),
-    pendingCount: argued.filter((c) => !c.decided).length,
+    pendingCount: argued.filter((c) => !c.decided && c.argued! <= today).length,
+    scheduledCount: argued.filter((c) => !c.decided && c.argued! > today).length,
   };
 }

@@ -2,26 +2,29 @@ import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 import { sendNewGamiEmail, type NewGami } from "@/lib/email";
 import { fetchFame } from "@/lib/fame";
+import { fetchGranted, mergeBingo } from "@/lib/granted";
 import { splitLabel } from "@/lib/grid";
 import { currentTerm, scrapeTerm } from "@/lib/oyez";
 import { fetchDecided, reconcileDecided } from "@/lib/scotusgov";
 import {
   loadAllCases,
+  loadBingo,
   loadMeta,
   loadTerm,
   saveBingo,
   saveMeta,
   saveTerm,
 } from "@/lib/redis";
-import type { CaseRecord } from "@/lib/types";
+import type { BingoCase, CaseRecord } from "@/lib/types";
 
 export const maxDuration = 300; // Oyez scrape is sequential and polite
 export const dynamic = "force-dynamic";
 
 /**
  * Daily cron (11:00 EST / 16:00 UTC, see vercel.json): re-scrape the current
- * term from Oyez, upsert it into Redis, refresh the bingo card, and email when
- * a never-before-seen alignment lights up.
+ * term from Oyez, upsert it into Redis, refresh the bingo card (Oyez layered
+ * over the Court's Granted & Noted calendar), and email when a never-before-seen
+ * alignment lights up.
  */
 export async function GET(req: NextRequest) {
   const auth = req.headers.get("authorization");
@@ -55,23 +58,38 @@ export async function GET(req: NextRequest) {
   }
   await saveTerm(term, cases);
 
-  // Reconcile the bingo cases against the Court's slip-opinion list so the card
-  // reflects same-day hand-downs even while Oyez lags. Degrade to Oyez-only if
-  // the fetch fails (e.g. the site blocks the request).
-  let bingoCases = bingo;
-  try {
-    bingoCases = reconcileDecided(bingo, await fetchDecided(term));
-  } catch {
-    /* keep Oyez-only bingo */
-  }
-  await saveBingo(term, bingoCases);
+  // Bingo card, current term and the one ahead. The Court's Granted & Noted list
+  // is the skeleton (every granted case, with its calendared argument date), and
+  // Oyez's argued/decided cases are layered over it — Oyez alone only knows a
+  // case once it has been argued, so replacing the card with Oyez's scrape blanked
+  // it every October between the term flip and the first argument. If the list
+  // can't be fetched, the previously stored card stands in for it, so a failed
+  // fetch never drops cases.
+  const bingoCounts: Record<number, number> = {};
+  for (const t of [term, term + 1]) {
+    let calendar: BingoCase[] | null = null;
+    try {
+      calendar = await fetchGranted(t);
+    } catch {
+      /* fall back to the stored card below */
+    }
+    calendar ??= await loadBingo(t);
+    let bingoCases = mergeBingo(calendar, t === term ? bingo : []);
+    if (!bingoCases.length) continue;
 
-  // NOTE: the upcoming term's granted pool (scotusgami:bingo:{term+1}) is NOT
-  // refreshed here. Oyez badly under-lists a not-yet-argued term, so that pool
-  // is sourced from the Court's authoritative Granted & Noted list via
-  // `scripts/build-granted.ts` (run it when the Court grants more cases). The
-  // cron deliberately leaves that key alone so it isn't clobbered with Oyez's
-  // partial list.
+    // Reconcile against the Court's slip-opinion list so the card reflects
+    // same-day hand-downs even while Oyez lags. Degrade to Oyez-only if the
+    // fetch fails (e.g. the site blocks the request).
+    if (t === term) {
+      try {
+        bingoCases = reconcileDecided(bingoCases, await fetchDecided(t));
+      } catch {
+        /* keep Oyez-only decisions */
+      }
+    }
+    await saveBingo(t, bingoCases);
+    bingoCounts[t] = bingoCases.length;
+  }
 
   // Brand-new alignments, diffed against the SAME merged view the board shows
   // (`loadAllCases` = SCDB supplement where one exists, plus /admin manual
@@ -117,7 +135,7 @@ export async function GET(req: NextRequest) {
     term,
     parsed: cases.length,
     skipped: skipped.length,
-    bingo: bingo.length,
+    bingo: bingoCounts,
     totalCases: all.length,
     newGamis: newGamis.length,
     email,

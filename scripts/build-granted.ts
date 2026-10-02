@@ -1,61 +1,15 @@
 /**
- * Build the upcoming term's "granted" pool from the Court's authoritative
- * Granted & Noted list (supremecourt.gov/orders/{yy}grantednotedlist.pdf) and
- * push it to Redis under scotusgami:bingo:{term} (+ data/bingo-{term}.json).
- *
- * Oyez badly under-lists an upcoming term (it had 9 of OT2026's 21 grants and
- * even disagreed on which), so for a term whose arguments haven't started we
- * source the granted cases straight from the Court. Each becomes a BingoCase
- * with no argument date yet (argued=null) — it sits in the granted pool until
- * the Court calendars it. Names are taken from Oyez when it has the docket
- * (nicer casing), else title-cased from the all-caps official list.
+ * Build a term's bingo cases from the Court's authoritative Granted & Noted list
+ * (supremecourt.gov/orders/{yy}grantednotedlist.pdf) and push them to Redis
+ * under scotusgami:bingo:{term} (+ data/bingo-{term}.json). Calendared cases
+ * carry their argument date and slot into sittings; the rest sit in the granted
+ * pool. The daily cron does the same (merged with Oyez) — this is the manual /
+ * local-dev path, e.g. right after the Court grants or calendars cases.
  *
  * Usage (from project root): npx tsx scripts/build-granted.ts [term]
- *   pdf-parse is a devDependency — this runs as a script, not in the app bundle.
  */
 import { readFileSync, mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { PDFParse } from "pdf-parse";
-import type { BingoCase } from "../lib/types";
-
-const UA =
-  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36";
-
-const MONTH = [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December",
-];
-
-const KEEP_UPPER = new Set([
-  "LLC", "L.L.C.", "USA", "U.S.", "U.S.A.", "GA", "SEC", "RNC", "FCC", "EPA",
-  "NLRB", "IRS", "TVA", "WBI", "CSX", "II", "III", "FBI", "DHS", "DOJ", "VA",
-]);
-
-/** Lower an ALL-CAPS official caption to readable title case (best effort). */
-function titleCase(s: string): string {
-  return s
-    .replace(/[’]/g, "'")
-    .split(/\s+/)
-    .map((w) => {
-      const bare = w.replace(/[^A-Za-z.]/g, "").toUpperCase();
-      if (w.toUpperCase() === "V.") return "v.";
-      if (KEEP_UPPER.has(bare)) return w.toUpperCase();
-      return w.charAt(0).toUpperCase() + w.slice(1).toLowerCase();
-    })
-    .join(" ");
-}
-
-function toIso(mdy: string): string | null {
-  const m = mdy.match(/(\d{1,2})\/(\d{1,2})\/(\d{2})/);
-  if (!m) return null;
-  const [, mm, dd, yy] = m;
-  return `20${yy}-${mm.padStart(2, "0")}-${dd.padStart(2, "0")}`;
-}
-
-interface OyezSummary {
-  docket_number: string;
-  name: string;
-}
 
 async function main() {
   // load .env.local manually (no Next runtime here)
@@ -69,81 +23,10 @@ async function main() {
     /* fall through */
   }
 
+  const { fetchGranted } = await import("../lib/granted");
   const term = Number(process.argv[2] ?? new Date().getUTCFullYear());
-  const yy = term % 100;
-  const url = `https://www.supremecourt.gov/orders/${yy}grantednotedlist.pdf`;
-  console.log(`fetching ${url}`);
-  const res = await fetch(url, { headers: { "User-Agent": UA } });
-  if (!res.ok) throw new Error(`granted/noted list ${res.status}`);
-  const buf = Buffer.from(await res.arrayBuffer());
-
-  const { text } = await new PDFParse({ data: buf }).getText();
-  const lines = text.split(/\r?\n/).map((s) => s.trim()).filter(Boolean);
-
-  // Each case starts "{docket} {3-letter code} {NAME}" (name may wrap to the
-  // next line), followed by "Granted: m/d/yy" and — once the Court calendars it
-  // — an "Argument Date: m/d/yy". We scan a small window after each case line
-  // for both. The argument date is what slots the case into a sitting; until it
-  // appears the case stays in the granted pool.
-  const caseLine = /^(\d{2}-\d{1,5})\*?\s+([CAQ][SFTMO][XYH])\s+(.+)$/;
-  const parsed: {
-    docket: string;
-    name: string;
-    granted: string | null;
-    argued: string | null;
-  }[] = [];
-  for (let i = 0; i < lines.length; i++) {
-    const m = lines[i].match(caseLine);
-    if (!m) continue;
-    // window = this line through the line before the next case (or +4 lines)
-    let end = i + 1;
-    while (end < lines.length && end < i + 5 && !lines[end].match(caseLine)) end++;
-    const window = lines.slice(i, end).join(" ");
-    const granted = window.match(/Granted:\s*(\d{1,2}\/\d{1,2}\/\d{2})/)?.[1] ?? null;
-    const argued = window.match(/Argument Date:\s*(\d{1,2}\/\d{1,2}\/\d{2})/)?.[1] ?? null;
-    parsed.push({
-      docket: m[1],
-      name: m[3],
-      granted: granted ? toIso(granted) : null,
-      argued: argued ? toIso(argued) : null,
-    });
-  }
-  const scheduled = parsed.filter((c) => c.argued).length;
-  console.log(
-    `granted/noted list: ${parsed.length} cases for argument (${scheduled} calendared)`
-  );
-
-  // Oyez names where available (nicer casing than the all-caps official list).
-  const oyezByDocket = new Map<string, string>();
-  try {
-    const list = (await (
-      await fetch(`https://api.oyez.org/cases?per_page=1000&filter=term:${term}`, {
-        headers: { "User-Agent": "scotusgami.grannis.xyz (personal project)" },
-      })
-    ).json()) as OyezSummary[];
-    for (const c of list) oyezByDocket.set(c.docket_number.trim(), c.name);
-  } catch {
-    console.log("(Oyez name lookup failed; using official captions)");
-  }
-
-  const cases: BingoCase[] = parsed.map((c) => {
-    const oyezName = oyezByDocket.get(c.docket);
-    return {
-      term: String(term),
-      docket: c.docket,
-      name: oyezName ?? titleCase(c.name),
-      argued: c.argued,
-      granted: c.granted,
-      // sitting label is recomputed from the argument date by buildBingoGrid's
-      // session clustering; store it too for reference.
-      sitting: c.argued ? MONTH[new Date(`${c.argued}T00:00:00Z`).getUTCMonth()] : null,
-      decided: null,
-      majorityAuthor: null,
-      oyezUrl: oyezName
-        ? `https://www.oyez.org/cases/${term}/${c.docket}`
-        : `https://www.supremecourt.gov/search.aspx?filename=/docket/docketfiles/html/public/${c.docket}.html`,
-    };
-  });
+  const cases = await fetchGranted(term, console.log);
+  if (!cases) throw new Error(`no Granted & Noted list published for OT${term} yet`);
 
   cases.forEach((c) =>
     console.log(

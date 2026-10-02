@@ -2,32 +2,32 @@
  {
   "term": "2026",
   "docket": "24-1016",
-  "name": "Riseandshine Corp. v. Pepsico, Inc.",
+  "name": "RiseandShine Corporation v. PepsiCo, Inc.",
   "argued": null,
   "granted": "2026-06-29",
   "sitting": null,
   "decided": null,
   "majorityAuthor": null,
-  "oyezUrl": "https://www.supremecourt.gov/search.aspx?filename=/docket/docketfiles/html/public/24-1016.html"
+  "oyezUrl": "https://www.oyez.org/cases/2026/24-1016"
  },
  {
   "term": "2026",
   "docket": "25-159",
   "name": "Hoffmann v. WBI Energy Transmission, Inc.",
-  "argued": null,
+  "argued": "2026-11-09",
   "granted": "2026-06-29",
-  "sitting": null,
+  "sitting": "November",
   "decided": null,
   "majorityAuthor": null,
-  "oyezUrl": "https://www.supremecourt.gov/search.aspx?filename=/docket/docketfiles/html/public/25-159.html"
+  "oyezUrl": "https://www.oyez.org/cases/2026/25-159"
  },
  {
   "term": "2026",
   "docket": "25-170",
   "name": "Suncor Energy (U.S.A.) Inc. v. County Commissioners of Boulder County",
-  "argued": null,
+  "argued": "2026-10-05",
   "granted": "2026-02-23",
-  "sitting": null,
+  "sitting": "October",
   "decided": null,
   "majorityAuthor": null,
   "oyezUrl": "https://www.oyez.org/cases/2026/25-170"
@@ -36,20 +36,31 @@
   "term": "2026",
   "docket": "25-183",
   "name": "Crowther v. Board of Regents of the University System of Georgia",
-  "argued": null,
+  "argued": "2026-11-30",
   "granted": "2026-05-18",
-  "sitting": null,
+  "sitting": "November",
   "decided": null,
   "majorityAuthor": null,
   "oyezUrl": "https://www.oyez.org/cases/2026/25-183"
  },
  {
   "term": "2026",
+  "docket": "25-246",
+  "name": "Jouppi v. Alaska",
+  "argued": "2026-12-01",
+  "granted": "2026-07-20",
+  "sitting": "December",
+  "decided": null,
+  "majorityAuthor": null,
+  "oyezUrl": "https://www.supremecourt.gov/search.aspx?filename=/docket/docketfiles/html/public/25-246.html"
+ },
+ {
+  "term": "2026",
   "docket": "25-352",
   "name": "Younge v. Fulton Judicial Circuit District Attorney's Office, Georgia",
-  "argued": null,
+  "argued": "2026-11-02",
   "granted": "2026-03-30",
-  "sitting": null,
+  "sitting": "November",
   "decided": null,
   "majorityAuthor": null,
   "oyezUrl": "https://www.oyez.org/cases/2026/25-352"
@@ -58,20 +69,20 @@
   "term": "2026",
   "docket": "25-417",
   "name": "Nielsen v. Watanabe",
-  "argued": null,
+  "argued": "2026-11-09",
   "granted": "2026-06-22",
-  "sitting": null,
+  "sitting": "November",
   "decided": null,
   "majorityAuthor": null,
-  "oyezUrl": "https://www.supremecourt.gov/search.aspx?filename=/docket/docketfiles/html/public/25-417.html"
+  "oyezUrl": "https://www.oyez.org/cases/2026/25-417"
  },
  {
   "term": "2026",
   "docket": "25-459",
   "name": "Salazar v. Paramount Global",
-  "argued": null,
+  "argued": "2026-10-14",
   "granted": "2026-01-26",
-  "sitting": null,
+  "sitting": "October",
   "decided": null,
   "majorityAuthor": null,
   "oyezUrl": "https://www.supremecourt.gov/search.aspx?filename=/docket/docketfiles/html/public/25-459.html"
@@ -80,9 +91,9 @@
   "term": "2026",
   "docket": "25-498",
   "name": "Anderson v. Intel Corp. Investment Policy Comm.",
-  "argued": null,
+  "argued": "2026-10-06",
   "granted": "2026-01-16",
-  "sitting": null,
+  "sitting": "October",
   "decided": null,
   "majorityAuthor": null,
   "oyezUrl": "https://www.supremecourt.gov/search.aspx?filename=/docket/docketfiles/html/public/25-498.html"
@@ -91,9 +102,9 @@
   "term": "2026",
   "docket": "25-579",
   "name": "Department of the Air Force v. Prutehi Guahan",
-  "argued": null,
+  "argued": "2026-10-07",
   "granted": "2026-03-09",
-  "sitting": null,
+  "sitting": "October",
   "decided": null,
   "majorityAuthor": null,
   "oyezUrl": "https://www.oyez.org/cases/2026/25-579"
@@ -102,9 +113,9 @@
   "term": "2026",
   "docket": "25-581",
   "name": "St. Mary Catholic Parish v. Roy",
-  "argued": null,
+  "argued": "2026-11-03",
   "granted": "2026-04-20",
-  "sitting": null,
+  "sitting": "November",
   "decided": null,
   "majorityAuthor": null,
   "oyezUrl": "https://www.oyez.org/cases/2026/25-581"
@@ -113,9 +124,9 @@
   "term": "2026",
   "docket": "25-735",
   "name": "Johnson v. United States Congress",
-  "argued": null,
+  "argued": "2026-10-05",
   "granted": "2026-04-06",
-  "sitting": null,
+  "sitting": "October",
   "decided": null,
   "majorityAuthor": null,
   "oyezUrl": "https://www.oyez.org/cases/2026/25-735"
@@ -123,54 +134,43 @@
  {
   "term": "2026",
   "docket": "25-840",
-  "name": "International Partners For Ethical Care, Inc. v. Ferguson",
-  "argued": null,
+  "name": "International Partners for Ethical Care, Inc. v. Ferguson",
+  "argued": "2026-12-07",
   "granted": "2026-06-29",
-  "sitting": null,
+  "sitting": "December",
   "decided": null,
   "majorityAuthor": null,
-  "oyezUrl": "https://www.supremecourt.gov/search.aspx?filename=/docket/docketfiles/html/public/25-840.html"
+  "oyezUrl": "https://www.oyez.org/cases/2026/25-840"
  },
  {
   "term": "2026",
   "docket": "25-842",
-  "name": "Wassily v. Blanche, Acting Att'y Gen.",
-  "argued": null,
+  "name": "Wassily v. Blanche",
+  "argued": "2026-11-30",
   "granted": "2026-06-29",
-  "sitting": null,
+  "sitting": "November",
   "decided": null,
   "majorityAuthor": null,
-  "oyezUrl": "https://www.supremecourt.gov/search.aspx?filename=/docket/docketfiles/html/public/25-842.html"
- },
- {
-  "term": "2026",
-  "docket": "25-886",
-  "name": "Genalo v. Black",
-  "argued": null,
-  "granted": "2026-06-15",
-  "sitting": null,
-  "decided": null,
-  "majorityAuthor": null,
-  "oyezUrl": "https://www.supremecourt.gov/search.aspx?filename=/docket/docketfiles/html/public/25-886.html"
+  "oyezUrl": "https://www.oyez.org/cases/2026/25-842"
  },
  {
   "term": "2026",
   "docket": "25-965",
-  "name": "Grand v. City Of University Heights",
-  "argued": null,
+  "name": "Grand v. City of University Heights, Ohio",
+  "argued": "2026-12-09",
   "granted": "2026-06-30",
-  "sitting": null,
+  "sitting": "December",
   "decided": null,
   "majorityAuthor": null,
-  "oyezUrl": "https://www.supremecourt.gov/search.aspx?filename=/docket/docketfiles/html/public/25-965.html"
+  "oyezUrl": "https://www.oyez.org/cases/2026/25-965"
  },
  {
   "term": "2026",
   "docket": "25-966",
   "name": "Department of Labor v. Sun Valley Orchards, LLC ",
-  "argued": null,
+  "argued": "2026-11-10",
   "granted": "2026-04-27",
-  "sitting": null,
+  "sitting": "November",
   "decided": null,
   "majorityAuthor": null,
   "oyezUrl": "https://www.oyez.org/cases/2026/25-966"
@@ -179,23 +179,34 @@
   "term": "2026",
   "docket": "25-1003",
   "name": "Guerrero v. Johnson",
-  "argued": null,
+  "argued": "2026-11-04",
   "granted": "2026-06-15",
-  "sitting": null,
+  "sitting": "November",
   "decided": null,
   "majorityAuthor": null,
-  "oyezUrl": "https://www.supremecourt.gov/search.aspx?filename=/docket/docketfiles/html/public/25-1003.html"
+  "oyezUrl": "https://www.oyez.org/cases/2026/25-1003"
  },
  {
   "term": "2026",
   "docket": "25-1017",
   "name": "Republican National Committee v. Mi Familia Vota",
-  "argued": null,
+  "argued": "2026-12-08",
   "granted": "2026-06-29",
+  "sitting": "December",
+  "decided": null,
+  "majorityAuthor": null,
+  "oyezUrl": "https://www.oyez.org/cases/2026/25-1017"
+ },
+ {
+  "term": "2026",
+  "docket": "25-1131",
+  "name": "Missionaries Of St. John The Baptist, Inc. v. Frederic",
+  "argued": null,
+  "granted": "2026-10-01",
   "sitting": null,
   "decided": null,
   "majorityAuthor": null,
-  "oyezUrl": "https://www.supremecourt.gov/search.aspx?filename=/docket/docketfiles/html/public/25-1017.html"
+  "oyezUrl": "https://www.supremecourt.gov/search.aspx?filename=/docket/docketfiles/html/public/25-1131.html"
  },
  {
   "term": "2026",
@@ -206,7 +217,7 @@
   "sitting": null,
   "decided": null,
   "majorityAuthor": null,
-  "oyezUrl": "https://www.supremecourt.gov/search.aspx?filename=/docket/docketfiles/html/public/25-1223.html"
+  "oyezUrl": "https://www.oyez.org/cases/2026/25-1223"
  },
  {
   "term": "2026",
@@ -217,15 +228,26 @@
   "sitting": null,
   "decided": null,
   "majorityAuthor": null,
-  "oyezUrl": "https://www.supremecourt.gov/search.aspx?filename=/docket/docketfiles/html/public/25-1311.html"
+  "oyezUrl": "https://www.oyez.org/cases/2026/25-1311"
+ },
+ {
+  "term": "2026",
+  "docket": "25-1349",
+  "name": "Marschner v. Marschner",
+  "argued": null,
+  "granted": "2026-10-01",
+  "sitting": null,
+  "decided": null,
+  "majorityAuthor": null,
+  "oyezUrl": "https://www.supremecourt.gov/search.aspx?filename=/docket/docketfiles/html/public/25-1349.html"
  },
  {
   "term": "2026",
   "docket": "25-5343",
   "name": "Beaird v. United States",
-  "argued": null,
+  "argued": "2026-10-13",
   "granted": "2026-04-20",
-  "sitting": null,
+  "sitting": "October",
   "decided": null,
   "majorityAuthor": null,
   "oyezUrl": "https://www.oyez.org/cases/2026/25-5343"
@@ -234,9 +256,9 @@
   "term": "2026",
   "docket": "25-5930",
   "name": "Maxwell v. Thomas",
-  "argued": null,
+  "argued": "2026-11-02",
   "granted": "2026-06-01",
-  "sitting": null,
+  "sitting": "November",
   "decided": null,
   "majorityAuthor": null,
   "oyezUrl": "https://www.oyez.org/cases/2026/25-5930"
@@ -250,6 +272,39 @@
   "sitting": null,
   "decided": null,
   "majorityAuthor": null,
-  "oyezUrl": "https://www.supremecourt.gov/search.aspx?filename=/docket/docketfiles/html/public/25-6623.html"
+  "oyezUrl": "https://www.oyez.org/cases/2026/25-6623"
+ },
+ {
+  "term": "2026",
+  "docket": "26-104",
+  "name": "Rhoney v. Barbosa Da Cunha",
+  "argued": null,
+  "granted": "2026-10-01",
+  "sitting": null,
+  "decided": null,
+  "majorityAuthor": null,
+  "oyezUrl": "https://www.supremecourt.gov/search.aspx?filename=/docket/docketfiles/html/public/26-104.html"
+ },
+ {
+  "term": "2026",
+  "docket": "26-426",
+  "name": "Deptartment Of Homeland Security v. D. v. D.",
+  "argued": "2026-12-09",
+  "granted": "2026-09-29",
+  "sitting": "December",
+  "decided": null,
+  "majorityAuthor": null,
+  "oyezUrl": "https://www.supremecourt.gov/search.aspx?filename=/docket/docketfiles/html/public/26-426.html"
+ },
+ {
+  "term": "2026",
+  "docket": "25-886",
+  "name": "Genalo v. Black",
+  "argued": "2026-10-13",
+  "granted": "2026-06-15",
+  "sitting": "October",
+  "decided": null,
+  "majorityAuthor": null,
+  "oyezUrl": "https://www.oyez.org/cases/2026/25-886"
  }
 ]

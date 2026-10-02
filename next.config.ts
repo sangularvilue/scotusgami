@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // pdfjs (under pdf-parse) loads its worker at runtime; keep it out of the
+  // bundle so the refresh cron can parse the Granted & Noted list
+  serverExternalPackages: ["pdf-parse"],
   // the game reads data/pool.json server-side; make sure it ships with the
   // serverless functions that need it
   outputFileTracingIncludes: {

@@ -59,6 +59,7 @@ function termSummary(grid: BingoGrid): string {
   const parts: string[] = [];
   if (grid.decidedCount) parts.push(`${grid.decidedCount} decided`);
   if (grid.pendingCount) parts.push(`${grid.pendingCount} pending`);
+  if (grid.scheduledCount) parts.push(`${grid.scheduledCount} scheduled`);
   if (grid.granted.length) parts.push(`${grid.granted.length} granted`);
   return parts.join(" · ") || "no cases yet";
 }
@@ -90,8 +91,8 @@ export default async function BingoPage() {
 
       {grids.length === 0 ? (
         <p className="mx-auto max-w-md px-5 pb-16 text-center text-[14px] text-cream-dim">
-          No argued cases recorded yet. The card fills in as the daily refresh
-          pulls argument and opinion data from Oyez.
+          No cases recorded yet. The card fills in as the daily refresh pulls the
+          Court&apos;s argument calendar and opinion data from Oyez.
         </p>
       ) : (
         <div className="space-y-12 pb-8">
