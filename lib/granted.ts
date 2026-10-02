@@ -1,4 +1,3 @@
-import { PDFParse } from "pdf-parse";
 import type { BingoCase } from "./types";
 
 /**
@@ -67,7 +66,13 @@ export async function fetchGranted(
   if (!res.ok) throw new Error(`granted/noted list ${res.status}`);
   const buf = Buffer.from(await res.arrayBuffer());
 
-  const { text } = await new PDFParse({ data: buf }).getText();
+  // Loaded lazily so a broken PDF toolchain fails this fetch (callers fall back
+  // to the stored card) instead of the whole module graph. pdf-parse/worker's
+  // CanvasFactory supplies the DOMMatrix/canvas polyfills pdfjs needs on
+  // serverless Node, where they don't exist natively.
+  const { CanvasFactory } = await import("pdf-parse/worker");
+  const { PDFParse } = await import("pdf-parse");
+  const { text } = await new PDFParse({ data: buf, CanvasFactory }).getText();
   const lines = text.split(/\r?\n/).map((s) => s.trim()).filter(Boolean);
 
   // Each case starts "{docket} {3-letter code} {NAME}" (name may wrap to the
